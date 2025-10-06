@@ -1,4 +1,4 @@
-import { VirEnv_1, VirEnv_3, VirEnv_4, VirEnv_5, VirEnv_22, VirEnv_34, VirEnv_36, VirEnv_37, VirEnv_40 } from "./virEnvsProperties";
+import { VirEnv_1, VirEnv_3, VirEnv_4, VirEnv_5, VirEnv_22, VirEnv_34, VirEnv_36, VirEnv_37, VirEnv_40, VirEnv_43 } from "./virEnvsProperties";
 
 export const virEnvLayers: Readonly<any> = {
   VirEnv_1: {
@@ -390,9 +390,9 @@ export const virEnvLayers: Readonly<any> = {
       lng: 224 / 111000,
       lat: 74 / 112000,
     },
-    overlayCoords: VirEnv_1.overlayCoords,
-    bounds: VirEnv_1.bounds,
+    overlayCoords: VirEnv_43.overlayCoords,
+    bounds: VirEnv_43.bounds,
     center: [0.00001785714286 / 2 + 0.002, 0.002936936937 / 2],
-    zoom: 17,
+    zoom: 15,
   }
 };
