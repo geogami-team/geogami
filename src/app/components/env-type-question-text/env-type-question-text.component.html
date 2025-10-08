@@ -16,15 +16,33 @@
   <!-- Show part of quesition text -->
   <ion-chip color="medium" htmlFor="test">
     <ion-label style="color: black">
-      <span style="font-weight: bold"
-        >{{
+      <span style="font-weight: bold">
+        {{
           taskCategory.includes("info")
             ? "Info"
             : "General.question" | translate
-        }}:</span
-      >
-      {{ questionText.substring(0, 30) }}
-      {{ questionText.length > 30 ? "..." : "" }}
+        }}:
+      </span>
+      {{
+        questionText.substring(
+          0,
+          this.platform.width() > 1200
+            ? 80
+            : this.platform.width() > 900
+            ? 50
+            : 35
+        )
+      }}
+      {{
+        questionText.length >
+          (this.platform.width() > 1200
+            ? 80
+            : this.platform.width() > 900
+            ? 50
+            : 35)
+          ? "..."
+          : ""
+      }}
     </ion-label>
   </ion-chip>
 </div>
