@@ -483,14 +483,20 @@
     </ion-item>
 
     <!-- Select objects to hide from virtual world -->
-    <ion-item *ngIf="virEnvLayers[this.virEnvType].objectsList" lines="none" >
-      <ion-label>Select objects to hide</ion-label>
-      <ion-select multiple="true" interface="popover" placeholder="Choose">
+    <ion-item *ngIf="virEnvLayers[this.virEnvType].objectsList" lines="none">
+      <ion-label>Select landmark to exclude from virtual world</ion-label>
+      <ion-select
+        multiple="true"
+        interface="popover"
+        (ionChange)="onObjectExclusion($event)"
+        placeholder="Choose"
+        [(ngModel)]="excludedObjectsVirEnv"
+      >
         <ion-select-option
-          *ngFor="let fruit of ['Apple', 'Banana', 'Cherry', 'Mango', 'Orange']"
-          [value]="fruit"
+          *ngFor="let prefab of virEnvLayers[this.virEnvType].objectsList"
+          [value]="prefab"
         >
-          {{ fruit }}
+          {{ prefab }}
         </ion-select-option>
       </ion-select>
     </ion-item>
