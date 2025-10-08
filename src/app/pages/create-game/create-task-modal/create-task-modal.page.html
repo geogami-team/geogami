@@ -9,13 +9,17 @@
       <ion-icon name="navigate" color="primary"></ion-icon> {{
       "Tasktypes.navigationTasks" | translate }}
       <!-- Show task No -->
-      <span *ngIf="taskNo"> ({{ ("General.task" | translate) + " " + taskNo}}) </span>
+      <span *ngIf="taskNo">
+        ({{ ("General.task" | translate) + " " + taskNo}})
+      </span>
     </ion-title>
     <ion-title *ngIf="type == 'theme'">
       <ion-icon name="clipboard" color="secondary"></ion-icon> {{
       "Tasktypes.thematicTasks" | translate }}
       <!-- Show task No -->
-      <span *ngIf="taskNo"> ({{ ("General.task" | translate) + " " + taskNo}}) </span>
+      <span *ngIf="taskNo">
+        ({{ ("General.task" | translate) + " " + taskNo}})
+      </span>
     </ion-title>
     <ion-buttons slot="end">
       <ion-button color="dark" (click)="dismissModal(null)">
@@ -344,7 +348,7 @@
         [isVRMirrored]="isVRMirrored"
         [virEnvType]="virEnvType"
       ></app-map>
-      
+
       <ion-item-divider id="search-area-divider"></ion-item-divider>
     </div>
 
@@ -397,14 +401,13 @@
     </answer-type>
   </div>
 
-
   <!-- Vir. Env. settings -->
   <div *ngIf="isVirtualWorld && task.settings">
     <!-- section heading -->
     <ion-text>
       <h5>{{ "CreateGame.virEnvSettings" | translate }}</h5>
     </ion-text>
-    
+
     <!-- Avatar speed -->
     <ion-item lines="none" class="item-range">
       <ion-label>
@@ -443,8 +446,12 @@
 
     <!-- Disable avatar rotation -->
     <ion-item lines="none">
-      <ion-label> {{ "CreateGame.disableAvatarRotation" | translate }} </ion-label>
-      <ion-toggle [(ngModel)]="task.settings.disableAvatarRotation"></ion-toggle>
+      <ion-label>
+        {{ "CreateGame.disableAvatarRotation" | translate }}
+      </ion-label>
+      <ion-toggle
+        [(ngModel)]="task.settings.disableAvatarRotation"
+      ></ion-toggle>
     </ion-item>
 
     <!-- show environment settings -->
@@ -455,31 +462,37 @@
 
     <!-- show path visalisation -->
     <ion-item *ngIf="isVEBuilding" lines="none">
-      <ion-label> {{ "CreateGame.showEnvPathVisualization" | translate }} </ion-label>
-      <ion-toggle [(ngModel)]="task.settings.showPathVisualization"></ion-toggle>
+      <ion-label>
+        {{ "CreateGame.showEnvPathVisualization" | translate }}
+      </ion-label>
+      <ion-toggle
+        [(ngModel)]="task.settings.showPathVisualization"
+      ></ion-toggle>
     </ion-item>
 
+    <!-- Choose map size -->
     <ion-item lines="none">
-      <ion-label
-        >Choose map size
-      </ion-label>
+      <ion-label>Choose map size </ion-label>
       <select interface="popover" [(ngModel)]="task.settings.mapSize">
-        <option ngValue="1">
-          none
-        </option>
-        <option ngValue="2">
-          small
-        </option>
-        <option ngValue="3">
-          medium
-        </option>
-        <option ngValue="4">
-          big
-        </option>
-        <option ngValue="5">
-          full screen
-        </option>
+        <option ngValue="1">none</option>
+        <option ngValue="2">small</option>
+        <option ngValue="3">medium</option>
+        <option ngValue="4">big</option>
+        <option ngValue="5">full screen</option>
       </select>
+    </ion-item>
+
+    <!-- Select objects to hide from virtual world -->
+    <ion-item *ngIf="virEnvLayers[this.virEnvType].objectsList" lines="none" >
+      <ion-label>Select objects to hide</ion-label>
+      <ion-select multiple="true" interface="popover" placeholder="Choose">
+        <ion-select-option
+          *ngFor="let fruit of ['Apple', 'Banana', 'Cherry', 'Mango', 'Orange']"
+          [value]="fruit"
+        >
+          {{ fruit }}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
 
     <ion-item-divider></ion-item-divider>
@@ -646,7 +659,7 @@
       </ion-range>
     </ion-item>
   </div>
-  
+
   <ion-item
     detail
     lines="none"
