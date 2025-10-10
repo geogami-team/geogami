@@ -490,7 +490,7 @@
         interface="popover"
         (ionChange)="onObjectExclusion($event)"
         placeholder="Choose"
-        [(ngModel)]="excludedObjectsVirEnv"
+        [(ngModel)]="excludedObjectsNames"
       >
         <ion-select-option
           *ngFor="let prefab of virEnvLayers[this.virEnvType].objectsList"

@@ -746,7 +746,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
                       virEnvLayers[this.virEnvType].floors[parseInt(this.task.floor.substring(1))+1]["height"],
                     ]
                   : undefined,
-          excludedObjectsVirEnv: this.task?.excludedObjectsVirEnv.length>0 ? this.task?.excludedObjectsVirEnv : undefined,
+          excludedObjectsNames: this.task?.excludedObjectsNames.length>0 ? this.task?.excludedObjectsNames : undefined,
         });
       } else if(this.isSingleMode) {
         //* if task doesn't have initial positoin send default value and if no virenvtype is found send deafult one
@@ -782,7 +782,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
                       virEnvLayers[this.virEnvType].floors[parseInt(this.task.floor.substring(1))+1]["height"],
                     ]
                   : undefined,
-          excludedObjectsVirEnv: this.task?.excludedObjectsVirEnv.length>0 ? this.task?.excludedObjectsVirEnv : undefined,
+          excludedObjectsNames: this.task?.excludedObjectsNames.length>0 ? this.task?.excludedObjectsNames : undefined,
         });
       }
     });
@@ -1875,7 +1875,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
                         virEnvLayers[this.virEnvType].floors[parseInt(this.task.floor.substring(1))+1]["height"],
                     ]
                   : undefined,
-            excludedObjectsVirEnv: this.task?.excludedObjectsVirEnv.length>0 ? this.task?.excludedObjectsVirEnv : undefined,
+            excludedObjectsNames: this.task?.excludedObjectsNames.length>0 ? this.task?.excludedObjectsNames : undefined,
           });
         }, 1000);
 

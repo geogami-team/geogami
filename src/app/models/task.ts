@@ -16,7 +16,7 @@ export interface Task {
   isVEBuilding: boolean;
   floor: string;
   initialFloor: string;
-  excludedObjectsVirEnv: string[];    //* list of excluded objects from virtual environment
+  excludedObjectsNames: string[];    //* list of excluded objects from virtual environment
 
 }
 

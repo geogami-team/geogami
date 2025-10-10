@@ -394,6 +394,6 @@ export const virEnvLayers: Readonly<any> = {
     bounds: VirEnv_43.bounds,
     center: [0.00001785714286 / 2 + 0.002, 0.002936936937 / 2],
     zoom: 15,
-    objectsList: ["car","cat", "flower", "house", "stop sign", "tree"],
+    objectsList: ["car","cat", "flower", "house", "stop sign", "tree", "traffic light"],
   }
 };

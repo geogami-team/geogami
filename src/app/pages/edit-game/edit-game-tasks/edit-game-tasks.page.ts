@@ -154,7 +154,7 @@ export class EditGameTasksPage implements OnInit {
       : this.virEnvType,
     selectedFloor = (task?.isVEBuilding?task.floor:undefined),
     initialFloor = (task?.isVEBuilding?task.initialFloor:"Select floor"),
-    excludedObjectsVirEnv = (task?.excludedObjectsVirEnv)
+    excludedObjectsNames = (task?.excludedObjectsNames)
   ) {
     const modal: HTMLIonModalElement = await this.modalController.create({
       component:
@@ -171,7 +171,7 @@ export class EditGameTasksPage implements OnInit {
         initialFloor,
         numPlayers,
         isSingleMode,
-        excludedObjectsVirEnv
+        excludedObjectsNames
       },
     });
 
