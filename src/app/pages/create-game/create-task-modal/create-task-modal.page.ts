@@ -36,6 +36,8 @@ export class CreateTaskModalPage implements OnInit {
   @Input() isVirtualWorld: boolean;
   @Input() isVRMirrored: boolean;
   @Input() virEnvType: string;
+  @Input() excludedObjectsNames: string[] = [];  //* list of excluded objects from virtual environment
+  
   
   // VE building
   public isVEBuilding = false;
@@ -133,6 +135,15 @@ export class CreateTaskModalPage implements OnInit {
   virEnvTypesList = VirEnvHeaders;
   //* Get virtual environment layers
   virEnvLayers = virEnvLayers;
+  
+  // handle adding selected objects to exclusion list
+  onObjectExclusion(event: any) {
+    const selectedValue = event.detail.value as string[];
+    // Find the newly added item(s)
+    const newlySelected = selectedValue.filter(x => !this.excludedObjectsNames.includes(x));
+    // Add new ones to main list
+    this.excludedObjectsNames.push(...newlySelected);
+  }
 
   constructor(
     public modalController: ModalController,
@@ -245,6 +256,9 @@ export class CreateTaskModalPage implements OnInit {
           this.initialFloor = "Select floor";
         }
       }
+
+      // set default value of excluded objects from virtual environment (for not stored ones/when editing a task)
+      this.excludedObjectsNames = this.excludedObjectsNames ?? [];
     }
 
     // Translation
@@ -781,6 +795,7 @@ export class CreateTaskModalPage implements OnInit {
   }
 
   dismissModal(dismissType: string = "null") {
+
     if (dismissType == "close") {
       this.modalController.dismiss();
       return;
@@ -818,6 +833,11 @@ export class CreateTaskModalPage implements OnInit {
       this.task.isVEBuilding = this.isVEBuilding;
       this.task.floor = this.selectedFloor;
       this.task.initialFloor = this.initialFloor!="Select floor"?this.initialFloor:undefined;
+    }
+
+    // include excluded objects from virtual environment in task data
+    if (this.isVirtualWorld && this.excludedObjectsNames?.length>0) {
+      this.task.excludedObjectsNames = this.excludedObjectsNames;
     }
 
     /* multi-player */
