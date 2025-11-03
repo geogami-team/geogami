@@ -220,6 +220,7 @@ ion-thumbnail {
 
       > img {
         border-radius: 1rem;
+        object-fit: fill;     // To avoid image distortion
       }
 
       @media screen and (max-width: 575px) {
