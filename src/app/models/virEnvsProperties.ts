@@ -163,6 +163,19 @@ export const VirEnv_40: Readonly<any> = {
   },
 };
 
+export const VirEnv_41: Readonly<any> = {
+  overlayCoords: [
+    [0.00046381981981982,0.00412594642857143],			
+    [0.00347282882882883,0.00412594642857143],			
+    [0.00347282882882883,0.00131390287769784],			
+    [0.00046381981981982,0.00131390287769784],			
+  ],
+  bounds: [
+    [0.00046381981981982 - 0.002, 0.00131390287769784 - 0.0035], // Southwest coordinates (lng,lat)
+    [0.00347282882882883 + 0.002, 0.00412594642857143 + 0.002], // Northeast coordinates (lng,lat)
+  ],
+};
+
 export const VirEnv_43: Readonly<any> = {
   overlayCoords: [
     [0.0002307207207, 0.004459082914],
