@@ -5,14 +5,14 @@
 
 // const localhostIP="192.168.8.88"; // Change this to your local IP address
 const localhostIP="localhost";      // Use localhost if `cross-origin` error ` arised
-const localWebGLPort="51281";
+const localWebGLPort="50732";
 
 export const environment = {
   production: false,
   apiURL: `http://${localhostIP}:3000`,
   uiURL:`http://${localhostIP}:8100`,
   webglURL: `http://${localhostIP}:${localWebGLPort}`,
-  dashboardURL: `https://dashboard.geogami.ifgi.de`,
+  dashboardURL: `https://dashboard.geogami.uni-muenster.de`,
   mapboxAccessToken:
     "pk.eyJ1IjoiZmVsaXhhZXRlbSIsImEiOiI2MmE4YmQ4YjIzOTI2YjY3ZWFmNzUwOTU5NzliOTAxOCJ9.nshlehFGmK_6YmZarM2SHA",
   photoQuality: 10,
