@@ -56,7 +56,7 @@ export class CreateTaskModalPage implements OnInit {
   mapFeatures: any = this.task.mapFeatures;
 
   showFeedback = true;
-  showMultipleTries = true;
+  showMultipleTries = false;
   defaultTaskAccuracy = 3; // default accuracy for tasks
 
   // step = 5;

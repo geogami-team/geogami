@@ -731,9 +731,7 @@ export class FeedbackComponent {
           this.playingGamePage.nextTask();
         }
       }, this.feedbackDuration);
-    }
-
-    if (!this.task.settings.feedback) {
+    } else if (!this.task.settings.feedback) {
       setTimeout(() => {
         this.dismissFeedback();
         this.playingGamePage.nextTask();
