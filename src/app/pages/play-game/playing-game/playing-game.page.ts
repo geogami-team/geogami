@@ -2017,7 +2017,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.directionBearing = this.task.question.direction.bearing || 0;
     }
 
-    if (this.task.question.type == QuestionType.MAP_DIRECTION_MARKER && (this.game.name != "Test - VirEnv 43" && this.game.name != "Bibek's study")) {
+    if (this.task.question.type == QuestionType.MAP_DIRECTION_MARKER && (this.game.name != "Test-WebGL-Yousef" && this.game.name != "Bibek's study")) {
       this.directionBearing = this.task.question.direction.bearing || 0;
 
       this.map.addSource("viewDirectionTask", {
