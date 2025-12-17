@@ -200,12 +200,12 @@ export const VirEnvHeaders: ReadonlyArray<any> = [
     img_url: "assets/vir_envs_layers/VirEnv_40_f0.png",
   },
   {
-    envName: "Test Environment",
+    envName: "VirEnv_41",
     layerName: "VirEnv_41",
     img_url: "assets/vir_envs_layers/VirEnv_41.png",
   },
   {
-    envName: "Test Environment",
+    envName: "VirEnv_42",
     layerName: "VirEnv_42",
     img_url: "assets/vir_envs_layers/VirEnv_42.png",
   },
@@ -213,5 +213,25 @@ export const VirEnvHeaders: ReadonlyArray<any> = [
     envName: "Bibek - Study",
     layerName: "VirEnv_43",
     img_url: "assets/vir_envs_layers/VirEnv_43.png",
+  },
+  {
+    envName: "VirEnv_44",
+    layerName: "VirEnv_44",
+    img_url: "assets/vir_envs_layers/VirEnv_44.png",
+  },
+  {
+    envName: "VirEnv_45",
+    layerName: "VirEnv_45",
+    img_url: "assets/vir_envs_layers/VirEnv_45.png",
+  },
+  {
+    envName: "VirEnv_46",
+    layerName: "VirEnv_46",
+    img_url: "assets/vir_envs_layers/VirEnv_46.png",
+  },
+  {
+    envName: "VirEnv_47",
+    layerName: "VirEnv_47",
+    img_url: "assets/vir_envs_layers/VirEnv_47.png",
   },
 ];

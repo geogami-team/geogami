@@ -1,4 +1,20 @@
-import { VirEnv_1, VirEnv_3, VirEnv_4, VirEnv_5, VirEnv_22, VirEnv_34, VirEnv_36, VirEnv_37, VirEnv_40, VirEnv_41,VirEnv_43 } from "./virEnvsProperties";
+import {
+  VirEnv_1,
+  VirEnv_3,
+  VirEnv_4,
+  VirEnv_5,
+  VirEnv_22,
+  VirEnv_34,
+  VirEnv_36,
+  VirEnv_37,
+  VirEnv_40,
+  VirEnv_41,
+  VirEnv_43,
+  VirEnv_44,
+  VirEnv_45,
+  VirEnv_46,
+  VirEnv_47,
+} from "./virEnvsProperties";
 
 export const virEnvLayers: Readonly<any> = {
   VirEnv_1: {
@@ -304,7 +320,7 @@ export const virEnvLayers: Readonly<any> = {
     name: "Zoom - Training",
     initialPosition: VirEnv_36.initialPosition,
     overlayCoords: VirEnv_36.overlayCoords,
-    center: [0.002119500085399295, 0.0008621423878878431 ],
+    center: [0.002119500085399295, 0.0008621423878878431],
     bounds: VirEnv_36.bounds,
     zoom: 18.45,
     zoomInLayer1: "VirEnv_36_zoom1",
@@ -316,7 +332,7 @@ export const virEnvLayers: Readonly<any> = {
     name: "School",
     initialPosition: VirEnv_37.initialPosition,
     overlayCoords: VirEnv_37.overlayCoords,
-    center: [0.004837837838 - 0.004,	0.003383928571 ],
+    center: [0.004837837838 - 0.004, 0.003383928571],
     bounds: VirEnv_37.bounds,
     zoom: 17.8,
   },
@@ -346,24 +362,24 @@ export const virEnvLayers: Readonly<any> = {
       lng: 27.43 / 111000,
       lat: 18.81 / 112000,
     },
-    initialRotation: 180,  
+    initialRotation: 180,
     overlayCoords: VirEnv_40.overlayCoords,
-    center: [0,	0],
+    center: [0, 0],
     bounds: VirEnv_40.bounds,
     zoom: 17,
     defaultAvatarSpeed: 2,
     defaultFloor: 1,
-    floors:[
-      {tag:"f-1", name: "Library", height: 96.249},     // library
-      {tag:"f0", name: "Floor 0", height: 99.999},
-      {tag:"f1", name: "Floor 1", height: 103.749},
-      {tag:"f2",name: "Floor 2", height: 107.199},
-      {tag:"f3",name: "Floor 3", height: 110.649},
-      {tag:"f4",name: "Floor 4", height: 114.099},
-      {tag:"f5",name: "Floor 5", height: 117.549},
-      {tag:"f6",name: "Floor 6", height: 120.999},     // this floor is only to show in mapview but can't be used for creating tasks.
+    floors: [
+      { tag: "f-1", name: "Library", height: 96.249 }, // library
+      { tag: "f0", name: "Floor 0", height: 99.999 },
+      { tag: "f1", name: "Floor 1", height: 103.749 },
+      { tag: "f2", name: "Floor 2", height: 107.199 },
+      { tag: "f3", name: "Floor 3", height: 110.649 },
+      { tag: "f4", name: "Floor 4", height: 114.099 },
+      { tag: "f5", name: "Floor 5", height: 117.549 },
+      { tag: "f6", name: "Floor 6", height: 120.999 }, // this floor is only to show in mapview but can't be used for creating tasks.
     ],
-    floorStandardHeight: 3.40,
+    floorStandardHeight: 3.4,
   },
   VirEnv_41: {
     initialPosition: {
@@ -394,6 +410,46 @@ export const virEnvLayers: Readonly<any> = {
     bounds: VirEnv_43.bounds,
     center: [0.002004504505, 0.002459821429],
     zoom: 15,
-    objectsList: ["bear","chicken", "deer", "dog", "horse", "kitty", "tiger"],
-  }
+    objectsList: ["bear", "chicken", "deer", "dog", "horse", "kitty", "tiger"],
+  },
+  VirEnv_44: {
+    initialPosition: {
+      lng: 224 / 111000,
+      lat: 74 / 112000,
+    },
+    overlayCoords: VirEnv_44.overlayCoords,
+    bounds: VirEnv_44.bounds,
+    center: [0.00001785714286 / 2 + 0.002, 0.002936936937 / 2],
+    zoom: 17,
+  },
+  VirEnv_45: {
+    initialPosition: {
+      lng: 224 / 111000,
+      lat: 74 / 112000,
+    },
+    overlayCoords: VirEnv_45.overlayCoords,
+    bounds: VirEnv_45.bounds,
+    center: [0.00001785714286 / 2 + 0.002, 0.002936936937 / 2],
+    zoom: 17,
+  },
+  VirEnv_46: {
+    initialPosition: {
+      lng: 224 / 111000,
+      lat: 74 / 112000,
+    },
+    overlayCoords: VirEnv_46.overlayCoords,
+    bounds: VirEnv_46.bounds,
+    center: [0.00001785714286 / 2 + 0.002, 0.002936936937 / 2],
+    zoom: 17,
+  },
+  VirEnv_47: {
+    initialPosition: {
+      lng: 224 / 111000,
+      lat: 74 / 112000,
+    },
+    overlayCoords: VirEnv_47.overlayCoords,
+    bounds: VirEnv_47.bounds,
+    center: [0.00001785714286 / 2 + 0.002, 0.002936936937 / 2],
+    zoom: 17,
+  },
 };
