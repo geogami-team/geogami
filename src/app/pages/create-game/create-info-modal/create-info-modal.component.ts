@@ -91,6 +91,12 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
         this.task.settings.avatarSpeed =
           virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 2;
       }
+
+      // Set default map size if not set
+      if (!this.task.settings.mapSize) {
+        this.task.settings.mapSize = "3";
+      }
+
       // check wether selected VE is a building
       this.isVEBuilding = this.veBuildingUtilService.checkVEBuilding(
         this.virEnvType
