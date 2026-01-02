@@ -23,11 +23,12 @@
 <ion-content class="ion-padding">
   <!-- (Vir. Env.): enable teacher to choose a vir. env. -->
   <ion-item *ngIf="isVirtualWorld" class="ion-no-padding">
-    <h5>Choose a virtual world</h5>
+    <h5>{{ ("CreateGame.titleCreateGameVirtualMenu" | translate) }}</h5>
     &nbsp;&nbsp;
 
     <select
       [(ngModel)]="virEnvType"
+      (ngModelChange)="onEnvChanged()"
       interface="popover"
       [disabled]="!isSingleMode"
     >
@@ -102,6 +103,7 @@
       <!-- Select -->
       <select
         [(ngModel)]="initialFloor"
+        (ngModelChange)="onFloorChanged()"
         interface="popover"
         [disabled]="!isSingleMode"
       >
@@ -121,7 +123,7 @@
 
     <!-- Map view -->
     <app-map
-      *ngIf="initialFloor != 'Select floor'"
+      *ngIf="(isVEBuilding && initialFloor!='Select floor') || !isVEBuilding"
       featureType="direction"
       [(feature)]="task.question.initialAvatarPosition"
       [isVirtualWorld]="isVirtualWorld"

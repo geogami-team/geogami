@@ -82,7 +82,6 @@ export class QuestionTypeComponent implements OnInit, OnChanges {
       this.question &&
       (this.question.initialAvatarPosition || this.initialFloor!="Select floor")
     ) {
-    // console.log("----question: ", this.question);
       this.initialAvatarPositionStatus = true;
     }
 
@@ -94,8 +93,10 @@ export class QuestionTypeComponent implements OnInit, OnChanges {
     //* to remove object from db (when deleting initial position)
     if (!this.initialAvatarPositionStatus) {
       this.question.initialAvatarPosition = undefined;
-      this.initialFloor = "Select floor";
-      this.onFloorChanged()
+      if (this.isVEBuilding) {
+        this.initialFloor = "Select floor";
+        this.onFloorChanged()
+      }
     }
   }
 
