@@ -187,5 +187,13 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
   checkVEBuilding(){
     return virEnvLayers[this.virEnvType].isVEBuilding ?? false;
   }
+
+  // Set default avatar-speed when vir. env. is changed
+  onEnvChanged(){
+      this.task.settings.avatarSpeed =
+        virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 2;
+      this.isVEBuilding = this.veBuildingUtilService.checkVEBuilding(
+        this.virEnvType
+      );
   }
 }
