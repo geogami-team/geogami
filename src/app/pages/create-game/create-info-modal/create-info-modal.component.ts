@@ -39,6 +39,7 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
   @Input() selectedFloor;
   @Input()initialFloor;  // initial floor
   @Output() selectedFloorChange = new EventEmitter();
+  @Output() initialFloorChange=new EventEmitter();
   //* get virual environment headers
   virEnvLayers = virEnvLayers;
 
@@ -81,7 +82,7 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
       this.task.question &&
       (this.task.question.initialAvatarPosition || this.task.initialFloor)
     ) {
-      this.initialAvatarPositionStatus = true;
+        this.initialAvatarPositionStatus = true;
     }
 
     // Set default avatar-speed and building floor of new tasks
@@ -90,6 +91,12 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
         this.task.settings.avatarSpeed =
           virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 2;
       }
+
+      // Set default map size if not set
+      if (!this.task.settings.mapSize) {
+        this.task.settings.mapSize = "3";
+      }
+
       // check wether selected VE is a building
       this.isVEBuilding = this.veBuildingUtilService.checkVEBuilding(
         this.virEnvType
@@ -163,10 +170,30 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
 
   // TODO: Do we sill need it??
   initialAvatarPosToggleChange() {
-    //* to remove object from db (when deleting initial position)
+    //* to remove object from db (when deleting initial position)    
     if (!this.initialAvatarPositionStatus) {
       this.task.question.initialAvatarPosition = undefined;
-      this.task.initialFloor = this.initialFloor = "Select floor";
+      if (this.isVEBuilding) {
+        this.task.initialFloor = this.initialFloor = "Select floor";
+        this.onFloorChanged()
+      }
     }
+  }
+
+  onFloorChanged(){
+    this.initialFloorChange.emit(this.initialFloor);
+  }
+
+  checkVEBuilding(){
+    return virEnvLayers[this.virEnvType].isVEBuilding ?? false;
+  }
+
+  // Set default avatar-speed when vir. env. is changed
+  onEnvChanged(){
+      this.task.settings.avatarSpeed =
+        virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 2;
+      this.isVEBuilding = this.veBuildingUtilService.checkVEBuilding(
+        this.virEnvType
+      );
   }
 }

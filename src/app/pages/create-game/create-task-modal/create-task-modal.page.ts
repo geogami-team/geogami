@@ -20,6 +20,7 @@ import { themetasksMultiplayers3 } from "src/app/models/theme-tasks-multi-3-play
 import { themetasksMultiplayers2 } from "src/app/models/theme-tasks-multi-2-players";
 import { VirEnvHeaders } from "src/app/models/virEnvsHeader";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
+import { VEBuildingUtilService } from "src/app/services/ve-building-util.service";
 
 @Component({
   selector: "app-create-task-modal",
@@ -148,7 +149,8 @@ export class CreateTaskModalPage implements OnInit {
   constructor(
     public modalController: ModalController,
     public popoverController: PopoverController,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private veBuildingUtilService: VEBuildingUtilService
   ) {}
 
   ngOnInit() {
@@ -243,7 +245,10 @@ export class CreateTaskModalPage implements OnInit {
       }
 
       // check wether selected VE is a building
-      this.isVEBuilding = this.checkVEBuilding();
+      // this.isVEBuilding = this.checkVEBuilding();
+      this.isVEBuilding = this.veBuildingUtilService.checkVEBuilding(
+        this.virEnvType
+      );
       
       // set default floor for new tasks only (not stored ones/when editing a task)
       if (this.isVEBuilding) {
@@ -875,12 +880,10 @@ export class CreateTaskModalPage implements OnInit {
   onEnvChanged(){
       this.task.settings.avatarSpeed =
         virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 2;
-      this.isVEBuilding = this.checkVEBuilding();
+      this.isVEBuilding = this.veBuildingUtilService.checkVEBuilding(
+        this.virEnvType
+      );
       
-  }
-
-  checkVEBuilding(){
-    return virEnvLayers[this.virEnvType].isVEBuilding ?? false;
   }
 
   setInitialFloor(){
