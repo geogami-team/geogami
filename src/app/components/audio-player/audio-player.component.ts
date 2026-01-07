@@ -10,6 +10,7 @@ import {
 @Component({
   selector: "app-audio-player",
   templateUrl: "./audio-player.component.html",
+  styleUrls: ["./audio-player.component.scss"]
 })
 export class AudioPlayerComponent implements AfterViewInit, OnChanges {
   @Input("audioSource") audioSource: string;
