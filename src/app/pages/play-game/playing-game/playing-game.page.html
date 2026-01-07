@@ -143,7 +143,7 @@
             </ion-thumbnail>
           </div>
 
-          <div class="task-text" *ngIf="task.question?.text" [innerHTML]="task.question.text | markdown | keyword">
+          <div class="task-text" style="text-align: start;" *ngIf="task.question?.text" [innerHTML]="task.question.text | markdown | keyword">
             <!-- <p *ngIf='task.settings["question-type"]?.settings["object-description"]'>
                 {{ task.settings["question-type"].settings["object-description"] }}
               </p> -->
