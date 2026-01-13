@@ -234,4 +234,14 @@ export const VirEnvHeaders: ReadonlyArray<any> = [
     layerName: "VirEnv_47",
     img_url: "assets/vir_envs_layers/VirEnv_47.png",
   },
+  {
+    envName: "VirEnv_44_b",
+    layerName: "VirEnv_48",
+    img_url: "assets/vir_envs_layers/VirEnv_48.png",
+  },
+  {
+    envName: "VirEnv_45_b",
+    layerName: "VirEnv_49",
+    img_url: "assets/vir_envs_layers/VirEnv_49.png",
+  },
 ];
