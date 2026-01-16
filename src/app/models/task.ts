@@ -12,7 +12,7 @@ export interface Task {
   settings: any;
   type: string;
   collaborationType: string;
-  virEnvType: string;           //* to be used in having multiple vir. envs in a single game
+  virEnvType: string;           //* To be used when having multiple vir. envs in a single game
   isVEBuilding: boolean;
   floor: string;
   initialFloor: string;

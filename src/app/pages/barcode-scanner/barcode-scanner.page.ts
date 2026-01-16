@@ -16,7 +16,7 @@ export class BarcodeScannerPage implements OnInit {
     private utilService: UtilService,
     public modalController: ModalController,
     private navCtrl: NavController,
-    private socketService: SocketService
+    // private socketService: SocketService
   ) { }
 
   ngOnInit() {
