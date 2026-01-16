@@ -34,7 +34,8 @@ export class BarcodeScannerPage implements OnInit {
   }
 
   ngOnDestroy() {
-    // this.stopScan();
+    // To stop scanning when leaving the page
+    this.stopScan();
   }
 
   /**********/
