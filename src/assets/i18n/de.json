@@ -124,7 +124,8 @@
     "sendingData": "Übertrage Daten...",
     "gameSaved": "Dein GeoGami wurde gespeichert!",
     "setCuratedGame": "Als kuratiertes Spiel einstellen",
-    "enterValidGameName": "Bitte geben Sie einen gültigen Spielname ein."
+    "enterValidGameName": "Bitte geben Sie einen gültigen Spielname ein.",
+    "disableShareDataConsent":"Einwilligung zur Datenweitergabe deaktivieren"
   },
   "Start": {
     "playMode": "Spielen",

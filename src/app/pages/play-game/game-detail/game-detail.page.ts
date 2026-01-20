@@ -59,6 +59,8 @@ export class GameDetailPage implements OnInit {
   instructorId: string;
   showInstructionView: boolean = false; // only for multi-player game
 
+  disableShareData_cbox: boolean = false; // to disable shareData checkbox when game setting disableShareData is true
+
   constructor(
     public navCtrl: NavController,
     private route: ActivatedRoute,
@@ -93,6 +95,15 @@ export class GameDetailPage implements OnInit {
         .then((res) => res.content)
         .then((game) => {
           this.game = game;
+
+          // set share data checkbox status based on game setting
+          if(this.game.disableShareData !== undefined){
+            this.disableShareData_cbox = this.game.disableShareData;  // set disableShareData checkbox status based on game setting
+            if(this.disableShareData_cbox){
+              this.shareData_cbox = true; // if disableShareData is true, check shareData checkbox
+            }
+          }
+          
           // VR world
           // Check game type either real or VR world
           if (game.isVRWorld !== undefined && game.isVRWorld != false) {

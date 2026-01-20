@@ -58,8 +58,9 @@ export class EditGameOverviewPage implements AfterViewInit {
   isVirtualWorld: boolean = false;
   isVRMirrored: boolean = false;
 
-  // curated filter
-  isCuratedGame = false;
+  isCuratedGame: boolean = false;      // to set curated games only by admins (geogami team)
+  disableShareData: boolean = false;      // to disable share data consent
+
   // to set curated games only by admins (geogami team)
   userRole: String = "";
   user = this.authService.getUser();
@@ -255,6 +256,7 @@ export class EditGameOverviewPage implements AfterViewInit {
           this.mapSectionVisible = this.game.mapSectionVisible;
           this.geofence = this.game.geofence;
           this.isCuratedGame = this.game.isCuratedGame;
+          this.disableShareData = this.game.disableShareData;
 
           if (this.mapSection) {
             this.changeDetectorRef.detectChanges();
@@ -479,6 +481,7 @@ export class EditGameOverviewPage implements AfterViewInit {
       name: this.game.name,
       place: this.game.place,
       isCuratedGame: this.isCuratedGame, // to set whether game can be viewed in curated filter list
+      disableShareData: this.disableShareData, // to disable share data consent
       tasksCount: this.game.tasks.length, //* it might happen that user add or remove tasks, so we need to update the tasks
     });
   // console.log(this.gameFactory.game);

@@ -59,8 +59,9 @@ export class CreateGameOverviewPage implements AfterViewInit {
   isVRMirrored: boolean = false;
   virEnvType: string; // new to store vir env type
 
-  // curated filter
-  isCuratedGame = false;
+  isCuratedGame: boolean = false;      // to set curated games only by admins (geogami team)
+  disableShareData: boolean = false;      // to disable share data consent
+
   // to set curated gmaes only by admins (geogami team)
   userRole: String = "";
   user = this.authService.getUser();
@@ -493,6 +494,7 @@ export class CreateGameOverviewPage implements AfterViewInit {
       virEnvType: this.virEnvType /* to store vir env name */,
       isVisible: true, // new game is visible by default
       isCuratedGame: this.isCuratedGame, // to set whether game can be viewed in curated filter list
+      disableShareData: this.disableShareData, // to disable share data consent
       isMultiplayerGame: !this.isSingleMode ? true : undefined,
       numPlayers: !this.isSingleMode ? this.numPlayers : undefined,
       tasksCount: this.game.tasks.length, //* add tasks counts to show it in play-game-list page

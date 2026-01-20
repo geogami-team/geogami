@@ -124,7 +124,8 @@
     "sendingData": "Transferring data...",
     "gameSaved": "Your game has been saved!",
     "setCuratedGame": "Set as a curated game",
-    "enterValidGameName": "Please enter a valid game name."
+    "enterValidGameName": "Please enter a valid game name.",
+    "disableShareDataConsent":"Disable share data consent"
   },
   "Start": {
     "playMode": "Play",

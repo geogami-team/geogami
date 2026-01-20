@@ -124,7 +124,8 @@
     "sendingData": "Transfert des données...",
     "gameSaved": "Votre jeu a été enregistré !",
     "setCuratedGame": "Définir comme jeu sélectionné",
-    "enterValidGameName": "Veuillez entrer un nom de jeu valide."
+    "enterValidGameName": "Veuillez entrer un nom de jeu valide.",
+    "disableShareDataConsent":"Désactiver le consentement de partage des données"
   },
   "Start": {
     "playMode": "Jouer",

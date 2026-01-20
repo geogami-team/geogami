@@ -121,6 +121,17 @@
 
     <ion-card color="light">
       <ion-card-content>
+        <ion-item lines="none" color="light">
+          <ion-label>
+            {{ "SaveGame.disableShareDataConsent" | translate }}
+          </ion-label>
+          <ion-toggle [(ngModel)]="disableShareData"></ion-toggle>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card color="light">
+      <ion-card-content>
         <div class="ion-padding">
           <ion-button
             expand="block"

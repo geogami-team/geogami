@@ -61,7 +61,7 @@
         <ion-label text-wrap style="font-weight: bold"
           >{{ "PlayGame.shareDataAgreement" | translate }}</ion-label
         >
-        <ion-checkbox slot="start" [(ngModel)]="shareData_cbox"></ion-checkbox>
+        <ion-checkbox slot="start" [disabled]="disableShareData_cbox" [(ngModel)]="shareData_cbox"></ion-checkbox>
       </ion-item>
     </ion-card>
   </div>
