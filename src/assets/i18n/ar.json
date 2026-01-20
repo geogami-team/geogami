@@ -124,7 +124,8 @@
     "sendingData": "جارٍ إرسال البيانات...",
     "gameSaved": "تم حفظ لعبتك!",
     "setCuratedGame": "تعيين كلعبة مختارة",
-    "enterValidGameName": "يرجى إدخال اسم لعبة صالح."
+    "enterValidGameName": "يرجى إدخال اسم لعبة صالح.",
+    "disableShareDataConsent":"تعطيل الموافقة على مشاركة البيانات"
   },
   "Start": {
     "playMode": "اللعب",

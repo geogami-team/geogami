@@ -553,6 +553,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       false,
       "",
       false,
+      false,
       false
     );
     this.route.params.subscribe((params) => {

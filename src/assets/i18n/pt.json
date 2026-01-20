@@ -124,7 +124,8 @@
     "sendingData": "Enviando dados...",
     "gameSaved": "Seu GeoGami foi salvo!",
     "setCuratedGame": "Definir como jogo curado",
-    "enterValidGameName": "Por favor, insira um nome de jogo válido."
+    "enterValidGameName": "Por favor, insira um nome de jogo válido.",
+    "disableShareDataConsent":"Desativar consentimento de compartilhamento de dados"
   },
   "Start": {
     "playMode": "Jogar",
