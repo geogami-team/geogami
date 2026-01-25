@@ -191,7 +191,7 @@ export class AuthService {
   }
 
   recoverSession(token) {
-  // console.log('RECOVER');
+    // console.log('RECOVER');
     this.refreshTokenInProgress$.next(true);
     this.http
       .post(this.AUTH_API_URL + '/user/refresh-auth', { token })

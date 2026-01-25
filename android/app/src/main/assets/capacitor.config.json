@@ -8,5 +8,8 @@
   "server": {
     "iosScheme": "https",
     "androidScheme": "https"
+  },
+  "ios": {
+    "webContentsDebuggingEnabled": true
   }
 }

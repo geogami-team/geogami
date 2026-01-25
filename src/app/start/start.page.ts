@@ -146,7 +146,7 @@ export class StartPage implements OnInit {
   }
 
   async showUpdateAppAlert(latestDeployedVersion, latestBuild, isMajorUpdate) {
-    let currentAppVersion = this.versionToInt(this.device.appVersion);
+    let currentAppVersion = this.versionToInt(this.device?.appVersion);
     //let currentAppBuild = parseInt(this.device.appBuild);
 
     // alert buttons objects
@@ -196,6 +196,9 @@ export class StartPage implements OnInit {
   /************/
   /* convert version value to int */
   versionToInt(VersionInString) {
+    if (!VersionInString) {
+      return 0;
+    }
     let v = VersionInString.split(".");
     // console.log("v: ", v[0] * 100 + v[1] * 10 + v[2] * 1);
     return v[0] * 100 + v[1] * 10 + v[2] * 1;
