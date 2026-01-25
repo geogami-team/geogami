@@ -134,7 +134,7 @@
 
   <div class="ion-text-center" *ngIf="device && device.appBuild">
     <p>
-      V. {{device.appVersion}} {{['admin', 'contentAdmin'].includes( (user |
+      V. {{device?.appVersion}} {{['admin', 'contentAdmin'].includes( (user |
       async)?.roles[0])? "("+device.appBuild+")":""}}
     </p>
   </div>

@@ -1114,6 +1114,19 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.onMapClick(e, "standard");
     });
 
+    // Handle touchend event for tap detection for getting click events on mobile devices iPad, ..
+    this.map.on("touchend", (e) => {
+      const mode = this.DrawControl_all.getMode(); // returns current mode string
+      // Only handle taps when one of the drawing tools is active
+      if (
+        mode === "draw_polygon" ||
+        mode === "draw_line_string" ||
+        mode === "draw_point"
+      ) {
+        this.onMapClick(e, "standard");
+      }
+    });
+
     this.map.on("rotate", () => {
       if (this.map.getLayer("viewDirectionTask")) {
         this.map.setLayoutProperty(
