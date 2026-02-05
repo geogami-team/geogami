@@ -349,7 +349,8 @@
     "lookForSThingChoosePhoto": "Procure [...] perto de você. Escolha a foto correta.",
     "lookForSThingTakePhoto": "Procure [...] perto de você. Tire uma foto.",
     "turnDirectionChoosePhoto": "Vire-se na direção que você vê no mapa. Escolha a foto correta.",
-    "turnDirection": "Vire-se na direção que você vê no mapa.",
+    "turnDirectionMapBased": "Vire-se na direção que você vê no mapa.",
+    "turnDirectionPhotoBased": "Drehe dich in die Blickrichtung, die du auf dem Foto siehst.",
     "turnDirectionArrow": "Rode até que as setas apontem na mesma direção.",
     "whereAreYouLooking": "Para onde você está olhando agora? Marque sua direção no mapa.",
     "turnDirectionPhoto": "Vire-se na direção da foto. Marque sua direção no mapa."

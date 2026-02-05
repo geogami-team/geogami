@@ -349,7 +349,8 @@
     "lookForSThingChoosePhoto": "Cherchez [...] près de vous. Choisissez la photo appropriée.",
     "lookForSThingTakePhoto": "Cherchez [...] près de vous. Prenez une photo.",
     "turnDirectionChoosePhoto": "Tournez dans la direction que vous voyez sur la carte. Choisissez la photo appropriée.",
-    "turnDirection": "Tournez dans la direction que vous voyez sur la carte.",
+    "turnDirectionMapBased": "Tournez dans la direction que vous voyez sur la carte.",
+    "turnDirectionPhotoBased": "Drehe dich in die Blickrichtung, die du auf dem Foto siehst.",
     "turnDirectionArrow": "Tournez jusqu'à ce que la flèche pointe dans la même direction que vous voyez sur la carte.",
     "whereAreYouLooking": "Où regardez-vous maintenant ? Marquez votre direction de vue sur la carte.",
     "turnDirectionPhoto": "Tournez dans la direction de la photo. Marquez votre direction de vue sur la carte."
