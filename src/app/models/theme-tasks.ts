@@ -143,7 +143,7 @@ export const themetasks: ReadonlyArray<any> = [
         questionType: 'textMapFeature',
         question: {
             type: QuestionType.MAP_DIRECTION_MARKER,
-            key: 'QuestionText.turnDirection',
+            key: 'QuestionText.turnDirectionMapBased',
             text: ''    // empty text will be replaced by the translation
         },
         answerType: 'direction',
@@ -205,6 +205,24 @@ export const themetasks: ReadonlyArray<any> = [
             type: AnswerType.MAP_DIRECTION,
         },
         evaluate: 'evalMapDirection',
+        settings: {}
+    }, { // New task type with photo answer for direction determination
+        name: 'Tasktypes.directionDetermination',
+        type: 'theme-direction',
+        // category: "themedirection",
+        category: 'theme',
+        questionType: 'textPhoto',
+        question: {
+            type: QuestionType.MAP_DIRECTION_PHOTO,
+            key: 'QuestionText.turnDirectionPhotoBased',
+            text: ''    // empty text will be replaced by the translation
+
+        },
+        answerType: 'direction',
+        answer: {
+            type: AnswerType.DIRECTION,
+        },
+        evaluate: 'evalDirection',
         settings: {}
     }
 ];

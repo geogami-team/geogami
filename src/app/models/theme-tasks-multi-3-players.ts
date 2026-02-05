@@ -307,17 +307,17 @@ export const themetasksMultiplayers3: ReadonlyArray<any> = [
         question: [
             {
                 type: QuestionType.MAP_DIRECTION_MARKER,
-                key: 'QuestionText.turnDirection',
+                key: 'QuestionText.turnDirectionMapBased',
             text: ''    // empty text will be replaced by the translation
             },
             {
                 type: QuestionType.MAP_DIRECTION_MARKER,
-                key: 'QuestionText.turnDirection',
+                key: 'QuestionText.turnDirectionMapBased',
             text: ''    // empty text will be replaced by the translation
             },
             {
                 type: QuestionType.MAP_DIRECTION_MARKER,
-                key: 'QuestionText.turnDirection',
+                key: 'QuestionText.turnDirectionMapBased',
             text: ''    // empty text will be replaced by the translation
             }
         ],
@@ -344,17 +344,17 @@ export const themetasksMultiplayers3: ReadonlyArray<any> = [
         question: [
             {
                 type: QuestionType.MAP_DIRECTION,
-                key: 'QuestionText.turnDirection',
+                key: 'QuestionText.turnDirectionMapBased',
             text: ''    // empty text will be replaced by the translation
             },
             {
                 type: QuestionType.MAP_DIRECTION,
-                key: 'QuestionText.turnDirection',
+                key: 'QuestionText.turnDirectionMapBased',
             text: ''    // empty text will be replaced by the translation
             },
             {
                 type: QuestionType.MAP_DIRECTION,
-                key: 'QuestionText.turnDirection',
+                key: 'QuestionText.turnDirectionMapBased',
             text: ''    // empty text will be replaced by the translation
             }
         ],
@@ -448,6 +448,43 @@ export const themetasksMultiplayers3: ReadonlyArray<any> = [
             }
         ],
         evaluate: 'evalMapDirection',
+        settings: {}
+    }, {
+        name: 'Tasktypes.directionDetermination',
+        type: 'theme-direction',
+        // category: "themedirection",
+        category: 'theme',
+        questionType: 'textPhoto',
+        question: [
+            {
+                type: QuestionType.MAP_DIRECTION_PHOTO,
+                key: 'QuestionText.turnDirectionPhotoBased',
+            text: ''    // empty text will be replaced by the translation
+            },
+            {
+                type: QuestionType.MAP_DIRECTION_PHOTO,
+                key: 'QuestionText.turnDirectionPhotoBased',
+            text: ''    // empty text will be replaced by the translation
+            },
+            {
+                type: QuestionType.MAP_DIRECTION_PHOTO,
+                key: 'QuestionText.turnDirectionPhotoBased',
+            text: ''    // empty text will be replaced by the translation
+            }
+        ],
+        answerType: 'direction',
+        answer: [
+            {
+                type: AnswerType.DIRECTION,
+            },
+            {
+                type: AnswerType.DIRECTION,
+            },
+            {
+                type: AnswerType.DIRECTION,
+            }
+        ],
+        evaluate: 'evalDirection',
         settings: {}
     }
 ];

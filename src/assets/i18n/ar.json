@@ -349,7 +349,8 @@
     "lookForSThingChoosePhoto": "ابحث عن [...] بالقرب منك. اختر الصورة المناسبة.",
     "lookForSThingTakePhoto": "ابحث عن [...] بالقرب منك. التقط صورة.",
     "turnDirectionChoosePhoto": "اتجه في الاتجاه الذي تراه على الخريطة. اختر الصورة المناسبة.",
-    "turnDirection": "اتجه في الاتجاه الذي تراه على الخريطة.",
+    "turnDirectionMapBased": "اتجه في الاتجاه الذي تراه على الخريطة.",
+    "turnDirectionPhotoBased": "Drehe dich in die Blickrichtung, die du auf dem Foto siehst.",
     "turnDirectionArrow": "أدر حتى تشير الأسهم إلى نفس الاتجاه.",
     "whereAreYouLooking": "إلى أين تنظر الآن؟ حدد اتجاه نظرك على الخريطة.",
     "turnDirectionPhoto": "اتجه في اتجاه الصورة. حدد اتجاه نظرك على الخريطة."

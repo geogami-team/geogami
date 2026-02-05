@@ -2031,6 +2031,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.directionBearing = this.task.question.direction.bearing || 0;
     }
 
+    // TODO: remove excluded games after finishing the study
     if (this.task.question.type == QuestionType.MAP_DIRECTION_MARKER && (this.game.name != "Test-WebGL-Yousef" && this.game.name != "Bibek's study")) {
       this.directionBearing = this.task.question.direction.bearing || 0;
 

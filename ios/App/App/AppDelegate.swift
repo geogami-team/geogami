@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import WebKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,8 +28,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   func applicationDidBecomeActive(_ application: UIApplication) {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-  }
+  // Ensure UI is ready
+      DispatchQueue.main.async {
+        guard let bridgeVC = self.window?.rootViewController as? CAPBridgeViewController else { return }
+
+        // ✅ Find WKWebView in the view hierarchy (no private properties)
+        let webView = self.findWKWebView(in: bridgeVC.view)
+
+        guard let wk = webView else { return }
+
+        if #available(iOS 16.4, *) {
+          wk.isInspectable = true
+        }
+
+        // Optional (older iOS / older webkit debugging)
+        wk.configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
+      }
+    }
+
+    private func findWKWebView(in root: UIView) -> WKWebView? {
+      if let wk = root as? WKWebView { return wk }
+      for v in root.subviews {
+        if let wk = findWKWebView(in: v) { return wk }
+      }
+      return nil
+    }
 
   func applicationWillTerminate(_ application: UIApplication) {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.

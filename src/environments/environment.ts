@@ -3,9 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 // const localhost="localhost"
 
-// const localhostIP="192.168.8.88"; // Change this to your local IP address
+// const localhostIP="192.168.8.88"; // Change this to your local IP address, if `cross-origin` error ` arised
 const localhostIP="localhost";      // Use localhost if `cross-origin` error ` arised
-const localWebGLPort="50732";
+const localWebGLPort="58299";
 
 export const environment = {
   production: false,
