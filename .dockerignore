@@ -1,0 +1,17 @@
+# This is only usefull when using docker build context `docker build -t app .` as the root of the project, otherwise it will be ignored
+node_modules
+www
+dist
+build
+coverage
+
+.git
+.gitignore
+
+Dockerfile
+docker-compose.yml
+docker-compose.dev.yml
+
+npm-debug.log
+yarn-error.log
+.DS_Store

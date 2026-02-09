@@ -1,0 +1,9 @@
+services:
+  web:
+    image: node:16.10
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8100:4200"
+    command: sh -c "npm install --legacy-peer-deps && npm start"
