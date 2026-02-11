@@ -2226,14 +2226,6 @@ export class PlayingGamePage implements OnInit, OnDestroy {
             playerName: this.playersNames[0],
           });
         }
-        // VE-multi and single player (disconnect socket connection when tasks are done)
-        this.socketService.closeVEGame();
-      }
-
-      // VR world (disconnect socket connection when tasks are done and result data is stored) - only for single player
-      // as with multiplayer we need to check if data of alerady stored in cloud
-      if (this.isVirtualWorld && this.isSingleMode) {
-        this.disconnectSocketIO();
       }
 
       if (Capacitor.isNative) {
@@ -2478,6 +2470,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.positionSubscription.unsubscribe();
       this.deviceOrientationSubscription.unsubscribe();
     } else {
+      // Ve-multi and single player (disconnect socket connection when done btn is pressed) - to make sure vr app is closed before disconnecting socket connection
+      this.socketService.closeVEGame();
       // disconnect when user navigate home
       this.disconnectSocketIO();
 
