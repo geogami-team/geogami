@@ -14,6 +14,7 @@ import mapboxgl from "mapbox-gl";
 import { UtilService } from "src/app/services/util.service";
 import { SocketService } from "src/app/services/socket.service";
 import { TranslateService } from "@ngx-translate/core";
+import { OverlayService } from "src/app/services/overlay.service";
 // import {} from environment.mapStyle + 'realWorld.json'
 
 @Component({
@@ -68,7 +69,8 @@ export class PlayGameListPage implements OnInit {
     private utilService: UtilService,
     private socketService: SocketService,
     private alertController: AlertController,
-    public _translate: TranslateService
+    public _translate: TranslateService,
+    public overlayService: OverlayService
   ) {}
 
   ngOnInit() {
@@ -93,6 +95,14 @@ export class PlayGameListPage implements OnInit {
 
     // Get games data from server
     this.getGamesData();
+
+    // Load overlay after map is ready
+    this.map.on('load', async () => {
+      await this.overlayService.loadOverlay(
+        this.map,
+        'assets/configs/VirEnv_43.objects.json'
+      );
+    });
   }
 
   ionViewWillEnter() {

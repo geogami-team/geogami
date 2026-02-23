@@ -9,6 +9,7 @@ import { PlayGameListPage } from './play-game-list.page';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { PopupComponent } from 'src/app/components/popup/popup.component';
+// import { OverlayEditorModule } from 'src/app/components/overlay-editor/overlay-editor.module';
 
 const routes: Routes = [
   {
@@ -23,7 +24,8 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    TranslateModule
+    TranslateModule,
+    // OverlayEditorModule   // <-- Add this
   ],
   declarations: [PlayGameListPage, PopupComponent ]
 })

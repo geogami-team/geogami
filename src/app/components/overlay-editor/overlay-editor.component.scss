@@ -1,0 +1,206 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.editor-layout {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+
+  // Stack vertically on small screens
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+// ─── Canvas Area ──────────────────────────────────────────────
+
+.canvas-area {
+  flex: 1;
+  position: relative;
+  background: #1a1a2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  overflow: hidden;
+}
+
+.canvas-instructions {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: rgba(0, 229, 255, 0.12);
+  color: #00e5ff;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  pointer-events: none;
+  white-space: nowrap;
+  border: 1px solid rgba(0, 229, 255, 0.25);
+}
+
+.image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.editor-canvas {
+  cursor: crosshair;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  touch-action: none; // Prevent browser gestures on canvas
+  max-width: 100%;
+  max-height: 100%;
+}
+
+// ─── Objects Panel ────────────────────────────────────────────
+
+.objects-panel {
+  width: 320px;
+  min-width: 280px;
+  background: var(--ion-color-light, #f4f5f8);
+  border-left: 1px solid var(--ion-color-medium, #989aa2);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    min-width: unset;
+    max-height: 45vh;
+    border-left: none;
+    border-top: 1px solid var(--ion-color-medium, #989aa2);
+  }
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 4px;
+
+  h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ion-color-dark, #222);
+  }
+}
+
+// ─── Object List ──────────────────────────────────────────────
+
+.objects-list {
+  padding: 4px 8px;
+}
+
+.object-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  margin: 4px 0;
+  background: #fff;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--ion-color-primary, #3880ff);
+  }
+
+  &.selected {
+    border-color: #00e5ff;
+    background: rgba(0, 229, 255, 0.06);
+  }
+}
+
+.object-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.object-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ion-color-dark, #222);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.object-meta {
+  font-size: 11px;
+  color: var(--ion-color-medium, #989aa2);
+  margin-top: 2px;
+}
+
+.object-actions {
+  display: flex;
+  gap: 0;
+  flex-shrink: 0;
+
+  ion-button {
+    --padding-start: 6px;
+    --padding-end: 6px;
+    margin: 0;
+  }
+}
+
+// ─── Empty State ──────────────────────────────────────────────
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--ion-color-medium, #989aa2);
+
+  ion-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    opacity: 0.4;
+  }
+
+  p {
+    margin: 4px 0;
+    font-size: 14px;
+  }
+
+  .hint {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+}
+
+// ─── JSON Preview ─────────────────────────────────────────────
+
+.json-preview {
+  border-top: 1px solid var(--ion-color-light-shade, #d7d8da);
+  margin-top: auto;
+}
+
+.json-code {
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 11px;
+  line-height: 1.5;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  background: #1e1e2e;
+  color: #a6e3a1;
+  max-height: 240px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

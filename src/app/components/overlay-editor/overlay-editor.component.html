@@ -1,0 +1,105 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Overlay Object Editor</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="copyConfigToClipboard()" fill="clear" title="Copy JSON">
+        <ion-icon name="clipboard-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="saveConfig()" fill="solid" color="success">
+        <ion-icon name="save-outline" slot="start"></ion-icon>
+        Save
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="editor-layout">
+
+    <!-- Canvas Area -->
+    <div class="canvas-area">
+      <div class="canvas-instructions" *ngIf="imageUrl && objects.length === 0">
+        Draw rectangles around objects you want to control
+      </div>
+
+      <div
+        #imageContainer
+        class="image-container"
+        (window:resize)="onCanvasReady()"
+      >
+        <canvas
+          #editorCanvas
+          class="editor-canvas"
+          (mousedown)="onPointerDown($event)"
+          (mousemove)="onPointerMove($event)"
+          (mouseup)="onPointerUp($event)"
+          (mouseleave)="onPointerUp($event)"
+          (touchstart)="onPointerDown($event)"
+          (touchmove)="onPointerMove($event)"
+          (touchend)="onPointerUp($event)"
+        ></canvas>
+      </div>
+    </div>
+
+    <!-- Objects Panel -->
+    <div class="objects-panel">
+      <div class="panel-header">
+        <h3>Objects ({{ objects.length }})</h3>
+        <ion-button
+          *ngIf="objects.length > 0"
+          fill="clear"
+          color="danger"
+          size="small"
+          (click)="deleteAllObjects()"
+        >
+          Clear All
+        </ion-button>
+      </div>
+
+      <div class="objects-list" *ngIf="objects.length > 0">
+        <div
+          *ngFor="let obj of objects; trackBy: trackById"
+          class="object-item"
+          [class.selected]="obj.id === selectedObjectId"
+          (click)="selectObject(obj.id)"
+        >
+          <div class="object-info">
+            <div class="object-name">{{ obj.label || obj.id }}</div>
+            <div class="object-meta">
+              {{ obj.rect.x }}, {{ obj.rect.y }} &middot;
+              {{ obj.rect.w }}&times;{{ obj.rect.h }}px
+            </div>
+          </div>
+          <div class="object-actions">
+            <ion-button fill="clear" size="small" (click)="renameObject(obj); $event.stopPropagation()">
+              <ion-icon name="pencil-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="small" color="danger" (click)="deleteObject(obj.id); $event.stopPropagation()">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="objects.length === 0">
+        <ion-icon name="scan-outline"></ion-icon>
+        <p>No objects defined yet.</p>
+        <p class="hint">Click and drag on the image to draw bounding boxes around objects.</p>
+      </div>
+
+      <!-- JSON Preview -->
+      <div class="json-preview" *ngIf="objects.length > 0">
+        <div class="panel-header">
+          <h3>JSON Preview</h3>
+        </div>
+        <pre class="json-code">{{ getConfigJson() }}</pre>
+      </div>
+    </div>
+
+  </div>
+</ion-content>
