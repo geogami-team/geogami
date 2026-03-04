@@ -125,7 +125,9 @@
     "gameSaved": "تم حفظ لعبتك!",
     "setCuratedGame": "تعيين كلعبة مختارة",
     "enterValidGameName": "يرجى إدخال اسم لعبة صالح.",
-    "disableShareDataConsent":"تعطيل الموافقة على مشاركة البيانات"
+    "disableShareDataConsent":"تعطيل الموافقة على مشاركة البيانات",
+    "skipTaskPin": "ادخل كلمة السر لتخطي المهام (اختياري)",
+    "navigationPinPlaceholder": "رمز PIN مكون من 4 أرقام لتخطي المهام"
   },
   "Start": {
     "playMode": "اللعب",
@@ -250,7 +252,13 @@
     "deleteGameMsg": "هل أنت متأكد أنك تريد حذف هذه اللعبة؟",
     "useExternalVEApp":"استخدم تطبيق البيئة الافتراضية الخارجي (ويندوز/ماك)",
     "enterName":"أدخل اسمك",
-    "askPlayerToScanQRCode":"اطلب من اللاعبين مسح رمز QR أدناه أو استخدام رابط اللعبة للانضمام."
+    "askPlayerToScanQRCode":"اطلب من اللاعبين مسح رمز QR أدناه أو استخدام رابط اللعبة للانضمام.",
+    "pinDialogHeader": "أدخل رمز PIN",
+    "pinDialogMessage": "أدخل رمز PIN المكون من 4 أرقام للتنقل.",
+    "pinDialogPlaceholder": "PIN",
+    "pinDialogCancel": "إلغاء",
+    "pinDialogConfirm": "تأكيد",
+    "pinDialogWrong": "رمز PIN غير صحيح. يرجى المحاولة مرة أخرى."
   },
   "Showroom": {
     "titleShowroom": "اكتشف GeoGami",

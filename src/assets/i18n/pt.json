@@ -125,7 +125,9 @@
     "gameSaved": "Seu GeoGami foi salvo!",
     "setCuratedGame": "Definir como jogo curado",
     "enterValidGameName": "Por favor, insira um nome de jogo válido.",
-    "disableShareDataConsent":"Desativar consentimento de compartilhamento de dados"
+    "disableShareDataConsent":"Desativar consentimento de compartilhamento de dados",
+    "skipTaskPin": "PIN de navegação (opcional)",
+    "skipTaskPinPlaceholder": "PIN de 4 dígitos para pular tarefas"
   },
   "Start": {
     "playMode": "Jogar",
@@ -250,7 +252,13 @@
     "deleteGameMsg": "Tem certeza que deseja excluir este jogo?",
     "useExternalVEApp": "Usar app externa de Ambiente Virtual (WinOS/MacOS)",
     "enterName": "Digite seu nome",
-    "askPlayerToScanQRCode": "Peça aos jogadores para escanear o código QR abaixo ou usar o link do jogo para participar."
+    "askPlayerToScanQRCode": "Peça aos jogadores para escanear o código QR abaixo ou usar o link do jogo para participar.",
+    "pinDialogHeader": "Inserir PIN",
+    "pinDialogMessage": "Digite o PIN de 4 dígitos para navegar.",
+    "pinDialogPlaceholder": "PIN",
+    "pinDialogCancel": "Cancelar",
+    "pinDialogConfirm": "Confirmar",
+    "pinDialogWrong": "PIN incorreto. Por favor, tente novamente."
   },
   "Showroom": {
     "titleShowroom": "Conheça o GeoGami",

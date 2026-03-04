@@ -130,6 +130,21 @@
       </ion-card-content>
     </ion-card>
 
+    <ion-card color="light" *ngIf="game">
+      <ion-card-content>
+        <ion-item color="light">
+          <ion-label position="stacked">{{ "SaveGame.skipTaskPin" | translate }}</ion-label>
+          <ion-input
+            type="tel"
+            maxlength="4"
+            inputmode="numeric"
+            [(ngModel)]="skipTaskPin"
+            placeholder="{{ 'SaveGame.skipTaskPinPlaceholder' | translate }}"
+          ></ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
     <ion-card color="light">
       <ion-card-content>
         <div class="ion-padding">

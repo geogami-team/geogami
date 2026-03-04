@@ -8,10 +8,10 @@
     <!-- to show player name on top view -->
     <ion-title *ngIf="game">{{ game.name }} ({{playersNames[0]}})</ion-title>
     <ion-buttons slot="end">
-      <ion-button *ngIf="taskIndex>0" color="dark" (click)="previousTask()">
+      <ion-button *ngIf="taskIndex>0" color="dark" (click)="confirmNavWithPin('previous')">
         <ion-icon name="arrow-back-outline"></ion-icon>
       </ion-button>
-      <ion-button color="dark" (click)="nextTask()">
+      <ion-button color="dark" (click)="confirmNavWithPin('next')">
         <ion-icon name="arrow-forward"></ion-icon>
       </ion-button>
     </ion-buttons>

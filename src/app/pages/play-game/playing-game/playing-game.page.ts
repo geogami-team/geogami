@@ -554,7 +554,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       "",
       false,
       false,
-      false
+      false,
+      undefined
     );
     this.route.params.subscribe((params) => {
       this.gamesService
@@ -2116,6 +2117,48 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     }
 
     this.changeDetectorRef.detectChanges();
+  }
+
+  async confirmNavWithPin(action: 'next' | 'previous') {
+    if (!this.game.skipTaskPin) {
+      action === 'next' ? this.nextTask() : this.previousTask();
+      return;
+    }
+
+    const alert = await this.alertController.create({
+      header: this.translate.instant('PlayGame.pinDialogHeader'),
+      message: this.translate.instant('PlayGame.pinDialogMessage'),
+      inputs: [
+        {
+          name: 'pin',
+          type: 'password',
+          placeholder: this.translate.instant('PlayGame.pinDialogPlaceholder'),
+          attributes: { maxlength: 4, inputmode: 'numeric' },
+        },
+      ],
+      buttons: [
+        {
+          text: this.translate.instant('PlayGame.pinDialogCancel'),
+          role: 'cancel',
+        },
+        {
+          text: this.translate.instant('PlayGame.pinDialogConfirm'),
+          handler: (data) => {
+            if (data.pin === this.game.skipTaskPin) {
+              action === 'next' ? this.nextTask() : this.previousTask();
+            } else {
+              this.toastController.create({
+                message: this.translate.instant('PlayGame.pinDialogWrong'),
+                duration: 2000,
+                color: 'danger',
+              }).then(toast => toast.present());
+              return false;
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   nextTask() {
