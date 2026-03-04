@@ -163,6 +163,41 @@ ion-thumbnail {
     margin: 0;
   }
 
+  &.pin-dialog {
+    min-width: 280px;
+    max-width: 360px;
+
+    ion-item {
+      --background: transparent;
+    }
+
+    ion-input {
+      text-align: center;
+      font-size: 1.4rem;
+      letter-spacing: 0.5rem;
+    }
+
+    .skip-stepper {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      .skip-count {
+        font-size: 1.4rem;
+        font-weight: bold;
+        min-width: 2rem;
+        text-align: center;
+      }
+    }
+
+    .pin-dialog-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 16px;
+    }
+  }
+
   &.player-name {
     position: absolute;
     top: 50%;

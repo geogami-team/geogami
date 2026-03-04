@@ -255,6 +255,43 @@
     </ion-item> 
   </ion-card>-->
 
+  <!-- PIN confirmation dialog -->
+  <ion-card class="overlay success pin-dialog" *ngIf="showPinDialog">
+    <h3>{{ "PlayGame.pinDialogHeader" | translate }}</h3>
+    <p>{{ "PlayGame.pinDialogMessage" | translate }}</p>
+    <ion-item lines="none">
+      <ion-input
+        type="password"
+        maxlength="4"
+        inputmode="numeric"
+        [(ngModel)]="pinInputValue"
+        placeholder="{{ 'PlayGame.pinDialogPlaceholder' | translate }}"
+        (keyup.enter)="executePinConfirm()"
+        autofocus="true">
+      </ion-input>
+    </ion-item>
+    <ion-item lines="none" *ngIf="isLoggedIn">
+      <ion-label>{{ "PlayGame.pinDialogSkipCount" | translate }}</ion-label>
+      <div class="skip-stepper">
+        <ion-button fill="clear" (click)="skipCount = skipCount > 1 ? skipCount - 1 : 1">
+          <ion-icon name="remove-circle-outline" size="large"></ion-icon>
+        </ion-button>
+        <span class="skip-count">{{ skipCount }}</span>
+        <ion-button fill="clear" (click)="skipCount = skipCount <  game.tasks.length - 1 ? skipCount + 1 : skipCount">
+          <ion-icon name="add-circle-outline" size="large"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-item>
+    <div class="pin-dialog-buttons">
+      <ion-button fill="outline" color="medium" (click)="cancelPinDialog()">
+        {{ "PlayGame.pinDialogCancel" | translate }}
+      </ion-button>
+      <ion-button color="primary" (click)="executePinConfirm()">
+        {{ "PlayGame.pinDialogConfirm" | translate }}
+      </ion-button>
+    </div>
+  </ion-card>
+
   <app-feedback #feedback></app-feedback>
 
   <ion-card class="overlay success" *ngIf="staticShowSuccess">

@@ -258,7 +258,8 @@
     "pinDialogPlaceholder": "PIN",
     "pinDialogCancel": "إلغاء",
     "pinDialogConfirm": "تأكيد",
-    "pinDialogWrong": "رمز PIN غير صحيح. يرجى المحاولة مرة أخرى."
+    "pinDialogWrong": "رمز PIN غير صحيح. يرجى المحاولة مرة أخرى.",
+    "pinDialogSkipCount": "عدد المهام"
   },
   "Showroom": {
     "titleShowroom": "اكتشف GeoGami",
