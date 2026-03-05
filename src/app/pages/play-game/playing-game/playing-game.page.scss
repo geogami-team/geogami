@@ -194,6 +194,9 @@ ion-thumbnail {
 
     ion-item {
       --background: transparent;
+      --inner-padding-end: 0;
+      --padding-start: 0;
+      justify-content: center;
     }
 
     ion-input {
@@ -210,6 +213,8 @@ ion-thumbnail {
     .skip-stepper {
       display: flex;
       align-items: center;
+      justify-content: center;
+      margin: 0 auto;
       gap: 2px;
 
       .skip-count {
