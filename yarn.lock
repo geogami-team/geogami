@@ -3266,9 +3266,8 @@
     "@capacitor/core" "^2.0.1"
     "@capacitor/ios" "^2.0.1"
 
-"capacitor-voice-recorder@git+https://github.com/origami-team/capacitor-voice-recorder.git":
-  "integrity" "sha512-neTI2HFHxllVgJanFPZdH0tyOfxN8WX+8cqVpQQOFlTmb7bDfRNGNH0ZhCF8oE5L6es/0pkkBpPhkpvpbO4jAA=="
-  "resolved" "git+ssh://git@github.com/origami-team/capacitor-voice-recorder.git"
+"capacitor-voice-recorder+https://github.com/origami-team/capacitor-voice-recorder.git":
+  "resolved" "git+ssh://github.com/origami-team/capacitor-voice-recorder.git#c54cff0237b570ccadf8c76a2bdcb7b0df6de3f3"
   "version" "0.1.4"
   dependencies:
     "@capacitor/core" "^2.4.2"
