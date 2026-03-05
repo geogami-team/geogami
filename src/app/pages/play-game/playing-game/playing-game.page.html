@@ -273,11 +273,11 @@
     <ion-item lines="none" *ngIf="isLoggedIn">
       <ion-label>{{ "PlayGame.pinDialogSkipCount" | translate }}</ion-label>
       <div class="skip-stepper">
-        <ion-button fill="clear" (click)="skipCount = skipCount > 1 ? skipCount - 1 : 1">
+        <ion-button fill="clear" [disabled]="skipCount <= 1" (click)="skipCount = skipCount - 1">
           <ion-icon name="remove-circle-outline" size="large"></ion-icon>
         </ion-button>
         <span class="skip-count">{{ skipCount }}</span>
-        <ion-button fill="clear" (click)="skipCount = skipCount <  game.tasks.length - 1 ? skipCount + 1 : skipCount">
+        <ion-button fill="clear" [disabled]="skipCount >= maxSkipCount" (click)="skipCount = skipCount + 1">
           <ion-icon name="add-circle-outline" size="large"></ion-icon>
         </ion-button>
       </div>

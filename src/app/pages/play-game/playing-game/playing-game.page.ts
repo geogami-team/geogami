@@ -2143,6 +2143,14 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     this.showPinDialog = true;
   }
 
+  get maxSkipCount(): number {
+    if (!this.game?.tasks) return 1;
+    if (this.pendingNavAction === 'next') {
+      return Math.max(1, this.game.tasks.length - 1 - this.taskIndex);
+    }
+    return Math.max(1, this.taskIndex);
+  }
+
   cancelPinDialog() {
     this.showPinDialog = false;
     this.pendingNavAction = null;
