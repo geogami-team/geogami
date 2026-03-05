@@ -2212,6 +2212,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     }
 
     // this.feedbackControl.dismissFeedback();
+    // increase task index to show next task
     this.taskIndex++;
     //* check if this is last task that player skipped
     if (this.taskIndex > this.game.tasks.length - 1) {

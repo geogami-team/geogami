@@ -30,43 +30,47 @@
       </ion-card-content>
     </ion-card>
 
-    <div class="map-section-container">
-      <ion-item lines="none" color="light">
-        <ion-label>{{ "SaveGame.mapSection" | translate }}
-          <ion-icon name="information-circle" (click)="showPopover($event, 'Popover.gameArea')">
-          </ion-icon>
-        </ion-label>
-        <ion-toggle [(ngModel)]="mapSection" (ngModelChange)="mapSectionToggleChange($event)"></ion-toggle>
-      </ion-item>
+    <ion-card color="light">
+      <ion-card-content>
+        <div class="">
+          <ion-item lines="none" color="light">
+            <ion-label>{{ "SaveGame.mapSection" | translate }}
+              <ion-icon name="information-circle" (click)="showPopover($event, 'Popover.gameArea')">
+              </ion-icon>
+            </ion-label>
+            <ion-toggle [(ngModel)]="mapSection" (ngModelChange)="mapSectionToggleChange($event)"></ion-toggle>
+          </ion-item>
 
-      <ion-item lines="none" color="light" *ngIf="mapSection">
-        <ion-label>{{ "SaveGame.warningLeaveArea" | translate }}
-          <ion-icon name="information-circle" (click)="showPopover($event, 'Popover.leaveGameArea')">
-          </ion-icon>
-        </ion-label>
-        <ion-toggle [(ngModel)]="geofence"></ion-toggle>
-      </ion-item>
+          <ion-item lines="none" color="light" *ngIf="mapSection">
+            <ion-label>{{ "SaveGame.warningLeaveArea" | translate }}
+              <ion-icon name="information-circle" (click)="showPopover($event, 'Popover.leaveGameArea')">
+              </ion-icon>
+            </ion-label>
+            <ion-toggle [(ngModel)]="geofence"></ion-toggle>
+          </ion-item>
 
-      <div class="flex-radio-group" *ngIf="mapSection">
-        <div>
-          <input id="rd-visible" name="map-section" type="radio" value="visible" [checked]="mapSectionVisible"
-            (click)="mapSectionVisibleChange(true)" />
-          <label for="rd-visible"> {{ "SaveGame.outlined" | translate }}</label>
-          <ion-icon name="information-circle" (click)="showPopover($event, 'Popover.outlinedGameArea')">
-          </ion-icon>
+          <div class="flex-radio-group" *ngIf="mapSection">
+            <div>
+              <input id="rd-visible" name="map-section" type="radio" value="visible" [checked]="mapSectionVisible"
+                (click)="mapSectionVisibleChange(true)" />
+              <label for="rd-visible"> {{ "SaveGame.outlined" | translate }}</label>
+              <ion-icon name="information-circle" (click)="showPopover($event, 'Popover.outlinedGameArea')">
+              </ion-icon>
+            </div>
+
+            <div>
+              <input id="rd-invisible" name="map-section" type="radio" value="invisible" [checked]="!mapSectionVisible"
+                (click)="mapSectionVisibleChange(false)" />
+              <label for="rd-invisible"> {{ "SaveGame.invisible" | translate }}</label>
+              <ion-icon name="information-circle" (click)="showPopover($event, 'Popover.invisibleGameArea')">
+              </ion-icon>
+            </div>
+          </div>
+
+          <div #boundingMap class="map" *ngIf="mapSection"></div>
         </div>
-
-        <div>
-          <input id="rd-invisible" name="map-section" type="radio" value="invisible" [checked]="!mapSectionVisible"
-            (click)="mapSectionVisibleChange(false)" />
-          <label for="rd-invisible"> {{ "SaveGame.invisible" | translate }}</label>
-          <ion-icon name="information-circle" (click)="showPopover($event, 'Popover.invisibleGameArea')">
-          </ion-icon>
-        </div>
-      </div>
-
-      <div #boundingMap class="map" *ngIf="mapSection"></div>
-    </div>
+      </ion-card-content>
+    </ion-card>
 
     <ion-card color="light" *ngIf="userRole == 'contentAdmin'">
       <ion-card-content>
