@@ -164,8 +164,33 @@ ion-thumbnail {
   }
 
   &.pin-dialog {
-    min-width: 280px;
-    max-width: 360px;
+    width: 90vw;
+    max-width: 300px;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    // base: very small screens (< 300px)
+    h3 {
+      font-size: 0.8rem;
+      margin: 0.3rem 0 0.15rem;
+    }
+
+    p {
+      font-size: 0.7rem;
+      margin: 0.15rem 0;
+    }
+
+    @media screen and (min-width: 300px) {
+      h3 { font-size: 0.95rem; margin: 0.4rem 0 0.2rem; }
+      p { font-size: 0.8rem; margin: 0.2rem 0; }
+    }
+
+    @media screen and (min-width: 768px) {
+      max-width: 400px;
+
+      h3 { font-size: 1.1rem; }
+      p { font-size: 0.95rem; }
+    }
 
     ion-item {
       --background: transparent;
@@ -173,28 +198,50 @@ ion-thumbnail {
 
     ion-input {
       text-align: center;
-      font-size: 1.4rem;
-      letter-spacing: 0.5rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.25rem;
+
+      @media screen and (min-width: 300px) {
+        font-size: 1.1rem;
+        letter-spacing: 0.35rem;
+      }
     }
 
     .skip-stepper {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
 
       .skip-count {
-        font-size: 1.4rem;
+        font-size: 1rem;
         font-weight: bold;
         min-width: 2rem;
         text-align: center;
+      }
+
+      ion-button {
+        --padding-start: 2px;
+        --padding-end: 2px;
+      }
+
+      ion-icon {
+        font-size: 1.1rem !important;
       }
     }
 
     .pin-dialog-buttons {
       display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 8px 16px;
+      justify-content: center;
+      gap: 6px;
+      padding: 4px 8px;
+
+      ion-button {
+        min-width: 60px;
+        max-width: 90px;
+        font-size: 0.75rem;
+        --padding-top: 4px;
+        --padding-bottom: 4px;
+      }
     }
   }
 

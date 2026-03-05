@@ -259,7 +259,7 @@
     "pinDialogCancel": "Annuler",
     "pinDialogConfirm": "Confirmer",
     "pinDialogWrong": "PIN incorrect. Veuillez réessayer.",
-    "pinDialogSkipCount": "Nombre de tâches"
+    "pinDialogSkipCount": "Sauts"
   },
   "Showroom": {
     "titleShowroom": "Découvrez GeoGami",

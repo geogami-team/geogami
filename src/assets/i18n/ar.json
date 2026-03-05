@@ -259,7 +259,7 @@
     "pinDialogCancel": "إلغاء",
     "pinDialogConfirm": "تأكيد",
     "pinDialogWrong": "رمز PIN غير صحيح. يرجى المحاولة مرة أخرى.",
-    "pinDialogSkipCount": "عدد المهام"
+    "pinDialogSkipCount": "تخطيات"
   },
   "Showroom": {
     "titleShowroom": "اكتشف GeoGami",

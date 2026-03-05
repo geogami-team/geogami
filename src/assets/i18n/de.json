@@ -259,7 +259,7 @@
     "pinDialogCancel": "Abbrechen",
     "pinDialogConfirm": "Bestätigen",
     "pinDialogWrong": "Falsche PIN. Bitte versuche es erneut.",
-    "pinDialogSkipCount": "Anzahl der Aufgaben"
+    "pinDialogSkipCount": "Überspringen"
   },
   "Showroom": {
     "titleShowroom": "Lerne GeoGami kennen",
