@@ -60,6 +60,7 @@ export class EditGameOverviewPage implements AfterViewInit {
 
   isCuratedGame: boolean = false;      // to set curated games only by admins (geogami team)
   disableShareData: boolean = false;      // to disable share data consent
+  skipTaskPin: string = "";      // to store skip task pin
 
   // to set curated games only by admins (geogami team)
   userRole: String = "";
@@ -257,6 +258,7 @@ export class EditGameOverviewPage implements AfterViewInit {
           this.geofence = this.game.geofence;
           this.isCuratedGame = this.game.isCuratedGame;
           this.disableShareData = this.game.disableShareData;
+          this.skipTaskPin = this.game.skipTaskPin;
 
           if (this.mapSection) {
             this.changeDetectorRef.detectChanges();
@@ -482,6 +484,7 @@ export class EditGameOverviewPage implements AfterViewInit {
       place: this.game.place,
       isCuratedGame: this.isCuratedGame, // to set whether game can be viewed in curated filter list
       disableShareData: this.disableShareData, // to disable share data consent
+      skipTaskPin: this.skipTaskPin, // to store skip task pin
       tasksCount: this.game.tasks.length, //* it might happen that user add or remove tasks, so we need to update the tasks
     });
   // console.log(this.gameFactory.game);

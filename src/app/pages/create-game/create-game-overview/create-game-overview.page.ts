@@ -61,6 +61,7 @@ export class CreateGameOverviewPage implements AfterViewInit {
 
   isCuratedGame: boolean = false;      // to set curated games only by admins (geogami team)
   disableShareData: boolean = false;      // to disable share data consent
+  skipTaskPin: string = "";      // to store skip task pin
 
   // to set curated gmaes only by admins (geogami team)
   userRole: String = "";
@@ -495,6 +496,7 @@ export class CreateGameOverviewPage implements AfterViewInit {
       isVisible: true, // new game is visible by default
       isCuratedGame: this.isCuratedGame, // to set whether game can be viewed in curated filter list
       disableShareData: this.disableShareData, // to disable share data consent
+      skipTaskPin: this.skipTaskPin, // to store skip task pin
       isMultiplayerGame: !this.isSingleMode ? true : undefined,
       numPlayers: !this.isSingleMode ? this.numPlayers : undefined,
       tasksCount: this.game.tasks.length, //* add tasks counts to show it in play-game-list page

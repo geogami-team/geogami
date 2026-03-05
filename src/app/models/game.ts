@@ -18,6 +18,7 @@ export class Game {
     public virEnvType: string,
     public isVisible: boolean,
     public isCuratedGame: boolean,
-    public disableShareData: boolean
+    public disableShareData: boolean,
+    public skipTaskPin?: string
   ) { }
 }

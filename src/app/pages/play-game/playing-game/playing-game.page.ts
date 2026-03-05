@@ -78,6 +78,7 @@ import { UtilService } from "src/app/services/util.service";
 import { Storage } from "@ionic/storage";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
 import { VEBuildingUtilService } from "src/app/services/ve-building-util.service";
+import { AuthService } from "src/app/services/auth-service.service";
 
 @Component({
   selector: "app-playing-game",
@@ -190,6 +191,13 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
   uploading = false;
   loaded = false;
+
+  // PIN dialog state
+  showPinDialog = false;
+  pendingNavAction: 'next' | 'previous' | null = null;
+  pinInputValue = '';
+  skipCount = 1;
+  isLoggedIn = false;
 
   // to disable on-demand marker for some seconds after pressing
   geolocateButton = true;
@@ -468,7 +476,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     private utilService: UtilService,
     private veBuildingUtilService: VEBuildingUtilService,
     private storage: Storage,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.lottieConfig = {
       path: "assets/lottie/star-success.json",
@@ -490,6 +499,10 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.authService.getUser().subscribe(user => {
+      this.isLoggedIn = !!user;
+    });
+
     // // console.log('ngOnInit');
     if (Capacitor.platform !== "web") {
       Plugins.Keyboard.addListener("keyboardDidHide", async () => {
@@ -554,7 +567,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       "",
       false,
       false,
-      false
+      false,
+      undefined
     );
     this.route.params.subscribe((params) => {
       this.gamesService
@@ -2118,6 +2132,70 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     this.changeDetectorRef.detectChanges();
   }
 
+  confirmNavWithPin(action: 'next' | 'previous') {
+    if (!this.game.skipTaskPin) {
+      action === 'next' ? this.nextTask() : this.previousTask();
+      return;
+    }
+    this.pendingNavAction = action;
+    this.pinInputValue = '';
+    this.skipCount = 1;
+    this.showPinDialog = true;
+  }
+
+  get maxSkipCount(): number {
+    if (!this.game?.tasks) return 1;
+    if (this.pendingNavAction === 'next') {
+      return Math.max(1, this.game.tasks.length - 1 - this.taskIndex);
+    }
+    return Math.max(1, this.taskIndex);
+  }
+
+  cancelPinDialog() {
+    this.showPinDialog = false;
+    this.pendingNavAction = null;
+  }
+
+  executePinConfirm() {
+    if (this.pinInputValue !== this.game.skipTaskPin) {
+      this.toastController.create({
+        message: this.translate.instant('PlayGame.pinDialogWrong'),
+        duration: 2000,
+        color: 'danger',
+      }).then(toast => toast.present());
+      return;
+    }
+    this.showPinDialog = false;
+    const action = this.pendingNavAction;
+    this.pendingNavAction = null;
+    this.executeNavigation(action, this.skipCount);
+  }
+
+  executeNavigation(action: 'next' | 'previous', count: number) {
+    if (count === 1) {
+      action === 'next' ? this.nextTask() : this.previousTask();
+      return;
+    }
+    if (action === 'next') {
+      const newIndex = this.taskIndex + count;
+      if (newIndex >= this.game.tasks.length) {
+        this.taskIndex = this.game.tasks.length - 1;
+        this.nextTask();
+      } else {
+        this.taskIndex = newIndex;
+        this.task = this.game.tasks[this.taskIndex];
+        this.feedbackControl.setTask(this.task);
+        this.initTask();
+      }
+    } else {
+      this.taskIndex = Math.max(0, this.taskIndex - count);
+      this.task = this.game.tasks[this.taskIndex];
+      this.feedbackControl.setTask(this.task);
+      if (this.isVirtualWorld) this.avatarLastKnownPosition = undefined;
+      this.initTask();
+    }
+  }
+
   nextTask() {
     // Keep track on map impl.
     // Check if the previous task has track feature and check
@@ -2142,6 +2220,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     }
 
     // this.feedbackControl.dismissFeedback();
+    // increase task index to show next task
     this.taskIndex++;
     //* check if this is last task that player skipped
     if (this.taskIndex > this.game.tasks.length - 1) {
