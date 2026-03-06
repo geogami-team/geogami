@@ -1130,15 +1130,20 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
     // Handle touchend event for tap detection for getting click events on mobile devices iPad, ..
     this.map.on("touchend", (e) => {
-      const mode = this.DrawControl_all.getMode(); // returns current mode string
-      // Only handle taps when one of the drawing tools is active
-      if (
-        mode === "draw_polygon" ||
-        mode === "draw_line_string" ||
-        mode === "draw_point"
-      ) {
-        this.onMapClick(e, "standard");
-      }
+      // DrawControl_all may not be fully initialized yet (events property missing)
+      // An uncaught exception here corrupts Mapbox's TouchZoomRotateHandler internal state,
+      // causing the map to freeze on subsequent pinch gestures (iPad bug).
+      try {
+        const mode = this.DrawControl_all.getMode(); // returns current mode string
+        // Only handle taps when one of the drawing tools is active
+        if (
+          mode === "draw_polygon" ||
+          mode === "draw_line_string" ||
+          mode === "draw_point"
+        ) {
+          this.onMapClick(e, "standard");
+        }
+      } catch (_) {}
     });
 
     this.map.on("rotate", () => {
