@@ -225,7 +225,7 @@ export const virEnvLayers: Readonly<any> = {
     overlayCoords: VirEnv_22.overlayCoords,
     center: [0.002252252252 / 2, 0.002232142857 / 2],
     bounds: VirEnv_22.bounds,
-    zoom: 17,
+    zoom: 16,
   },
   VirEnv_26: {
     name: "Landmarks - ",
@@ -389,7 +389,7 @@ export const virEnvLayers: Readonly<any> = {
     overlayCoords: VirEnv_41.overlayCoords,
     bounds: VirEnv_41.bounds,
     center: [0.00001785714286 / 2 + 0.002, 0.002936936937 / 2],
-    zoom: 17,
+    zoom: 16,
   },
   VirEnv_42: {
     initialPosition: {
