@@ -30,7 +30,7 @@
         [(ngModel)]="gameEnvSelected"
         (change)="filterGamesEnv($event.target.value)"
       >
-        <option value="real">{{ 'GameList.realWorld' | translate }}</option>
+        <option value="real" [disabled]="isStandalone">{{ 'GameList.realWorld' | translate }}</option>
         <option value="virtual">
           {{ 'GameList.virtualWorld' | translate }}
         </option>
@@ -196,7 +196,7 @@
     </app-popup>
   </div>
 
-  <ion-fab class="custom-fab" horizontal="end" vertical="bottom" slot="fixed">
+  <ion-fab *ngIf="!isStandalone" class="custom-fab" horizontal="end" vertical="bottom" slot="fixed">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
@@ -212,7 +212,7 @@
   </ion-fab>
 </ion-content>
 
-<ion-footer>
+<ion-footer *ngIf="!isStandalone">
   <ion-toolbar>
     <ion-tabs>
       <ion-tab-bar slot="bottom">
