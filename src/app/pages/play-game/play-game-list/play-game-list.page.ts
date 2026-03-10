@@ -45,6 +45,7 @@ export class PlayGameListPage implements OnInit {
   isVRMirrored: boolean = false; // temp
   map: mapboxgl.Map;
   isListTabSelected: boolean = true;
+  isStandalone: boolean = false;
 
   // Map popup
   popup: any;
@@ -77,6 +78,12 @@ export class PlayGameListPage implements OnInit {
       // show no connection notification
       this.utilService.showAlertNoConnection();
       // return;
+    }
+
+    /* Check if page is accessed directly via standalone URL param */
+    this.isStandalone = this.route.snapshot.queryParamMap.get('standalone') === 'true';
+    if (this.isStandalone) {
+      this.gameEnvSelected = 'virtual';
     }
 
     /* Check whther user is registerd. if yes, get role and id */
@@ -114,8 +121,12 @@ export class PlayGameListPage implements OnInit {
         // Get either real or VE agmes based on selected environment
         this.games_res = games;
 
-        /* filter real world games (default) - as it represents the initial view */
-        this.filterRealWorldGames();
+        /* filter games based on selected environment (default: real, standalone: virtual) */
+        if (this.isStandalone) {
+          this.filterVirtualEnvGames();
+        } else {
+          this.filterRealWorldGames();
+        }
 
         // this.loading = true;
 

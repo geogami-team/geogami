@@ -270,6 +270,7 @@
         autofocus="true">
       </ion-input>
     </ion-item>
+    <!-- TODO: isLoggedIN is not working on cloud as it seems user is not logged in on webview!! -->
     <ion-item lines="none" *ngIf="isLoggedIn">
       <div class="skip-stepper">
         <ion-button fill="clear" [disabled]="skipCount <= 1" (click)="skipCount = skipCount - 1">
