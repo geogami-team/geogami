@@ -481,6 +481,17 @@ export const virEnvLayers: Readonly<any> = {
     bounds: VirEnv_43.bounds,
     center: [0.002004504505, 0.002459821429],
     zoom: 15,
-    objectsList: ["bear", "chicken", "deer", "dog", "horse", "kitty", "tiger"],
+    objectsList: ["boat", "trash_can", "chest_box", "bench", "sofa", "car", "piano"],
   },
+  VirEnv_51: {
+    initialPosition: {
+      lng: 224 / 111000,
+      lat: 74 / 112000,
+    },
+    overlayCoords: VirEnv_43.overlayCoords,
+    bounds: VirEnv_43.bounds,
+    center: [0.002004504505, 0.002459821429],
+    zoom: 15,
+    objectsList: ["bear", "bull", "deer", "gorilla", "horse", "wolf", "tiger"],
+  }
 };
