@@ -39,7 +39,8 @@ export class CreateTaskModalPage implements OnInit {
   @Input() virEnvType: string;
   @Input() excludedObjectsNames: string[] = [];  //* list of excluded objects from virtual environment
   
-  
+  visibleObjectsNames: string[] = [];  //* UI binding: all objects minus excluded ones
+
   // VE building
   public isVEBuilding = false;
   @Input() selectedFloor;  // task floor
@@ -139,7 +140,9 @@ export class CreateTaskModalPage implements OnInit {
   
   // handle adding/exclusion selected objects to exclusion list
   onObjectExclusion(event: any) {
-    this.excludedObjectsNames = event.detail.value as string[];
+    this.visibleObjectsNames = event.detail.value as string[];
+    const allObjects: string[] = this.virEnvLayers[this.virEnvType]?.objectsList ?? [];
+    this.excludedObjectsNames = allObjects.filter(o => !this.visibleObjectsNames.includes(o));
   }
 
   constructor(
@@ -260,6 +263,10 @@ export class CreateTaskModalPage implements OnInit {
 
       // set default value of excluded objects from virtual environment (for not stored ones/when editing a task)
       this.excludedObjectsNames = this.excludedObjectsNames ?? [];
+
+      // initialize visible objects: all objects minus any already-excluded ones
+      const allObjects: string[] = this.virEnvLayers[this.virEnvType]?.objectsList ?? [];
+      this.visibleObjectsNames = allObjects.filter(o => !this.excludedObjectsNames.includes(o));
     }
 
     // Translation
