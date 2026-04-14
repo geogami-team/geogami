@@ -149,6 +149,7 @@
                 translate) : ""}}
               </ion-label>
             </ion-item>
+            
           </ion-card-header>
         </ion-card>
         <ion-buttons *ngIf="this.userId == game.user || userRole=='contentAdmin'" class="game-actions">
@@ -158,9 +159,18 @@
           >
             <ion-icon name="create-outline"></ion-icon>
           </ion-button>
+
+
+          <ion-button
+            title="Copy game"
+            (click)="copyGame(game)"
+          >
+            <ion-icon name="copy-outline"></ion-icon>
+          </ion-button>
         </ion-buttons>
       </div>
     </div>
+
     
   </ng-container>
 
