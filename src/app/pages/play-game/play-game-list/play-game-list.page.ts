@@ -577,7 +577,12 @@ export class PlayGameListPage implements OnInit {
     try {
       const res = await this.gamesService.postGame(fullGame);
       if (res.status == 201) {
-        this.getGamesData();
+        this.gamesService.getGames(true, this.userRole != "unloggedUser")
+          .then((r) => r.content)
+          .then((games) => {
+            this.games_res = games;
+            this.filterGamesEnv(this.gameEnvSelected);
+          });
       }
     } catch (e) {
       const errorAlert = await this.alertController.create({
