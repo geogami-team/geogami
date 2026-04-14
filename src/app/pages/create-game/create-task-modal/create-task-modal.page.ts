@@ -137,13 +137,9 @@ export class CreateTaskModalPage implements OnInit {
   //* Get virtual environment layers
   virEnvLayers = virEnvLayers;
   
-  // handle adding selected objects to exclusion list
+  // handle adding/exclusion selected objects to exclusion list
   onObjectExclusion(event: any) {
-    const selectedValue = event.detail.value as string[];
-    // Find the newly added item(s)
-    const newlySelected = selectedValue.filter(x => !this.excludedObjectsNames.includes(x));
-    // Add new ones to main list
-    this.excludedObjectsNames.push(...newlySelected);
+    this.excludedObjectsNames = event.detail.value as string[];
   }
 
   constructor(
@@ -841,8 +837,8 @@ export class CreateTaskModalPage implements OnInit {
     }
 
     // include excluded objects from virtual environment in task data
-    if (this.isVirtualWorld && this.excludedObjectsNames?.length>0) {
-      this.task.excludedObjectsNames = this.excludedObjectsNames;
+    if (this.isVirtualWorld) {
+      this.task.excludedObjectsNames = this.excludedObjectsNames?.length > 0 ? this.excludedObjectsNames : [];
     }
 
     /* multi-player */
