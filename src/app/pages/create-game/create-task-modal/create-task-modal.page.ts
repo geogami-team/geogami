@@ -39,7 +39,8 @@ export class CreateTaskModalPage implements OnInit {
   @Input() virEnvType: string;
   @Input() excludedObjectsNames: string[] = [];  //* list of excluded objects from virtual environment
   
-  
+  visibleObjectsNames: string[] = [];  //* UI binding: all objects minus excluded ones
+
   // VE building
   public isVEBuilding = false;
   @Input() selectedFloor;  // task floor
@@ -137,13 +138,11 @@ export class CreateTaskModalPage implements OnInit {
   //* Get virtual environment layers
   virEnvLayers = virEnvLayers;
   
-  // handle adding selected objects to exclusion list
+  // handle adding/exclusion selected objects to exclusion list
   onObjectExclusion(event: any) {
-    const selectedValue = event.detail.value as string[];
-    // Find the newly added item(s)
-    const newlySelected = selectedValue.filter(x => !this.excludedObjectsNames.includes(x));
-    // Add new ones to main list
-    this.excludedObjectsNames.push(...newlySelected);
+    this.visibleObjectsNames = event.detail.value as string[];
+    const allObjects: string[] = this.virEnvLayers[this.virEnvType]?.objectsList ?? [];
+    this.excludedObjectsNames = allObjects.filter(o => !this.visibleObjectsNames.includes(o));
   }
 
   constructor(
@@ -264,6 +263,10 @@ export class CreateTaskModalPage implements OnInit {
 
       // set default value of excluded objects from virtual environment (for not stored ones/when editing a task)
       this.excludedObjectsNames = this.excludedObjectsNames ?? [];
+
+      // initialize visible objects: all objects minus any already-excluded ones
+      const allObjects: string[] = this.virEnvLayers[this.virEnvType]?.objectsList ?? [];
+      this.visibleObjectsNames = allObjects.filter(o => !this.excludedObjectsNames.includes(o));
     }
 
     // Translation
@@ -841,8 +844,8 @@ export class CreateTaskModalPage implements OnInit {
     }
 
     // include excluded objects from virtual environment in task data
-    if (this.isVirtualWorld && this.excludedObjectsNames?.length>0) {
-      this.task.excludedObjectsNames = this.excludedObjectsNames;
+    if (this.isVirtualWorld) {
+      this.task.excludedObjectsNames = this.excludedObjectsNames?.length > 0 ? this.excludedObjectsNames : [];
     }
 
     /* multi-player */

@@ -544,6 +544,56 @@ export class PlayGameListPage implements OnInit {
     }
   }
 
+  // Copy game
+  async copyGame(game: any) {
+    const alert = await this.alertController.create({
+      header: 'Copy Game',
+      inputs: [
+        {
+          name: 'gameName',
+          type: 'text',
+          value: `Copy of ${game.name}`,
+          placeholder: 'New game name',
+        },
+      ],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        { text: 'Copy', role: 'confirm' },
+      ],
+    });
+    await alert.present();
+
+    const { data, role } = await alert.onDidDismiss();
+    if (role !== 'confirm') return;
+
+    const newName = data?.values?.gameName?.trim();
+    if (!newName) return;
+
+    const fullGame = (await this.gamesService.getGame(game._id))?.content;
+    if (!fullGame) return;
+
+    fullGame.name = newName;
+
+    try {
+      const res = await this.gamesService.postGame(fullGame);
+      if (res.status == 201) {
+        this.gamesService.getGames(true, this.userRole != "unloggedUser")
+          .then((r) => r.content)
+          .then((games) => {
+            this.games_res = games;
+            this.filterGamesEnv(this.gameEnvSelected);
+          });
+      }
+    } catch (e) {
+      const errorAlert = await this.alertController.create({
+        header: 'Error',
+        message: 'A game with this name already exists. Please choose a different name.',
+        buttons: ['OK'],
+      });
+      await errorAlert.present();
+    }
+  }
+
   // Edit game
   async EditGame(gameID: string) {
     let bundle = {

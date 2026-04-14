@@ -482,15 +482,15 @@
       </select>
     </ion-item>
 
-    <!-- Select objects to hide from virtual world -->
+    <!-- Select objects to show in virtual world (all selected = all visible) -->
     <ion-item *ngIf="virEnvLayers[this.virEnvType].objectsList" lines="none">
-      <ion-label>Select landmark to exclude from virtual world</ion-label>
+      <ion-label>Select landmarks to show</ion-label>
       <ion-select
         multiple="true"
         interface="popover"
         (ionChange)="onObjectExclusion($event)"
         placeholder="Choose"
-        [(ngModel)]="excludedObjectsNames"
+        [(ngModel)]="visibleObjectsNames"
       >
         <ion-select-option
           *ngFor="let prefab of virEnvLayers[this.virEnvType].objectsList"
