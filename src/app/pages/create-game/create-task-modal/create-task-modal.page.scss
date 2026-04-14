@@ -68,3 +68,10 @@ ion-range::part(.range-has-pin){
 ion-label{
   min-width: fit-content;
 }
+
+ion-select {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  padding: 4px 8px;
+  border: 1px solid #bcbcc5;
+}
