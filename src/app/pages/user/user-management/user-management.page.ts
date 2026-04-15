@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { AlertController, ToastController } from "@ionic/angular";
+import { AlertController, ModalController, ToastController } from "@ionic/angular";
+import { UserDetailsModalComponent } from "./user-details-modal/user-details-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "src/app/services/auth-service.service";
 import { MatTableDataSource } from "@angular/material/table";
@@ -32,8 +33,20 @@ export class UserManagementPage implements OnInit {
     private authService: AuthService,
     public _translate: TranslateService,
     public toastController: ToastController,
-    public alertController: AlertController
+    public alertController: AlertController,
+    public modalController: ModalController
   ) {}
+
+  // Open a modal with the user's profile and (lazily-loaded) created games.
+  async openUserDetails(user: any) {
+    if (!user || !user._id) return;
+    const modal = await this.modalController.create({
+      component: UserDetailsModalComponent,
+      componentProps: { user },
+      cssClass: "user-details-modal",
+    });
+    await modal.present();
+  }
 
   ngAfterViewInit() {
     if (this.dataSource) {

@@ -1,0 +1,29 @@
+.state-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  color: var(--ion-color-medium);
+}
+
+.state-row.error {
+  color: var(--ion-color-danger);
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+}
+
+.meta {
+  font-size: 0.8rem;
+  color: var(--ion-color-medium);
+}
+
+.hidden-tag {
+  color: var(--ion-color-warning);
+}
+
+ion-chip {
+  margin: 0 0.25rem 0.25rem 0;
+}

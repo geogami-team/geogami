@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { UserManagementPage } from './user-management.page';
+import { UserDetailsModalComponent } from './user-details-modal/user-details-modal.component';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { MaterialModule } from '../../../material.module';
@@ -28,6 +29,6 @@ const routes: Routes = [
     TranslateModule,
     MaterialModule,
   ],
-  declarations: [UserManagementPage]
+  declarations: [UserManagementPage, UserDetailsModalComponent]
 })
 export class UserManagementPageModule { }

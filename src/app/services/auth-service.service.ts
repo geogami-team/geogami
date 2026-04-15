@@ -303,6 +303,15 @@ export class AuthService {
       .toPromise();
   }
 
+  // admin: list games created by a specific user (with track counts)
+  getGamesByUserId(userId: string): Promise<any> {
+    return this.http
+      .get(`${environment.apiURL}/user/user/${userId}/games`, {
+        headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
   // admin: trigger a password-reset email for a user
   triggerPasswordReset(userId: string): Promise<any> {
     return this.http
