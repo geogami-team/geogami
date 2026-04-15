@@ -18,6 +18,7 @@ export class UserManagementPage implements OnInit {
     "#",
     "username",
     "email",
+    "emailConfirmed",
     "createdAt",
     "roles",
     "action",
@@ -167,6 +168,68 @@ export class UserManagementPage implements OnInit {
         }
       })
       .catch(() => this.showToast("Could not delete user."));
+  }
+
+  // Admin: resend the email-verification link to the user.
+  async resendVerification(user: any) {
+    if (!user || !user._id) return;
+    if (user.emailIsConfirmed) {
+      this.showToast("This user's email is already confirmed.");
+      return;
+    }
+    const alert = await this.alertController.create({
+      header: "Resend verification email?",
+      message: `Send a new verification link to <strong>${user.email}</strong>?`,
+      buttons: [
+        { text: "Cancel", role: "cancel" },
+        {
+          text: "Send",
+          handler: () => {
+            this.authService
+              .resendVerificationEmail(user._id)
+              .then((res) => {
+                if (res && res.status === 200) {
+                  this.showToast("Verification email sent.");
+                } else {
+                  this.showToast("Could not send verification email.");
+                }
+              })
+              .catch(() => this.showToast("Could not send verification email."));
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  // Admin: trigger a password-reset email (user gets a verification code by mail).
+  async triggerPasswordReset(user: any) {
+    if (!user || !user._id) return;
+    const alert = await this.alertController.create({
+      header: "Send password reset?",
+      message:
+        `Send a password-reset email to <strong>${user.email}</strong>?<br/><br/>` +
+        `The user will receive a verification code they can use to set a new password.`,
+      buttons: [
+        { text: "Cancel", role: "cancel" },
+        {
+          text: "Send",
+          handler: () => {
+            this.authService
+              .triggerPasswordReset(user._id)
+              .then((res) => {
+                if (res && res.status === 200) {
+                  this.showToast("Password reset email sent.");
+                } else {
+                  this.showToast("Could not send password reset email.");
+                }
+              })
+              .catch(() => this.showToast("Could not send password reset email."));
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   // show feedback after updating user role
