@@ -281,6 +281,7 @@ export class AuthService {
       })
       .toPromise();
   }
+
   // delete user by id (admin)
   deleteUserById(userId: string): Promise<any> {
     return this.http
