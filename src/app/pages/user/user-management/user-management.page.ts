@@ -26,6 +26,12 @@ export class UserManagementPage implements OnInit {
   ];
   dataSource: MatTableDataSource<any>;
 
+  // Advanced filter state. Keyed by the mat-select values in the template.
+  filterRole: "all" | "admin" | "contentAdmin" | "trackAccess" | "scholar" | "user" = "all";
+  filterVerified: "all" | "yes" | "no" = "all";
+  // Held so the text search can be combined with role/verified filters.
+  private textFilter = "";
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -66,27 +72,67 @@ export class UserManagementPage implements OnInit {
   initializeDataSource(usersData) {
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(usersData);
-    // console.log("this.dataSource: ", this.dataSource);
+    // Custom predicate so the single mat-table filter string can encode the
+    // text search + role + verified state as a single JSON blob. Keeps us on
+    // client-side filtering without reimplementing the table datasource.
+    this.dataSource.filterPredicate = (row: any, filter: string) => {
+      let f: { text: string; role: string; verified: string };
+      try {
+        f = JSON.parse(filter);
+      } catch {
+        f = { text: filter || "", role: "all", verified: "all" };
+      }
+      const text = (f.text || "").trim().toLowerCase();
+      if (text) {
+        const hay = `${row.username || ""} ${row.email || ""}`.toLowerCase();
+        if (!hay.includes(text)) return false;
+      }
+      if (f.role && f.role !== "all") {
+        if (!Array.isArray(row.roles) || !row.roles.includes(f.role)) return false;
+      }
+      if (f.verified === "yes" && !row.emailIsConfirmed) return false;
+      if (f.verified === "no" && row.emailIsConfirmed) return false;
+      return true;
+    };
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.applyAdvancedFilters();
   }
 
-  // update user role
-  async changeRole(roleValue, userEmail) {
-    if (userEmail != undefined) {
-      // console.log("userEmail1: ", userEmail);
-      // console.log("roleValue1: ", roleValue);
-
-      // update user role and change save icon color to blue
-      this.users.find((user) => {
-        if (user.email == userEmail) {
-          user.roleIsUpdated = true;
-          user.roles = [roleValue];
-          // console.log("user: ", user);
-          return user;
-        }
-      });
+  applyAdvancedFilters() {
+    if (!this.dataSource) return;
+    this.dataSource.filter = JSON.stringify({
+      text: this.textFilter,
+      role: this.filterRole,
+      verified: this.filterVerified,
+    });
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
+  }
+
+  resetFilters(input?: HTMLInputElement) {
+    this.filterRole = "all";
+    this.filterVerified = "all";
+    this.textFilter = "";
+    if (input) input.value = "";
+    this.applyAdvancedFilters();
+  }
+
+  // Single-role selector. We still store roles as an array in the DB (the
+  // Mongoose schema defines it that way), but the admin only assigns one
+  // primary role from the UI. Legacy users that were saved with multiple
+  // roles get collapsed to the newly-selected single role on next save —
+  // until then their original roles remain intact.
+  async changeRole(roleValue: string, userEmail: string) {
+    if (!userEmail || !roleValue) return;
+    this.users.find((user) => {
+      if (user.email === userEmail) {
+        user.roleIsUpdated = true;
+        user.roles = [roleValue];
+        return user;
+      }
+    });
   }
 
   // save updated role
@@ -256,13 +302,9 @@ export class UserManagementPage implements OnInit {
     toast.present();
   }
 
-  // material table filter
+  // material table filter — text box only; combines with role/verified filters.
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    this.textFilter = (event.target as HTMLInputElement).value || "";
+    this.applyAdvancedFilters();
   }
 }

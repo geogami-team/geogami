@@ -11,10 +11,37 @@
 
   <h3>List of registered users</h3>
 
-  <mat-form-field appearance="standard" >
-    <mat-label>Filter</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Jan" #input>
-  </mat-form-field>
+  <div class="filters-row">
+    <mat-form-field appearance="standard" class="filter-search">
+      <mat-label>Search name / email</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Jan" #input>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard" class="filter-compact">
+      <mat-label>Role</mat-label>
+      <mat-select [(value)]="filterRole" (selectionChange)="applyAdvancedFilters()">
+        <mat-option value="all">All roles</mat-option>
+        <mat-option value="admin">admin</mat-option>
+        <mat-option value="contentAdmin">content admin</mat-option>
+        <mat-option value="trackAccess">track access</mat-option>
+        <mat-option value="scholar">scholar</mat-option>
+        <mat-option value="user">user</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard" class="filter-compact">
+      <mat-label>Verified</mat-label>
+      <mat-select [(value)]="filterVerified" (selectionChange)="applyAdvancedFilters()">
+        <mat-option value="all">All</mat-option>
+        <mat-option value="yes">Verified</mat-option>
+        <mat-option value="no">Unverified</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-stroked-button type="button" (click)="resetFilters(input)" class="filter-reset">
+      Reset
+    </button>
+  </div>
 
 <!--   <ion-searchbar (ionChange)="applyFilter($event)" placeholder="Filter" #input></ion-searchbar>   -->
 
@@ -69,15 +96,28 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
         <td mat-cell *matCellDef="let row; let i = index">
           <ion-list>
-            <ion-select interface="popover" value="{{ row.roles[0]}}"
+            <!--
+              Single role selector. `row.roles` remains an array in the DB
+              (the Mongoose schema enforces that), but admins edit a single
+              primary role here. For legacy users with multiple roles we pick
+              the first one so the dropdown always has a defined value.
+            -->
+            <ion-select
+              interface="popover"
+              [value]="row.roles && row.roles[0]"
               (ionChange)="changeRole($event.detail.value, row.email)"
               [ngStyle]="{ 'background-color' : i%2 ? '#ecebeb' : ''}">
               <ion-select-option value="admin">admin</ion-select-option>
               <ion-select-option value="contentAdmin">content admin</ion-select-option>
+              <ion-select-option value="trackAccess">track access</ion-select-option>
               <ion-select-option value="scholar">scholar</ion-select-option>
               <ion-select-option value="user">user</ion-select-option>
             </ion-select>
           </ion-list>
+          <!-- Subtle hint if legacy data stored more than one role. -->
+          <small *ngIf="row.roles && row.roles.length > 1" class="legacy-roles-hint">
+            was: {{ row.roles.join(', ') }}
+          </small>
         </td>
       </ng-container>
 

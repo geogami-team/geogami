@@ -39,3 +39,54 @@ ion-col {
     padding-left: 0rem;
     padding-right: 0rem;
   }
+
+  .legacy-roles-hint {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--ion-color-medium);
+    padding-left: 0.75rem;
+  }
+
+  .filters-row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+    width: 100%;
+
+    .filter-search {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .filter-compact {
+      flex: 0 0 140px;
+    }
+    .filter-reset {
+      flex: 0 0 auto;
+      height: 36px;
+      align-self: center;
+    }
+  }
+
+  // Phone: search + reset on row 1; role & verified dropdowns on row 2.
+  // CSS order resequences because reset is last in the DOM but needs to
+  // sit next to the search field on small screens.
+  @media (max-width: 640px) {
+    .filters-row {
+      flex-wrap: wrap;
+
+      .filter-search {
+        flex: 1 1 0;
+        min-width: 40%;
+        order: 1;
+      }
+      .filter-reset {
+        order: 2;
+        flex: 0 0 auto;
+      }
+      .filter-compact {
+        order: 3;
+        flex: 1 1 45%;
+      }
+    }
+  }
