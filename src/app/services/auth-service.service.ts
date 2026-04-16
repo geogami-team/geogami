@@ -281,4 +281,55 @@ export class AuthService {
       })
       .toPromise();
   }
+
+  // delete user by id (admin)
+  deleteUserById(userId: string): Promise<any> {
+    return this.http
+      .delete(`${environment.apiURL}/user/user/${userId}`, {
+        headers: this.createHeaders(),
+        observe: "response",
+      })
+      .toPromise();
+  }
+
+  // admin: resend email-verification link to a user
+  resendVerificationEmail(userId: string): Promise<any> {
+    return this.http
+      .post(
+        `${environment.apiURL}/user/user/${userId}/resend-verification`,
+        {},
+        { headers: this.createHeaders(), observe: "response" }
+      )
+      .toPromise();
+  }
+
+  // admin: list games created by a specific user (with track counts)
+  getGamesByUserId(userId: string): Promise<any> {
+    return this.http
+      .get(`${environment.apiURL}/user/user/${userId}/games`, {
+        headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
+  // admin: create a new user
+  createUser(data: { username: string; email: string; password: string }): Promise<any> {
+    return this.http
+      .post(`${environment.apiURL}/user/user`, data, {
+        headers: this.createHeaders(),
+        observe: "response",
+      })
+      .toPromise();
+  }
+
+  // admin: trigger a password-reset email for a user
+  triggerPasswordReset(userId: string): Promise<any> {
+    return this.http
+      .post(
+        `${environment.apiURL}/user/user/${userId}/trigger-password-reset`,
+        {},
+        { headers: this.createHeaders(), observe: "response" }
+      )
+      .toPromise();
+  }
 }

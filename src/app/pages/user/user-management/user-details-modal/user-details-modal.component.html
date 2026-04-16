@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>User details</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment [value]="selectedTab" (ionChange)="onTabChange($any($event.detail.value))">
+      <ion-segment-button value="profile">
+        <ion-label>Profile</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="games">
+        <ion-label>Games created</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Profile tab -->
+  <div *ngIf="selectedTab === 'profile'" class="profile-tab">
+    <ion-list lines="full">
+      <ion-item>
+        <ion-label>
+          <h3>Username</h3>
+          <p>{{ user?.username || '—' }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <h3>Name</h3>
+          <p>{{ user?.name || '—' }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <h3>Email</h3>
+          <p>{{ user?.email }}</p>
+        </ion-label>
+        <ion-icon
+          slot="end"
+          [name]="user?.emailIsConfirmed ? 'checkmark-circle' : 'close-circle'"
+          [color]="user?.emailIsConfirmed ? 'success' : 'medium'"
+          [title]="user?.emailIsConfirmed ? 'Email confirmed' : 'Email not confirmed'">
+        </ion-icon>
+      </ion-item>
+
+      <ion-item *ngIf="user?.unconfirmedEmail">
+        <ion-label>
+          <h3>Pending email change</h3>
+          <p>{{ user.unconfirmedEmail }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <h3>Roles</h3>
+          <p>
+            <ion-chip *ngFor="let r of (user?.roles || [])" color="primary" outline="true">
+              <ion-label>{{ r }}</ion-label>
+            </ion-chip>
+          </p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <h3>Language</h3>
+          <p>{{ user?.language || '—' }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <h3>Created at</h3>
+          <p>{{ user?.createdAt ? user.createdAt.slice(0,10) : '—' }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label>
+          <h3>User ID</h3>
+          <p class="mono">{{ user?._id }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- Games tab -->
+  <div *ngIf="selectedTab === 'games'" class="games-tab">
+    <div *ngIf="gamesLoading" class="state-row">
+      <ion-spinner></ion-spinner>
+      <span>Loading games…</span>
+    </div>
+
+    <div *ngIf="!gamesLoading && gamesError" class="state-row error">
+      {{ gamesError }}
+    </div>
+
+    <div *ngIf="!gamesLoading && !gamesError && gamesLoaded && games.length === 0" class="state-row">
+      This user has not created any games.
+    </div>
+
+    <ion-list *ngIf="!gamesLoading && games.length > 0" lines="full">
+      <ion-item *ngFor="let g of games">
+        <ion-label>
+          <h3>{{ g.name }}</h3>
+          <p>
+            <ion-icon name="location-outline"></ion-icon>
+            {{ g.place || 'No place' }}
+            &middot;
+            <ion-icon name="analytics-outline"></ion-icon>
+            {{ g.tracksCount }} track{{ g.tracksCount === 1 ? '' : 's' }}
+            <span *ngIf="g.isMultiplayerGame"> &middot; Multiplayer</span>
+            <span *ngIf="g.isVRWorld"> &middot; VR ({{ g.virEnvType }})</span>
+            <span *ngIf="g.isVisible === false" class="hidden-tag"> &middot; Hidden</span>
+          </p>
+          <p class="meta">Created: {{ g.createdAt ? g.createdAt.slice(0,10) : '—' }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
