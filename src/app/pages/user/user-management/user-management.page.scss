@@ -1,6 +1,32 @@
-ion-col {
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    h3 { margin: 0; }
+  }
+
+  .bulk-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+    background: var(--ion-color-light, #f4f5f8);
+    border-radius: 6px;
+
+    > span {
+      font-weight: 500;
+      margin-right: 0.25rem;
+    }
+  }
+
+  ion-col {
     text-align: start;
-  
+
     > ion-buttons ,ion-button, ion-icon{
       padding: 0rem;
       margin: 0rem;

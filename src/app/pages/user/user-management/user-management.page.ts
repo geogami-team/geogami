@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
+import { SelectionModel } from "@angular/cdk/collections";
 import { AlertController, ModalController, ToastController } from "@ionic/angular";
 import { UserDetailsModalComponent } from "./user-details-modal/user-details-modal.component";
 import { TranslateService } from "@ngx-translate/core";
@@ -16,6 +17,7 @@ export class UserManagementPage implements OnInit {
   users: any; // To hold users info
 
   displayedColumns: string[] = [
+    "select",
     "#",
     "username",
     "email",
@@ -25,6 +27,7 @@ export class UserManagementPage implements OnInit {
     "action",
   ];
   dataSource: MatTableDataSource<any>;
+  selection = new SelectionModel<any>(true, []);
 
   // Advanced filter state. Keyed by the mat-select values in the template.
   filterRole: "all" | "admin" | "contentAdmin" | "trackAccess" | "scholar" | "user" = "all";
@@ -306,5 +309,177 @@ export class UserManagementPage implements OnInit {
   applyFilter(event: Event) {
     this.textFilter = (event.target as HTMLInputElement).value || "";
     this.applyAdvancedFilters();
+  }
+
+  // ── Selection helpers ──────────────────────────────────────────────
+  // Whether every *visible* (filtered) row is selected.
+  isAllSelected(): boolean {
+    const filtered = this.dataSource?.filteredData || [];
+    return filtered.length > 0 && filtered.every((row) => this.selection.isSelected(row));
+  }
+
+  // Toggle all visible rows on/off.
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      (this.dataSource?.filteredData || []).forEach((row) => this.selection.select(row));
+    }
+  }
+
+  // ── Bulk actions ───────────────────────────────────────────────────
+
+  // Bulk delete: confirm once, then delete all selected users sequentially.
+  async bulkDelete() {
+    const selected = this.selection.selected;
+    if (!selected.length) return;
+
+    const currentUser = this.authService.getUserValue();
+    const safe = selected.filter((u) => !(currentUser && (currentUser as any)._id === u._id));
+    if (safe.length < selected.length) {
+      this.showToast("Your own account was excluded from the selection.");
+    }
+    if (!safe.length) return;
+
+    const alert = await this.alertController.create({
+      header: `Delete ${safe.length} user${safe.length > 1 ? "s" : ""}?`,
+      message: `This will permanently delete the selected users. This cannot be undone.`,
+      buttons: [
+        { text: "Cancel", role: "cancel" },
+        {
+          text: "Delete all",
+          role: "destructive",
+          cssClass: "alert-button-danger",
+          handler: () => {
+            this.performBulkDelete(safe);
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  private async performBulkDelete(usersToDelete: any[]) {
+    let deleted = 0;
+    for (const u of usersToDelete) {
+      try {
+        const res = await this.authService.deleteUserById(u._id);
+        if (res && (res.status === 200 || res.status === 204)) {
+          this.users = this.users.filter((x) => x._id !== u._id);
+          deleted++;
+        }
+      } catch {}
+    }
+    this.selection.clear();
+    this.initializeDataSource(this.users);
+    this.showToast(`${deleted} of ${usersToDelete.length} user(s) deleted.`);
+  }
+
+  // Bulk role change: set one role for all selected users.
+  async bulkChangeRole() {
+    const selected = this.selection.selected;
+    if (!selected.length) return;
+
+    const alert = await this.alertController.create({
+      header: `Set role for ${selected.length} user${selected.length > 1 ? "s" : ""}`,
+      inputs: [
+        { type: "radio", label: "admin", value: "admin" },
+        { type: "radio", label: "content admin", value: "contentAdmin" },
+        { type: "radio", label: "track access", value: "trackAccess" },
+        { type: "radio", label: "scholar", value: "scholar" },
+        { type: "radio", label: "user", value: "user", checked: true },
+      ],
+      buttons: [
+        { text: "Cancel", role: "cancel" },
+        {
+          text: "Apply",
+          handler: (role: string) => {
+            if (!role) return false;
+            this.performBulkRoleChange(selected, role);
+            return true;
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  private async performBulkRoleChange(users: any[], role: string) {
+    let updated = 0;
+    for (const u of users) {
+      u.roles = [role];
+      try {
+        const res = await this.authService.updateUserRole(u);
+        if (res && res.status === 200) {
+          u.roleIsUpdated = false;
+          updated++;
+        }
+      } catch {}
+    }
+    this.selection.clear();
+    this.initializeDataSource(this.users);
+    this.showToast(`${updated} of ${users.length} user(s) updated to "${role}".`);
+  }
+
+  // ── Create / invite user ──────────────────────────────────────────
+
+  async createUser() {
+    const alert = await this.alertController.create({
+      header: "Create new user",
+      inputs: [
+        { name: "username", type: "text", placeholder: "Username (min 4 chars)" },
+        { name: "email", type: "email", placeholder: "Email" },
+        {
+          name: "password",
+          type: "password",
+          placeholder: "Temporary password (min 8 chars)",
+        },
+      ],
+      buttons: [
+        { text: "Cancel", role: "cancel" },
+        {
+          text: "Create",
+          handler: (data) => {
+            if (!data.username || data.username.length < 4) {
+              this.showToast("Username must be at least 4 characters.");
+              return false;
+            }
+            if (!data.email || !data.email.includes("@")) {
+              this.showToast("Please enter a valid email.");
+              return false;
+            }
+            if (!data.password || data.password.length < 8) {
+              this.showToast("Password must be at least 8 characters.");
+              return false;
+            }
+            this.performCreateUser(data);
+            return true;
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  private performCreateUser(data: { username: string; email: string; password: string }) {
+    this.authService
+      .createUser(data)
+      .then((res) => {
+        if (res && res.status === 200) {
+          // Re-fetch all users so the new user's server-generated fields
+          // (_id, createdAt, roles default, etc.) are fully available.
+          this.authService.GetUsers().then((all) => {
+            this.users = all.map((obj) => ({ ...obj, roleIsUpdated: false }));
+            this.initializeDataSource(this.users);
+          });
+          this.showToast(`User "${data.username}" created.`);
+        } else {
+          this.showToast("Could not create user.");
+        }
+      })
+      .catch((err) => {
+        const msg = err?.error?.message || err?.error?.error?.message || "Could not create user.";
+        this.showToast(msg);
+      });
   }
 }

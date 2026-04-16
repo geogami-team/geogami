@@ -312,6 +312,16 @@ export class AuthService {
       .toPromise();
   }
 
+  // admin: create a new user
+  createUser(data: { username: string; email: string; password: string }): Promise<any> {
+    return this.http
+      .post(`${environment.apiURL}/user/user`, data, {
+        headers: this.createHeaders(),
+        observe: "response",
+      })
+      .toPromise();
+  }
+
   // admin: trigger a password-reset email for a user
   triggerPasswordReset(userId: string): Promise<any> {
     return this.http
