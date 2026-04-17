@@ -31,6 +31,8 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
   @Input() isVirtualWorld: boolean;
   @Input() isVRMirrored: boolean;
   @Input() virEnvType: string;
+  @Input() excludedObjectsNames: string[] = [];  //* list of excluded objects from virtual environment
+  visibleObjectsNames: string[] = [];  //* UI binding: all objects minus excluded ones
   initialAvatarPositionStatus = false;
   @Input() isSingleMode: boolean;
 
@@ -113,7 +115,21 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
           this.initialFloor = "Select floor";
         }
       }
+
+      // set default value of excluded objects from virtual environment (for not stored ones/when editing a task)
+      this.excludedObjectsNames = this.excludedObjectsNames ?? [];
+
+      // initialize visible objects: all objects minus any already-excluded ones
+      const allObjects: string[] = this.virEnvLayers[this.virEnvType]?.objectsList ?? [];
+      this.visibleObjectsNames = allObjects.filter(o => !this.excludedObjectsNames.includes(o));
     }
+  }
+
+  // handle adding/exclusion selected objects to exclusion list
+  onObjectExclusion(event: any) {
+    this.visibleObjectsNames = event.detail.value as string[];
+    const allObjects: string[] = this.virEnvLayers[this.virEnvType]?.objectsList ?? [];
+    this.excludedObjectsNames = allObjects.filter(o => !this.visibleObjectsNames.includes(o));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -165,6 +181,11 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
       this.task.isVEBuilding = this.isVEBuilding;
       this.task.floor = this.selectedFloor;
       this.task.initialFloor = this.initialFloor!="Select floor"?this.initialFloor:undefined;
+    }
+
+    // include excluded objects from virtual environment in task data
+    if (this.isVirtualWorld) {
+      this.task.excludedObjectsNames = this.excludedObjectsNames?.length > 0 ? this.excludedObjectsNames : [];
     }
   }
 
