@@ -227,6 +227,25 @@
       </select>
     </ion-item>
 
+    <!-- Select objects to show in virtual world (all selected = all visible) -->
+    <ion-item *ngIf="virEnvLayers[this.virEnvType].objectsList" lines="none">
+      <ion-label>Select landmarks to show</ion-label>
+      <ion-select
+        multiple="true"
+        interface="popover"
+        (ionChange)="onObjectExclusion($event)"
+        placeholder="Choose"
+        [(ngModel)]="visibleObjectsNames"
+      >
+        <ion-select-option
+          *ngFor="let prefab of virEnvLayers[this.virEnvType].objectsList"
+          [value]="prefab"
+        >
+          {{ prefab }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
     <ion-item-divider></ion-item-divider>
   </div>
 
