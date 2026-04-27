@@ -126,6 +126,14 @@ const routes: Routes = [
         (m) => m.ResetPasswordPageModule
       ),
   },
+  {
+    path: "user/verify-email",
+    loadChildren: () =>
+      import("./pages/user/verify-email/verify-email.module").then(
+        (m) => m.VerifyEmailPageModule
+      ),
+    canActivate: [AuthGuard],
+  },
   // older stuff
   // { path: 'map-swipe', loadChildren: './map-swipe/map-swipe.module#MapSwipePageModule' },
   {
