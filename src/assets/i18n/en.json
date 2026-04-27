@@ -95,21 +95,21 @@
     "players": "players",
     "tasks": "tasks",
     "task": "task",
-    "gameEnv":"Game environment",
-    "gameEnv_info":"Choose between playing GeoGami outside (real world) or indoor (virtual environment)",
-    "gameMode":"Game Mode",
-    "gameMode_info":"Choose between playing GeoGami indivisually or with a group. Minium number of players of a mutliplayer mode is 2",
-    "singlePlayer":"Single player",
-    "multiplayer":"Multiplayer",
+    "gameEnv": "Game environment",
+    "gameEnv_info": "Choose between playing GeoGami outside (real world) or indoor (virtual environment)",
+    "gameMode": "Game Mode",
+    "gameMode_info": "Choose between playing GeoGami indivisually or with a group. Minium number of players of a mutliplayer mode is 2",
+    "singlePlayer": "Single player",
+    "multiplayer": "Multiplayer",
     "loginToAccess": " (login to have access)"
   },
   "CreateTasks": {
     "combineTasks": "List of created tasks:",
     "information": "Information",
     "chooseComponents": "Choose from the following components:",
-    "taskFloor":"Task floor",
-    "chooseTaskFloor":"Choose task floor",
-    "chooseInitialFloor":"Choose initial floor"
+    "taskFloor": "Task floor",
+    "chooseTaskFloor": "Choose task floor",
+    "chooseInitialFloor": "Choose initial floor"
   },
   "SaveGame": {
     "titleSaveGame": "Save your GeoGami",
@@ -125,7 +125,7 @@
     "gameSaved": "Your game has been saved!",
     "setCuratedGame": "Set as a curated game",
     "enterValidGameName": "Please enter a valid game name.",
-    "disableShareDataConsent":"Disable share data consent",
+    "disableShareDataConsent": "Disable share data consent",
     "skipTaskPin": "Navigation PIN (optional)",
     "skipTaskPinPlaceholder": "4-digit PIN to skip tasks"
   },
@@ -150,8 +150,8 @@
     "update": "Update",
     "notNow": "Not Now",
     "games": "Games",
-    "scanCode":"Scan Code",
-    "scanCode_desc":"Scan game qr-code provided by instructor."
+    "scanCode": "Scan Code",
+    "scanCode_desc": "Scan game qr-code provided by instructor."
   },
   "AnalyzeGame": {
     "title": "Analyze your GeoGami",
@@ -203,13 +203,13 @@
     "photoDirection": "Photo of the direction to be searched for",
     "photoTask": "Photo for the task",
     "correctAnswer": "The correct answer:",
-    "selectGameType":"Select game type",
-    "setAvatarPosition":"Set avatar initial position and direction",
+    "selectGameType": "Select game type",
+    "setAvatarPosition": "Set avatar initial position and direction",
     "virEnvSettings": "Virtual world settings",
-    "avatarSpeed":"Avatar speed",
-    "disableAvatarRotation":"Disable avatar rotation",
-    "showEnvSettings":"Show environment settings",
-    "showEnvPathVisualization":"Show path visualization "
+    "avatarSpeed": "Avatar speed",
+    "disableAvatarRotation": "Disable avatar rotation",
+    "showEnvSettings": "Show environment settings",
+    "showEnvPathVisualization": "Show path visualization "
   },
   "EditGame": {
     "titleEditGame": "Edit your GeoGami",
@@ -247,12 +247,12 @@
     "myGames": "My games",
     "curated": "Curated",
     "emptyGamesList": "You haven't created a game yet!",
-    "gameNotFound":"Game could not be found.",
+    "gameNotFound": "Game could not be found.",
     "deleteGame": "Delete Game",
     "deleteGameMsg": "Are you sure you want to delete this game?",
-    "useExternalVEApp":"Use external Virtual Enviroment App (WinOS/ MacOS)",
-    "enterName":"Enter your name",
-    "askPlayerToScanQRCode":"Ask players to scan the below QR code or use game link to join the game.",
+    "useExternalVEApp": "Use external Virtual Enviroment App (WinOS/ MacOS)",
+    "enterName": "Enter your name",
+    "askPlayerToScanQRCode": "Ask players to scan the below QR code or use game link to join the game.",
     "pinDialogHeader": "Enter PIN",
     "pinDialogMessage": "Enter the 4-digit PIN to navigate.",
     "pinDialogPlaceholder": "PIN",
@@ -390,5 +390,24 @@
     "alsoNextTask": "also for the next task",
     "inEntireGame": "in the entire game",
     "drawPointOnly": "Show only draw point"
+  },
+  "VerifyEmail": {
+    "title": "Verify your email",
+    "statusConfirmed": "Your email is confirmed",
+    "statusNotConfirmed": "Email not confirmed yet",
+    "pendingChangeTo": "Pending change to",
+    "intro": "We sent a verification link to your email when you registered. If you didn't get it, you can resend it below.",
+    "resend": "Resend verification email",
+    "sending": "Sending…",
+    "wait": "Wait {{seconds}}s",
+    "tipsTitle": "Didn't receive it?",
+    "tipSpam": "Check your spam or junk folder.",
+    "tipMinutes": "It can take a few minutes to arrive.",
+    "tipCorrect": "Make sure your email address is correct.",
+    "allGood": "Everything looks good. You don't need to do anything else.",
+    "backHome": "Back to home",
+    "sentToast": "Verification email sent. Check your inbox (and spam).",
+    "couldNotSend": "Could not send verification email.",
+    "pleaseWait": "Please wait before retrying."
   }
 }

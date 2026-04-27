@@ -125,7 +125,7 @@
     "gameSaved": "Seu GeoGami foi salvo!",
     "setCuratedGame": "Definir como jogo curado",
     "enterValidGameName": "Por favor, insira um nome de jogo válido.",
-    "disableShareDataConsent":"Desativar consentimento de compartilhamento de dados",
+    "disableShareDataConsent": "Desativar consentimento de compartilhamento de dados",
     "skipTaskPin": "PIN de navegação (opcional)",
     "skipTaskPinPlaceholder": "PIN de 4 dígitos para pular tarefas"
   },
@@ -289,7 +289,7 @@
     "enterVirCode": "O código de confirmação foi enviado para {{email}}. Por favor, insira o código abaixo junto com sua nova senha."
   },
   "Popover": {
-   "chooseComponent": "Toque nos campos para saber mais sobre os tipos de tarefas.",
+    "chooseComponent": "Toque nos campos para saber mais sobre os tipos de tarefas.",
     "showFeedback": "O jogador deve receber feedback sobre se a tarefa foi resolvida corretamente?",
     "gameArea": "O jogo deve ser limitado a uma área do mapa?",
     "leaveGameArea": "O jogador deve receber um aviso ao sair da área marcada?",
@@ -390,5 +390,24 @@
     "alsoNextTask": "também na próxima tarefa",
     "inEntireGame": "em todo o jogo",
     "drawPointOnly": "Mostrar apenas o ponto"
+  },
+  "VerifyEmail": {
+    "title": "Verifique seu e-mail",
+    "statusConfirmed": "Seu e-mail está confirmado",
+    "statusNotConfirmed": "E-mail ainda não confirmado",
+    "pendingChangeTo": "Alteração pendente para",
+    "intro": "Enviamos um link de verificação para seu e-mail no registro. Se não recebeu, você pode reenviá-lo abaixo.",
+    "resend": "Reenviar e-mail de verificação",
+    "sending": "Enviando…",
+    "wait": "Aguarde {{seconds}}s",
+    "tipsTitle": "Não recebeu?",
+    "tipSpam": "Verifique sua pasta de spam ou lixo eletrônico.",
+    "tipMinutes": "Pode levar alguns minutos para chegar.",
+    "tipCorrect": "Certifique-se de que seu e-mail está correto.",
+    "allGood": "Tudo certo. Você não precisa fazer mais nada.",
+    "backHome": "Voltar ao início",
+    "sentToast": "E-mail de verificação enviado. Veja sua caixa (e spam).",
+    "couldNotSend": "Não foi possível enviar o e-mail de verificação.",
+    "pleaseWait": "Aguarde antes de tentar novamente."
   }
 }

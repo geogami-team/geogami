@@ -95,21 +95,21 @@
     "players": "Spieler",
     "tasks": "Aufgaben",
     "task": "Aufgabe",
-    "gameEnv":"Spielumgebung",
-    "gameEnv_info":"Wähle ob Sie GeoGami draußen (Realraum) oder drinnen (virtuelle Umgebung) spielen möchten.",
-    "gameMode":"Spielemodus",
-    "gameMode_info":"Wählen ob Sie GeoGami einzeln oder in einer Gruppe spielen möchten. Die Mindestanzahl an Spielern im Mehrspielermodus beträgt 2.",
-    "singlePlayer":"Einzelspieler",
-    "multiplayer":"Mehrspieler",
+    "gameEnv": "Spielumgebung",
+    "gameEnv_info": "Wähle ob Sie GeoGami draußen (Realraum) oder drinnen (virtuelle Umgebung) spielen möchten.",
+    "gameMode": "Spielemodus",
+    "gameMode_info": "Wählen ob Sie GeoGami einzeln oder in einer Gruppe spielen möchten. Die Mindestanzahl an Spielern im Mehrspielermodus beträgt 2.",
+    "singlePlayer": "Einzelspieler",
+    "multiplayer": "Mehrspieler",
     "loginToAccess": " (einloggen, um Zugang zu haben)"
   },
   "CreateTasks": {
     "combineTasks": "Liste der erstellten Aufgaben:",
     "information": "Information",
     "chooseComponents": "Wähle aus folgenden Bausteinen:",
-    "taskFloor":"Aufgabenetage",
-    "chooseTaskFloor":"Wähle eine Aufgabenetage",
-    "chooseInitialFloor":"Wähle das Anfangsgeschoss"
+    "taskFloor": "Aufgabenetage",
+    "chooseTaskFloor": "Wähle eine Aufgabenetage",
+    "chooseInitialFloor": "Wähle das Anfangsgeschoss"
   },
   "SaveGame": {
     "titleSaveGame": "Speichere dein GeoGami",
@@ -125,7 +125,7 @@
     "gameSaved": "Dein GeoGami wurde gespeichert!",
     "setCuratedGame": "Als kuratiertes Spiel einstellen",
     "enterValidGameName": "Bitte geben Sie einen gültigen Spielname ein.",
-    "disableShareDataConsent":"Einwilligung zur Datenweitergabe deaktivieren",
+    "disableShareDataConsent": "Einwilligung zur Datenweitergabe deaktivieren",
     "skipTaskPin": "Navigations-PIN (optional)",
     "skipTaskPinPlaceholder": "4-stellige PIN zum Überspringen von Aufgaben"
   },
@@ -150,8 +150,8 @@
     "update": "Aktualisieren",
     "notNow": "Nicht Jetzt",
     "games": "Spiele",
-    "scanCode":"Code Scannen",
-    "scanCode_desc":"Scanne den vom Kursleiter bereitgestellten QR-Code des Spiels."
+    "scanCode": "Code Scannen",
+    "scanCode_desc": "Scanne den vom Kursleiter bereitgestellten QR-Code des Spiels."
   },
   "AnalyzeGame": {
     "title": "Analysiere dein GeoGami",
@@ -203,13 +203,13 @@
     "photoDirection": "Foto der zu suchenden Richtung",
     "photoTask": "Foto zur Aufgabe",
     "correctAnswer": "Die korrekte Anwort:",
-    "selectGameType":"Spieltyp auswählen",
-    "setAvatarPosition":"Anfangsposition und Richtung des Avatars festlegen",
+    "selectGameType": "Spieltyp auswählen",
+    "setAvatarPosition": "Anfangsposition und Richtung des Avatars festlegen",
     "virEnvSettings": "Einstellungen der virtuellen Welt",
-    "avatarSpeed":"Avatar-Geschwindigkeit",
-    "disableAvatarRotation":"Avatar-Rotation deaktivieren",
-    "showEnvSettings":"Umgebungseinstellungen anzeigen",
-    "showEnvPathVisualization":"Pfadvisualisierung anzeigen"
+    "avatarSpeed": "Avatar-Geschwindigkeit",
+    "disableAvatarRotation": "Avatar-Rotation deaktivieren",
+    "showEnvSettings": "Umgebungseinstellungen anzeigen",
+    "showEnvPathVisualization": "Pfadvisualisierung anzeigen"
   },
   "EditGame": {
     "titleEditGame": "Bearbeite dein GeoGami",
@@ -247,12 +247,12 @@
     "myGames": "Meine Spiele",
     "curated": "Kuratiert",
     "emptyGamesList": "Du hast noch kein Spiel erstellt!",
-    "gameNotFound":"Das Spiel konnte nicht gefunden werden.",
+    "gameNotFound": "Das Spiel konnte nicht gefunden werden.",
     "deleteGame": "Spiel löschen",
     "deleteGameMsg": "Bist du sicher, dass du dieses Spiel löschen möchtest?",
-    "useExternalVEApp":"Externe Virtual Environment App verwenden (WinOS/MacOS)",
-    "enterName":"Gib deinen Namen ein",
-    "askPlayerToScanQRCode":"Bitte die Spieler, den untenstehenden QR-Code zu scannen oder den Spiellink zu verwenden, um am Spiel teilzunehmen.",
+    "useExternalVEApp": "Externe Virtual Environment App verwenden (WinOS/MacOS)",
+    "enterName": "Gib deinen Namen ein",
+    "askPlayerToScanQRCode": "Bitte die Spieler, den untenstehenden QR-Code zu scannen oder den Spiellink zu verwenden, um am Spiel teilzunehmen.",
     "pinDialogHeader": "PIN eingeben",
     "pinDialogMessage": "Gib die 4-stellige PIN ein, um zu navigieren.",
     "pinDialogPlaceholder": "PIN",
@@ -390,5 +390,24 @@
     "alsoNextTask": "auch bei der nächsten Aufgabe",
     "inEntireGame": "im gesamten Spiel",
     "drawPointOnly": "Nur punkt anzeigen "
+  },
+  "VerifyEmail": {
+    "title": "E-Mail verifizieren",
+    "statusConfirmed": "Deine E-Mail-Adresse ist bestätigt",
+    "statusNotConfirmed": "E-Mail noch nicht bestätigt",
+    "pendingChangeTo": "Ausstehende Änderung zu",
+    "intro": "Wir haben dir bei der Registrierung einen Bestätigungslink gesendet. Falls du ihn nicht erhalten hast, kannst du ihn unten erneut senden.",
+    "resend": "Bestätigungs-E-Mail erneut senden",
+    "sending": "Wird gesendet…",
+    "wait": "Warte {{seconds}}s",
+    "tipsTitle": "Nicht erhalten?",
+    "tipSpam": "Prüfe deinen Spam- oder Junk-Ordner.",
+    "tipMinutes": "Es kann einige Minuten dauern, bis sie ankommt.",
+    "tipCorrect": "Stelle sicher, dass deine E-Mail-Adresse korrekt ist.",
+    "allGood": "Alles in Ordnung. Du musst nichts weiter tun.",
+    "backHome": "Zurück zur Startseite",
+    "sentToast": "Bestätigungs-E-Mail gesendet. Prüfe dein Postfach (und Spam).",
+    "couldNotSend": "Bestätigungs-E-Mail konnte nicht gesendet werden.",
+    "pleaseWait": "Bitte warte kurz, bevor du es erneut versuchst."
   }
 }

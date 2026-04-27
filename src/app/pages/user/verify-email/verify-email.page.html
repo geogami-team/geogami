@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button color="dark" defaultHref="/" text="{{ 'General.back_button' | translate }}"></ion-back-button>
     </ion-buttons>
-    <ion-title>Verify your email</ion-title>
+    <ion-title>{{ 'VerifyEmail.title' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -16,45 +16,42 @@
         size="large">
       </ion-icon>
       <div>
-        <h2 *ngIf="user?.emailIsConfirmed">Your email is confirmed</h2>
-        <h2 *ngIf="!user?.emailIsConfirmed">Email not confirmed yet</h2>
+        <h2 *ngIf="user?.emailIsConfirmed">{{ 'VerifyEmail.statusConfirmed' | translate }}</h2>
+        <h2 *ngIf="!user?.emailIsConfirmed">{{ 'VerifyEmail.statusNotConfirmed' | translate }}</h2>
         <p class="email-line">{{ user?.email }}</p>
         <p *ngIf="user?.unconfirmedEmail && user?.unconfirmedEmail !== user?.email" class="hint">
-          Pending change to: <strong>{{ user.unconfirmedEmail }}</strong>
+          {{ 'VerifyEmail.pendingChangeTo' | translate }}: <strong>{{ user.unconfirmedEmail }}</strong>
         </p>
       </div>
     </div>
 
     <ng-container *ngIf="!user?.emailIsConfirmed">
-      <p>
-        We sent a verification link to your email when you registered.
-        If you didn't get it, you can resend it below or change your email address.
-      </p>
+      <p>{{ 'VerifyEmail.intro' | translate }}</p>
 
       <ion-button
         expand="block"
         (click)="resendVerification()"
         [disabled]="resending || cooldownSeconds > 0">
         <ion-icon name="mail-outline" slot="start"></ion-icon>
-        <span *ngIf="cooldownSeconds === 0 && !resending">Resend verification email</span>
-        <span *ngIf="resending">Sending…</span>
-        <span *ngIf="cooldownSeconds > 0">Wait {{ cooldownSeconds }}s</span>
+        <span *ngIf="cooldownSeconds === 0 && !resending">{{ 'VerifyEmail.resend' | translate }}</span>
+        <span *ngIf="resending">{{ 'VerifyEmail.sending' | translate }}</span>
+        <span *ngIf="cooldownSeconds > 0">{{ 'VerifyEmail.wait' | translate:{ seconds: cooldownSeconds } }}</span>
       </ion-button>
 
       <div class="tips">
-        <h4>Didn't receive it?</h4>
+        <h4>{{ 'VerifyEmail.tipsTitle' | translate }}</h4>
         <ul>
-          <li>Check your spam or junk folder.</li>
-          <li>It can take a few minutes to arrive.</li>
-          <li>Make sure your email address is correct.</li>
+          <li>{{ 'VerifyEmail.tipSpam' | translate }}</li>
+          <li>{{ 'VerifyEmail.tipMinutes' | translate }}</li>
+          <li>{{ 'VerifyEmail.tipCorrect' | translate }}</li>
         </ul>
       </div>
     </ng-container>
 
     <ng-container *ngIf="user?.emailIsConfirmed">
-      <p>Everything looks good. You don't need to do anything else.</p>
+      <p>{{ 'VerifyEmail.allGood' | translate }}</p>
       <ion-button expand="block" routerLink="/">
-        Back to home
+        {{ 'VerifyEmail.backHome' | translate }}
       </ion-button>
     </ng-container>
   </div>

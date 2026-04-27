@@ -95,21 +95,21 @@
     "players": "لاعبون",
     "tasks": "مهام",
     "task": "مهمة",
-    "gameEnv":"بيئة اللعبة",
-    "gameEnv_info":"اختر بين لعب GeoGami في الخارج (العالم الحقيقي) أو في الداخل (بيئة افتراضية)",
-    "gameMode":"وضع اللعبة",
-    "gameMode_info":"اختر بين لعب GeoGami بشكل فردي أو جماعي. الحد الأدنى لعدد اللاعبين في وضع اللاعبين المتعددين هو 2",
-    "singlePlayer":"لاعب واحد",
-    "multiplayer":"لاعبون متعددون",
+    "gameEnv": "بيئة اللعبة",
+    "gameEnv_info": "اختر بين لعب GeoGami في الخارج (العالم الحقيقي) أو في الداخل (بيئة افتراضية)",
+    "gameMode": "وضع اللعبة",
+    "gameMode_info": "اختر بين لعب GeoGami بشكل فردي أو جماعي. الحد الأدنى لعدد اللاعبين في وضع اللاعبين المتعددين هو 2",
+    "singlePlayer": "لاعب واحد",
+    "multiplayer": "لاعبون متعددون",
     "loginToAccess": " (سجل الدخول للوصول)"
   },
   "CreateTasks": {
     "combineTasks": "قائمة المهام التي تم إنشاؤها:",
     "information": "معلومات",
     "chooseComponents": "اختر من المكونات التالية:",
-    "taskFloor":"طابق المهمة",
-    "chooseTaskFloor":"اختر طابق المهمة",
-    "chooseInitialFloor":"اختر الطابق الأولي"
+    "taskFloor": "طابق المهمة",
+    "chooseTaskFloor": "اختر طابق المهمة",
+    "chooseInitialFloor": "اختر الطابق الأولي"
   },
   "SaveGame": {
     "titleSaveGame": "احفظ GeoGami الخاص بك",
@@ -125,7 +125,7 @@
     "gameSaved": "تم حفظ لعبتك!",
     "setCuratedGame": "تعيين كلعبة مختارة",
     "enterValidGameName": "يرجى إدخال اسم لعبة صالح.",
-    "disableShareDataConsent":"تعطيل الموافقة على مشاركة البيانات",
+    "disableShareDataConsent": "تعطيل الموافقة على مشاركة البيانات",
     "skipTaskPin": "ادخل كلمة السر لتخطي المهام (اختياري)",
     "navigationPinPlaceholder": "رمز PIN مكون من 4 أرقام لتخطي المهام"
   },
@@ -150,8 +150,8 @@
     "update": "تحديث",
     "notNow": "ليس الآن",
     "games": "ألعاب",
-    "scanCode":"مسح الكود",
-    "scanCode_desc":"امسح رمز QR الخاص باللعبة الذي قدمه المعلم."
+    "scanCode": "مسح الكود",
+    "scanCode_desc": "امسح رمز QR الخاص باللعبة الذي قدمه المعلم."
   },
   "AnalyzeGame": {
     "title": "حلل GeoGami الخاص بك",
@@ -203,13 +203,13 @@
     "photoDirection": "صورة الاتجاه المطلوب البحث عنه",
     "photoTask": "صورة للمهمة",
     "correctAnswer": "الإجابة الصحيحة:",
-    "selectGameType":"اختر نوع اللعبة",
-    "setAvatarPosition":"حدد موقع واتجاه البداية للشخصية",
+    "selectGameType": "اختر نوع اللعبة",
+    "setAvatarPosition": "حدد موقع واتجاه البداية للشخصية",
     "virEnvSettings": "إعدادات العالم الافتراضي",
-    "avatarSpeed":"سرعة الشخصية",
-    "disableAvatarRotation":"تعطيل دوران الشخصية",
-    "showEnvSettings":"عرض إعدادات البيئة",
-    "showEnvPathVisualization":"عرض تصور المسار "
+    "avatarSpeed": "سرعة الشخصية",
+    "disableAvatarRotation": "تعطيل دوران الشخصية",
+    "showEnvSettings": "عرض إعدادات البيئة",
+    "showEnvPathVisualization": "عرض تصور المسار "
   },
   "EditGame": {
     "titleEditGame": "عدل GeoGami الخاص بك",
@@ -247,12 +247,12 @@
     "myGames": "ألعابي",
     "curated": "مختارة",
     "emptyGamesList": "لم تقم بإنشاء أي لعبة بعد!",
-    "gameNotFound":"تعذر العثور على اللعبة.",
+    "gameNotFound": "تعذر العثور على اللعبة.",
     "deleteGame": "حذف اللعبة",
     "deleteGameMsg": "هل أنت متأكد أنك تريد حذف هذه اللعبة؟",
-    "useExternalVEApp":"استخدم تطبيق البيئة الافتراضية الخارجي (ويندوز/ماك)",
-    "enterName":"أدخل اسمك",
-    "askPlayerToScanQRCode":"اطلب من اللاعبين مسح رمز QR أدناه أو استخدام رابط اللعبة للانضمام.",
+    "useExternalVEApp": "استخدم تطبيق البيئة الافتراضية الخارجي (ويندوز/ماك)",
+    "enterName": "أدخل اسمك",
+    "askPlayerToScanQRCode": "اطلب من اللاعبين مسح رمز QR أدناه أو استخدام رابط اللعبة للانضمام.",
     "pinDialogHeader": "أدخل رمز PIN",
     "pinDialogMessage": "أدخل رمز PIN المكون من 4 أرقام للتنقل.",
     "pinDialogPlaceholder": "PIN",
@@ -390,5 +390,24 @@
     "alsoNextTask": "أيضاً للمهمة التالية",
     "inEntireGame": "في كامل اللعبة",
     "drawPointOnly": "عرض النقطة المرسومة فقط"
+  },
+  "VerifyEmail": {
+    "title": "تأكيد البريد الإلكتروني",
+    "statusConfirmed": "تم تأكيد بريدك الإلكتروني",
+    "statusNotConfirmed": "البريد الإلكتروني لم يتم تأكيده بعد",
+    "pendingChangeTo": "تغيير معلق إلى",
+    "intro": "أرسلنا لك رابط تأكيد إلى بريدك الإلكتروني عند التسجيل. إذا لم تستلمه، يمكنك إعادة إرساله أدناه.",
+    "resend": "إعادة إرسال بريد التأكيد",
+    "sending": "جارٍ الإرسال…",
+    "wait": "انتظر {{seconds}} ثانية",
+    "tipsTitle": "لم تستلمه؟",
+    "tipSpam": "تحقق من مجلد البريد العشوائي.",
+    "tipMinutes": "قد يستغرق وصوله بضع دقائق.",
+    "tipCorrect": "تأكد من أن عنوان بريدك الإلكتروني صحيح.",
+    "allGood": "كل شيء على ما يرام. لا تحتاج إلى فعل أي شيء آخر.",
+    "backHome": "العودة إلى الرئيسية",
+    "sentToast": "تم إرسال بريد التأكيد. تحقق من صندوق الوارد (والبريد العشوائي).",
+    "couldNotSend": "تعذر إرسال بريد التأكيد.",
+    "pleaseWait": "يرجى الانتظار قبل المحاولة مرة أخرى."
   }
 }
