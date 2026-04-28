@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color="dark" defaultHref="/" text="{{ 'General.back_button' | translate }}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'VerifyEmail.title' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="verify-card">
+    <div class="status-row">
+      <ion-icon
+        [name]="user?.emailIsConfirmed ? 'checkmark-circle' : 'alert-circle'"
+        [color]="user?.emailIsConfirmed ? 'success' : 'warning'"
+        size="large">
+      </ion-icon>
+      <div>
+        <h2 *ngIf="user?.emailIsConfirmed">{{ 'VerifyEmail.statusConfirmed' | translate }}</h2>
+        <h2 *ngIf="!user?.emailIsConfirmed">{{ 'VerifyEmail.statusNotConfirmed' | translate }}</h2>
+        <p class="email-line">{{ user?.email }}</p>
+        <p *ngIf="user?.unconfirmedEmail && user?.unconfirmedEmail !== user?.email" class="hint">
+          {{ 'VerifyEmail.pendingChangeTo' | translate }}: <strong>{{ user.unconfirmedEmail }}</strong>
+        </p>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!user?.emailIsConfirmed">
+      <p>{{ 'VerifyEmail.intro' | translate }}</p>
+
+      <ion-button
+        expand="block"
+        (click)="resendVerification()"
+        [disabled]="resending || cooldownSeconds > 0">
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        <span *ngIf="cooldownSeconds === 0 && !resending">{{ 'VerifyEmail.resend' | translate }}</span>
+        <span *ngIf="resending">{{ 'VerifyEmail.sending' | translate }}</span>
+        <span *ngIf="cooldownSeconds > 0">{{ 'VerifyEmail.wait' | translate:{ seconds: cooldownSeconds } }}</span>
+      </ion-button>
+
+      <div class="tips">
+        <h4>{{ 'VerifyEmail.tipsTitle' | translate }}</h4>
+        <ul>
+          <li>{{ 'VerifyEmail.tipSpam' | translate }}</li>
+          <li>{{ 'VerifyEmail.tipMinutes' | translate }}</li>
+          <li>{{ 'VerifyEmail.tipCorrect' | translate }}</li>
+        </ul>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="user?.emailIsConfirmed">
+      <p>{{ 'VerifyEmail.allGood' | translate }}</p>
+      <ion-button expand="block" routerLink="/">
+        {{ 'VerifyEmail.backHome' | translate }}
+      </ion-button>
+    </ng-container>
+  </div>
+</ion-content>

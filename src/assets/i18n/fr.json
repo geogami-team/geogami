@@ -95,21 +95,21 @@
     "players": "joueurs",
     "tasks": "tâches",
     "task": "tâche",
-    "gameEnv":"Environnement de jeu",
-    "gameEnv_info":"Choisissez entre jouer à GeoGami à l'extérieur (monde réel) ou en intérieur (environnement virtuel)",
-    "gameMode":"Mode de jeu",
-    "gameMode_info":"Choisissez entre jouer à GeoGami individuellement ou en groupe. Le nombre minimum de joueurs en mode multijoueur est de 2",
-    "singlePlayer":"Joueur seul",
-    "multiplayer":"Multijoueur",
+    "gameEnv": "Environnement de jeu",
+    "gameEnv_info": "Choisissez entre jouer à GeoGami à l'extérieur (monde réel) ou en intérieur (environnement virtuel)",
+    "gameMode": "Mode de jeu",
+    "gameMode_info": "Choisissez entre jouer à GeoGami individuellement ou en groupe. Le nombre minimum de joueurs en mode multijoueur est de 2",
+    "singlePlayer": "Joueur seul",
+    "multiplayer": "Multijoueur",
     "loginToAccess": " (connectez-vous pour avoir accès)"
   },
   "CreateTasks": {
     "combineTasks": "Liste des tâches créées :",
     "information": "Information",
     "chooseComponents": "Choisissez parmi les composants suivants :",
-    "taskFloor":"Étage de la tâche",
-    "chooseTaskFloor":"Choisissez l'étage de la tâche",
-    "chooseInitialFloor":"Choisissez l'étage initial"
+    "taskFloor": "Étage de la tâche",
+    "chooseTaskFloor": "Choisissez l'étage de la tâche",
+    "chooseInitialFloor": "Choisissez l'étage initial"
   },
   "SaveGame": {
     "titleSaveGame": "Enregistrez votre jeu GeoGami",
@@ -125,7 +125,7 @@
     "gameSaved": "Votre jeu a été enregistré !",
     "setCuratedGame": "Définir comme jeu sélectionné",
     "enterValidGameName": "Veuillez entrer un nom de jeu valide.",
-    "disableShareDataConsent":"Désactiver le consentement de partage des données",
+    "disableShareDataConsent": "Désactiver le consentement de partage des données",
     "skipTaskPin": "PIN de navigation (optionnel)",
     "skipTaskPinPlaceholder": "PIN à 4 chiffres pour passer les tâches"
   },
@@ -150,8 +150,8 @@
     "update": "Mettre à jour",
     "notNow": "Pas maintenant",
     "games": "Jeux",
-    "scanCode":"Scanner le code",
-    "scanCode_desc":"Scannez le QR code du jeu fourni par l'instructeur."
+    "scanCode": "Scanner le code",
+    "scanCode_desc": "Scannez le QR code du jeu fourni par l'instructeur."
   },
   "AnalyzeGame": {
     "title": "Analysez votre GeoGami",
@@ -203,13 +203,13 @@
     "photoDirection": "Photo de la direction à rechercher",
     "photoTask": "Photo pour la tâche",
     "correctAnswer": "La bonne réponse :",
-    "selectGameType":"Sélectionnez le type de jeu",
-    "setAvatarPosition":"Définir la position et la direction initiales de l'avatar",
+    "selectGameType": "Sélectionnez le type de jeu",
+    "setAvatarPosition": "Définir la position et la direction initiales de l'avatar",
     "virEnvSettings": "Paramètres du monde virtuel",
-    "avatarSpeed":"Vitesse de l'avatar",
-    "disableAvatarRotation":"Désactiver la rotation de l'avatar",
-    "showEnvSettings":"Afficher les paramètres de l'environnement",
-    "showEnvPathVisualization":"Afficher la visualisation du chemin "
+    "avatarSpeed": "Vitesse de l'avatar",
+    "disableAvatarRotation": "Désactiver la rotation de l'avatar",
+    "showEnvSettings": "Afficher les paramètres de l'environnement",
+    "showEnvPathVisualization": "Afficher la visualisation du chemin "
   },
   "EditGame": {
     "titleEditGame": "Modifiez votre jeu GeoGami",
@@ -247,12 +247,12 @@
     "myGames": "Mes jeux",
     "curated": "Sélectionnés",
     "emptyGamesList": "Vous n'avez pas encore créé de jeu !",
-    "gameNotFound":"Le jeu n'a pas pu être trouvé.",
+    "gameNotFound": "Le jeu n'a pas pu être trouvé.",
     "deleteGame": "Supprimer le jeu",
     "deleteGameMsg": "Êtes-vous sûr de vouloir supprimer ce jeu ?",
-    "useExternalVEApp":"Utiliser l'application d'environnement virtuel externe (WinOS/MacOS)",
-    "enterName":"Entrez votre nom",
-    "askPlayerToScanQRCode":"Demandez aux joueurs de scanner le QR code ci-dessous ou d'utiliser le lien du jeu pour rejoindre la partie.",
+    "useExternalVEApp": "Utiliser l'application d'environnement virtuel externe (WinOS/MacOS)",
+    "enterName": "Entrez votre nom",
+    "askPlayerToScanQRCode": "Demandez aux joueurs de scanner le QR code ci-dessous ou d'utiliser le lien du jeu pour rejoindre la partie.",
     "pinDialogHeader": "Entrer le PIN",
     "pinDialogMessage": "Entrez le PIN à 4 chiffres pour naviguer.",
     "pinDialogPlaceholder": "PIN",
@@ -390,5 +390,24 @@
     "alsoNextTask": "aussi pour la tâche suivante",
     "inEntireGame": "dans tout le jeu",
     "drawPointOnly": "Afficher uniquement le point dessiné"
+  },
+  "VerifyEmail": {
+    "title": "Vérifier votre e-mail",
+    "statusConfirmed": "Votre e-mail est confirmé",
+    "statusNotConfirmed": "E-mail pas encore confirmé",
+    "pendingChangeTo": "Changement en attente vers",
+    "intro": "Nous avons envoyé un lien de vérification à votre e-mail lors de l'inscription. Si vous ne l'avez pas reçu, vous pouvez le renvoyer ci-dessous.",
+    "resend": "Renvoyer l'e-mail de vérification",
+    "sending": "Envoi…",
+    "wait": "Attendez {{seconds}}s",
+    "tipsTitle": "Vous ne l'avez pas reçu ?",
+    "tipSpam": "Vérifiez votre dossier spam ou indésirables.",
+    "tipMinutes": "Cela peut prendre quelques minutes.",
+    "tipCorrect": "Assurez-vous que votre adresse e-mail est correcte.",
+    "allGood": "Tout est en ordre. Vous n'avez rien à faire.",
+    "backHome": "Retour à l'accueil",
+    "sentToast": "E-mail de vérification envoyé. Vérifiez votre boîte (et les spams).",
+    "couldNotSend": "Impossible d'envoyer l'e-mail de vérification.",
+    "pleaseWait": "Veuillez patienter avant de réessayer."
   }
 }

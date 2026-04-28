@@ -144,7 +144,14 @@ export class AuthService {
         window.localStorage.setItem('bg_refreshtoken', res.refreshToken);
         this.loading$.next(false);
         this.setLoginPageOpen(false);
-        this.router.navigate(['/']);
+        // If the email isn't confirmed yet, send the user to the verify-email
+        // page instead of the home page. They are still authenticated so the
+        // page can call resend/change-mail endpoints.
+        if (res.needsEmailVerification) {
+          this.router.navigate(['/user/verify-email']);
+        } else {
+          this.router.navigate(['/']);
+        }
       },
       (err) => {
         this.errorMessage$.next(err.error.message);
@@ -289,6 +296,29 @@ export class AuthService {
         headers: this.createHeaders(),
         observe: "response",
       })
+      .toPromise();
+  }
+
+  // self-serve: change email (and trigger a new verification email).
+  // Uses the existing /user/change-mail endpoint.
+  changeMyEmail(newEmail: string): Promise<any> {
+    return this.http
+      .post(
+        `${environment.apiURL}/user/change-mail`,
+        { mail: newEmail },
+        { headers: this.createHeaders(), observe: "response" }
+      )
+      .toPromise();
+  }
+
+  // self-serve: resend verification email for the currently logged-in user
+  resendMyVerificationEmail(): Promise<any> {
+    return this.http
+      .post(
+        `${environment.apiURL}/user/resend-verification`,
+        {},
+        { headers: this.createHeaders(), observe: "response" }
+      )
       .toPromise();
   }
 
