@@ -37,6 +37,8 @@ This repository contains the **front-end client** — an Angular + Ionic applica
 - [Building for mobile (iOS / Android)](#building-for-mobile-ios--android)
 - [Internationalisation](#internationalisation)
 - [Contributing](#contributing)
+- [Map Features and Task Types in GeoGami](#map-features-and-task-types-in-geogami)
+- [Contact](#contact)
 - [License](#license)
 
 ---
