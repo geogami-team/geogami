@@ -1,138 +1,261 @@
-![](https://geogami.ifgi.de/pictures/logo/icon.png)
+<p align="center">
+  <img src=https://github.com/origami-team/geogami/blob/master/src/assets/icons/icon.png width="80" alt="GeoGami logo"/>
+</p>
 
-# GeoGami
+<h1 align="center">GeoGami UI</h1>
 
-<!-- [![Netlify Status](https://api.netlify.com/api/v1/badges/cdc7d43f-3125-4477-bbcb-8138671c61b7/deploy-status)](https://app.netlify.com/sites/origami-4/deploys) -->
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5384903.svg)](https://doi.org/10.5281/zenodo.5384903)
+<p align="center">
+  Cross-platform mobile and web client for the <strong>GeoGami</strong> location-based game platform.
+</p>
 
+<p align="center">
+  <a href="https://doi.org/10.5281/zenodo.5384903"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5384903.svg" alt="DOI"/></a>
+  <img src="https://img.shields.io/badge/Angular-12-DD0031?logo=angular" alt="Angular 12"/>
+  <img src="https://img.shields.io/badge/Ionic-6-3880FF?logo=ionic" alt="Ionic 6"/>
+  <img src="https://img.shields.io/badge/Capacitor-iOS%20%7C%20Android-119EFF?logo=ionic" alt="Capacitor"/>
+</p>
 
-GeoGami is a location-based game that allows the user to play and create map-based games - for any place in the world. GeoGami is intended for users to improve and develop their spatial intelligence by improving their orientation skills and cognition. It is created by the Spatial Intelligence Lab (SIL) of the Institute for Geoinformatics, University of Münster.
+GeoGami is a location-based game built by the **Spatial Intelligence Lab (SIL)** at the Institute for Geoinformatics, University of Münster. The app lets users **play and create map-based games** in the real world or in a virtual environment, with the goal of training and studying spatial cognition.
 
-For more information on **GeoGami** and our **research** visit the [Website](https://geogami.ifgi.de). It's available in both English and German.
+This repository contains the **front-end client** — an Angular + Ionic application that runs as a web app, an iOS app, and an Android app from a single codebase.
 
-## Table of Contents
+> Looking for the other components?
+> - **Backend API**: [`../geogami-server`](https://github.com/geogami-team/origami-backend)
+> - **Analytics dashboard**: [`../geogami-dashboard`](https://github.com/geogami-team/geogami-dashboard)
+> - **Virtual environment**: [`../geogami-virtual-environment-dev`](https://github.com/geogami-team/geogami-virtual-environment-dev)
 
-* [Installation Guide](#installation-guide)
-* [How to Play a GeoGame](#how-to-play-a-geogame)
-* [How to Create  a GeoGame](#how-to-create-a-geogame)
-* [Map Features and Task Types in GeoGami](#map-features-and-task-types-in-geogami)
+---
 
-## Installation Guide
+## Table of contents
 
-GeoGami runs on both iOS and Android devices with a compass sensor and a GPS or GSM module. The app is still under development and it would be helpful if you all contribute by reporting bugs and functional limitations here: [issues](https://github.com/origami-team/origami/issues).
+- [Tech stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Getting started](#getting-started)
+- [Configuration](#configuration)
+- [Available scripts](#available-scripts)
+- [Project structure](#project-structure)
+- [Building for mobile (iOS / Android)](#building-for-mobile-ios--android)
+- [Internationalisation](#internationalisation)
+- [Contributing](#contributing)
+- [License](#license)
 
-***You can install GeoGami***...
+---
 
-1. **on your iOS device:** [Visit App Store](https://apps.apple.com/app/geogami/id1614864078).
-2. **on your Android device:** [Visit Google Play Store](https://play.google.com/store/apps/details?id=com.ifgi.geogami).
+## Tech stack
 
-After installation, you can play the game but if you want to create a game and be part of newer version updates by registering as a user. 
-To do that, simply register using your email id and set up a strong password. With that you are ready to play.
+| Area | Technology |
+|---|---|
+| Framework | Angular 12, Ionic 6 |
+| Native shell | Capacitor 3 (iOS, Android) |
+| Maps | Leaflet, Mapbox GL |
+| State / forms | Reactive forms, RxJS |
+| UI components | Angular Material, Ionic Components |
+| i18n | `@ngx-translate/core` |
+| HTTP | Angular HttpClient (JWT bearer) |
 
-<img src = https://github.com/origami-team/geogami/blob/master/src/assets/icons/icon.png width = 100>
+## Prerequisites
 
-## How to play a GeoGame
+- **Node.js** 14.x – 16.x (Angular 12 isn't compatible with newer Node versions)
+- **npm** 6+ or **yarn** 1.x
+- **Ionic CLI**: `npm i -g @ionic/cli`
+- For mobile builds:
+  - iOS: macOS, Xcode 14+, CocoaPods
+  - Android: Android Studio with SDK 33+
 
-**Requirement:** In order to play a game in GeoGami, you need to install GeoGami to your device. You should check whether your internet connection is strong.
+## Getting started
 
-GeoGami offers many games in both Real World and Virtual World. In this video, we will see how to play a GeoGame with Real World games.Depending on your location availability you can choose the game of your choice. To play GeoGami you need a GPS-enabled smartphone or tablet with internet access and an integrated compass. For best accuracy, use a device that has a SIM card. 
+```bash
+git clone <repo-url>
+cd geogami-ui
+npm install
+ionic serve         # opens http://localhost:8100
+```
 
-If you don't like the game list, you can create a game of your own by registering as a user. 
+The dev server proxies API calls to the URL configured in `src/environments/environment.ts`.
 
-[![Watch the video](https://uni-muenster.sciebo.de/s/0pEVIrcOVUhdxcc/view)](https://uni-muenster.sciebo.de/s/zTIT6F6zQ8VExXj)
+## Configuration
 
-## How to Create a GeoGame
+Per-environment configuration lives in `src/environments/`:
 
-The GeoGami games that you can find in our games database so far have been created by the GeoGami users themselves. 
-You can create your own game for your location. Choose from different task types, add photos and audio recordings and adapt the map to your needs. 
+| File | Used when |
+|---|---|
+| `environment.ts` | `ionic serve`, dev builds |
+| `environment.prod.ts` | `ionic build --prod` |
 
-To do that you need to install GeoGami and register as a User in GeoGami. This can be done by entering your email id in the login section. After registration, login with your user credentials that you have created when registering.
+Typical values:
 
-In this video, we will see how to create a game in geogami with a single task. You can create your games with as many task types as you want.
+```ts
+export const environment = {
+  production: false,
+  apiURL: 'http://localhost:3000',         // GeoGami server
+  dashboardURL: 'http://localhost:3838',   // Shiny dashboard
+  mapboxAccessToken: '<your-mapbox-token>',// Required for Mapbox GL map rendering
 
-https://uni-muenster.sciebo.de/s/g6eXo4xB7264g08
+  // Virtual environment (only required for virtual-world games)
+  uiURL: 'http://localhost:8100',          // UI origin used by the embedded WebGL view
+  webglURL: 'http://localhost:50544'       // Unity WebGL build served locally
+};
+```
+
+## Available scripts
+
+| Command | Purpose |
+|---|---|
+| `npm start` / `ionic serve` | Run dev server with live reload |
+| `npm run build` | Build the web bundle into `www/` |
+| `npm run build-browser` | Production browser build |
+| `npm test` | Run Karma unit tests |
+| `npm run lint` | TSLint check |
+| `ionic capacitor sync ios` | Copy `www/` into the iOS Xcode project |
+| `ionic capacitor sync android` | Copy `www/` into the Android Studio project |
+
+## Project structure
+
+```
+src/app/
+├── pages/
+│   ├── play-game/           # Real-world & virtual game playback
+│   ├── create-game/         # Author new games (real + VR)
+│   ├── edit-game/           # Modify existing games
+│   ├── analyze-game/        # Track listing + dashboard launcher
+│   ├── multiplayer/         # Real-time multiplayer flows
+│   ├── user/                # Login, register, profile, verify-email,
+│   │                        # reset-password, user-management (admin)
+│   ├── showroom/            # Map / task / world demos
+│   └── handbook/            # In-app help
+├── services/                # AuthService, UtilService, …
+├── models/                  # TypeScript interfaces and shared models
+└── interceptors/            # JWT refresh handling
+```
+
+## Building for mobile (iOS / Android)
+
+```bash
+ionic capacitor build ios       # opens the Xcode project
+ionic capacitor build android   # opens Android Studio
+```
+
+The `ios/` and `android/` folders are tracked in this repo so push notifications, plugins, and signing settings stay reproducible.
+
+## Internationalisation
+
+Translation files live at `src/assets/i18n/<locale>.json`. Currently shipped: `en`, `de`, `fr`, `pt`, `ar`. Add a new key under the appropriate namespace; the UI uses Angular `| translate` pipes everywhere, including dynamic strings such as toasts.
+
+## Contributing
+
+- Branch from `dev` (PRs target `master`), open a PR, and reference an issue when applicable.
+- Please run `npm run lint` and the unit tests before pushing.
+- Bug reports and feature requests: <https://github.com/geogami-team/geogami/issues>.
+
+---
 
 ## Map Features and Task Types in GeoGami
 
-### Table of Content
+The sections below describe the gameplay primitives the UI exposes — useful both for new players and for contributors implementing changes to game authoring or playback.
 
-<!--ts-->
-   * [Task Types](#task-types) 
-      * [Navigation Tasks](#navigation-tasks)
-      * [Thematic Tasks](#thematic-tasks)
-   * [Map Features](#map-features) 
-      * [Map Settings](#map-settings)
-      * [Marker Settings](#marker-settings)
-<!--te-->
+### Task types
 
-### Task Types
+GeoGami groups task types into **Navigation tasks** and **Thematic tasks**, plus a standalone **Information** module that lets game creators give the player hints, rules, or context before play.
 
-Task types are like game types meant to access the navigation skills and abilities.
+#### Navigation tasks
 
-These are classified as : 
+> Navigation tasks direct the player to a new location.
 
-#### Navigation Tasks 
-
-| Navigation to Flag | Navigation with Arrow | Navigation via Text | Navigation via Photo |
+| Navigation to flag | Navigation with arrow | Navigation via text | Navigation via photo |
 | ------------------ | --------------------- | ------------------- | -------------------- |
-| <img src = 'https://uni-muenster.sciebo.de/s/7cZ919drVRkrXLE/download' width = 500 height = 300>| <img src = 'https://uni-muenster.sciebo.de/s/VoBTWSpHaeGxFp9/download' width = 500 height = 300 > | <img src = 'https://uni-muenster.sciebo.de/s/J4dyocs2KTtKHil/download' width = 500 height = 300 > | <img src = 'https://uni-muenster.sciebo.de/s/T1aa7BdcPk154EP/download' width = 500 height = 300 > |
 
+#### Thematic tasks
 
-#### Thematic Tasks
+> Thematic tasks are location-specific tasks that probe specific spatial skills.
 
-| Self location Task | Object location Task | Direction determination Task | Free Tasks |
-| ------------------ | -------------------- | ---------------------------- | ---------- |
-| <img src = 'https://uni-muenster.sciebo.de/s/Qe4SmAb6bYIiOWl/download' width = 600 height = 300> | <img src = 'https://uni-muenster.sciebo.de/s/SjTNDpyMb8gm4GL/download' width = 600 height = 300> | <img src = 'https://uni-muenster.sciebo.de/s/uZzsjUfKuwcR642/download' width = 550 height = 300> | <img src = 'https://uni-muenster.sciebo.de/s/dCmgeA2Z4PuI05Z/download' width = 600 height = 300> |
+| Self-location | Object location | Direction determination | Free task |
+| ------------- | --------------- | ----------------------- | --------- |
 
-Additionally we have Information type where you can explain the game in detail to the players, give instructions and rules before proceeding to play.
+#### Free tasks
 
-### Map Features
+> Free tasks let game creators freely combine question and answer types to build quizzes or custom thematic challenges.
 
-Map Features have two settings: Map settings and Marker settings.
+**Supported question types**
 
-#### Map Settings
+| Type | Description |
+| --- | --- |
+| `TEXT` | Plain text question |
+| `MAP_FEATURE` | Question referencing a map feature |
+| `MAP_FEATURE_FREE` | Free-form map-feature question |
+| `MAP_FEATURE_PHOTO` | Map-feature question with a photo |
+| `MAP_TARGET` | Question targeting a specific map location |
+| `MAP_DIRECTION` | Question about a map direction |
+| `MAP_DIRECTION_MARKER` | Direction question shown via a map marker |
+| `MAP_DIRECTION_PHOTO` | Direction question shown via a photo |
+| `NAV_INSTRUCTION` | Navigation instruction prompt |
+| `NAV_INSTRUCTION_PHOTO` | Navigation instruction shown via a photo |
+| `PHOTO` | Photo-based question |
+| `INFO` | Informational prompt (no question) |
 
-Map Settings is where you control how to project the background map.
+**Supported answer types**
 
-| Map Features  | Types   |
-| ------------- |:-------------:|
-|     `Zoom`    | manual |Zoom to the task|Zoom to the game| off |
-|`Map Section`  | movable | automatically-centered | static | |
-| `Map Rotation`| manual | automatically | automatically on-demand | fixed to north |
-| `Map Type`    | standard map| satellite image | 3D view | Blank map |
+| Type | Description |
+| --- | --- |
+| `POSITION` | Player provides their current position |
+| `MAP_POINT` | Player picks a point on the map |
+| `DIRECTION` | Player indicates a direction |
+| `MAP_DIRECTION` | Player indicates a direction on the map |
+| `PHOTO` | Player submits a photo |
+| `DRAW` | Player draws on the map |
+| `MULTIPLE_CHOICE` | Multiple-choice answer |
+| `MULTIPLE_CHOICE_TEXT` | Multiple-choice with text options |
+| `TEXT` | Free-text answer |
+| `NUMBER` | Numeric answer |
+| `INFO` | Informational acknowledgement (no answer) |
 
-With `Map Type` we have options to use the above map types with `on-demand` and `swipe` capabilities.
+### Map features
 
+Each task can be configured with a combination of **map settings** and **marker / overlay settings**.
 
-#### Marker Settings
+#### Map settings
 
-| Marker Settings |  Description |
-| ----------------| :----------------------------------:|
-| `Location Marker` | You can know where you are right now |
-| `View Direction Marker` | You can know the direction currently faced by your device |
-| `Track Recording` | Route tracing |
-| `Buffer` | shows a section of the map at the location from 20m to 100m |
-| `Highlighting Landmarks` | Highlight the landmarks which was provided in the region surrounding the destination |
-| `Highlighting Street Section` | Highlight the street section at the destination, this feature is helpful in deciding which route to take on |
+| Setting | Options |
+| --- | --- |
+| `Zoom` | manual · zoom to task · zoom to game · off |
+| `Map Section` | movable · automatically-centered · static |
+| `Map Rotation` | manual · automatic · automatic on-demand · fixed to north |
+| `Map Type` | standard · map selection · satellite · satellite on-demand · satellite swipe · 3D · 3D on-demand · blank · blank + satellite swipe |
+| `Reduced Information` | strips non-essential map details to test orientation in minimal-information settings |
+| `Switch Layer` (virtual worlds) | toggles between map material and satellite layer inside the Unity virtual environment |
 
-With `Location Marker` and `View Direction Marker` you can use on/on-demand/at the beginning of the task/off capabitilies.
-`Track Recording` can be done for the entire game/ only for the current task/ also for the next task.
+#### Marker / overlay settings
 
+| Setting | What it does | Modes |
+| --- | --- | --- |
+| `Location Marker` | Shows the player's current position | on · on-demand · at start of task · off |
+| `View Direction Marker` | Shows the device's current heading | on · on-demand · at start of task · off |
+| `Track Recording` | Records the player's route | for the entire game · for the current task · also for the next task |
+| `Buffer` | Reveals a circular section of the map around the player | configurable diameter, **20–100 m** |
+| `Highlight Landmarks` | Highlights landmarks near the destination (with optional explicit `landmarkFeatures` list) | on · off |
+| `Highlight Street Section` | Highlights the street segment at the destination | on · off |
 
+### Game environments
+
+GeoGami games can be played in two environments:
+
+- **Real world** — outdoor play using the device's GPS and compass.
+- **Virtual world** — indoor / remote play in a Unity-based 3D environment.
+
+Both environments support **single-player** and **multiplayer** modes, with the same task and map-feature catalogue.
+
+---
 
 ## Contact
 
-Spatial Intelligence Lab (SIL)
-Institute for Geoinformatics
-University of Münster
-Heisenbergstraße 2
-48149 Münster
-**Mail:** geogami(at)uni-muenster.de
+**Spatial Intelligence Lab (SIL)** — Institute for Geoinformatics, University of Münster
 
-**Team :technologist::**  https://geogami.ifgi.de/kontakt.html#team
+| | |
+| --- | --- |
+| Address | Heisenbergstraße 2, 48149 Münster |
+| Email | geogami(at)uni-muenster.de |
+| Website | <https://geogami.ifgi.de> |
+| Team | <https://geogami.ifgi.de/kontakt.html#team> |
 
 ## License
 
-MIT Copyright(C) 2021 - GeoGami.
-
-Implemented by [re:edu](https://reedu.de).
+GeoGami is published under the **MIT License**. © 2026 — GeoGami. See the root project for full attribution and citation information.
