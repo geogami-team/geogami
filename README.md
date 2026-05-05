@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=https://github.com/origami-team/geogami/blob/master/src/assets/icons/icon.png width="80" alt="GeoGami logo"/>
+  <img src=https://github.com/origami-team/geogami/blob/master/src/assets/icons/icon.png width="100" alt="GeoGami logo"/>
 </p>
 
 <h1 align="center">GeoGami UI</h1>
