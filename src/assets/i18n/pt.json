@@ -409,5 +409,162 @@
     "sentToast": "E-mail de verificação enviado. Veja sua caixa (e spam).",
     "couldNotSend": "Não foi possível enviar o e-mail de verificação.",
     "pleaseWait": "Aguarde antes de tentar novamente."
+  },
+  "Handbook": {
+    "title": "Handbook",
+    "realWorld": {
+      "sectionTitle": "Outside in the real world",
+      "playGame": {
+        "heading": "Playing a game",
+        "content": {
+          "0": "In GeoGami you can play games created by yourself or by others. To see a list of games, choose 'Games' from the main menu, or scan a QR code if you have one.",
+          "1": "Make sure 'Real world' is selected in the dropdown menu at the top, and choose between single- and multiplayer (single is the default). You can now search for your game. The map button at the bottom right lets you find games near you.",
+          "2": "Once you have selected a game, enter your player name. To play GeoGami, the app uses your current GPS position but does not store it. If you give your consent, GPS and interaction data will be stored in a GDPR-compliant way (see 'Sharing data for teaching and research') and can later be used by the game's creator for analysis."
+        }
+      },
+      "createGame": {
+        "heading": "Creating a game",
+        "content": {
+          "0": "When creating a game, you can configure all conditions and difficulties yourself and tailor them to the players. Press 'Games' in the main menu to start.",
+          "1": "A plus icon will now appear in the bottom right. Selecting it lets you create a new game. Choose 'Real world'.",
+          "2": "Now create the tasks. The individual task types and an example are explained under the 'Task types' tab."
+        }
+      },
+      "editGame": {
+        "heading": "Editing / deleting / saving a game",
+        "content": {
+          "0": "You can delete games you created if they are no longer needed. You can also edit them again if you noticed mistakes or want to change something.",
+          "1": "After logging in, go to 'My games'. Note that only games matching the current game environment and mode are shown. Click the 'Edit' icon to the right of a game.",
+          "2": "You can now edit, delete, or save the game. Editing looks the same as creating a new game and offers the same features.",
+          "3": "Press the save icon at the top right to save. Enter the game name and location. If the tasks require it, the map section can be adjusted. Now save the game permanently."
+        }
+      }
+    },
+    "taskTypes": {
+      "sectionTitle": "Task types",
+      "navigation": {
+        "heading": "Navigation tasks",
+        "content": {
+          "0": "Navigation tasks always require players to reach a specific location to solve the task. Different task types define which conditions apply and which hints and reference points players receive. Each task type is explained in more detail under 'Learn'.\nFirst, pick a task type from the list.",
+          "1": "Define the question and the destination. The more reference points there are around the flag, the easier it is to find.",
+          "2": "Optionally use the special tools (explained under 'Further settings') to fine-tune difficulty and the learning experience for your testing.\nDefine the radius that counts as successfully reaching the destination. If the radius is too small, players may solve the task correctly without it being recognised. If too large, the task may be flagged as solved when it isn't. We recommend trying out your game yourself.\nClick on Map features to set the properties of the map and the markers. These are important for setting the difficulty and shaping the task to test exactly what you want. Map and marker properties are explained in their own tab."
+        }
+      },
+      "orientation": {
+        "heading": "Orientation tasks",
+        "content": {
+          "0": "In orientation tasks, players have to locate themselves or objects, determine which direction they are looking, or solve free-form tasks. The various task types are listed under the 'Learn' tab in the main menu.\nFirst, pick a task type from the list.",
+          "1": "Depending on the task type, you'll have to specify the task further. A tab navigation will appear automatically. See the 'Learn' tab in the main menu for details.",
+          "2": "Further task-specific settings will appear automatically. The required inputs depend on the task.\nOptionally use the special tools (explained under 'Further settings') to fine-tune difficulty and the learning experience for your testing.\nClick on Map features to set the properties of the map and the markers. These are important for setting the difficulty and shaping the task. Map and marker properties are explained in their own tab."
+        }
+      },
+      "free": {
+        "heading": "Free tasks",
+        "content": {
+          "0": "Free tasks allow many possibilities, classified into single-choice tasks and question-and-answer tasks.\nIn both task types, players can answer by selecting or creating a photo or text.",
+          "1": "In single-choice tasks, exactly one answer must be correct. To still allow more answer options, feedback must be turned off."
+        }
+      },
+      "info": {
+        "heading": "Information block",
+        "content": {
+          "0": "This block is mainly used to prepare players for upcoming tasks. Here you can add explanations and special instructions for the next tasks.\nWrite an information text with the details for the upcoming tasks.\nOptionally add photos and graphics for further explanation.\nClick on Map features to set the properties of the map and the markers. Map and marker properties are explained in their own tab."
+        }
+      }
+    },
+    "virtualWorld": {
+      "sectionTitle": "Virtual world",
+      "playGame": {
+        "heading": "Playing a game",
+        "content": {
+          "0": "In GeoGami you can play games created by yourself or by others. To see a list of games, choose 'Games' from the main menu, or scan a QR code if you have one.",
+          "1": "Select 'Virtual world' from the dropdown menu and choose between single- and multiplayer (single is the default). You can now search for your game.",
+          "2": "Once you have selected a game, enter your player name. To play GeoGami, the app uses your current GPS position but does not store it. If you give your consent, GPS and interaction data will be stored in a GDPR-compliant way (see 'Sharing data for teaching and research') and can later be used by the game's creator for analysis."
+        }
+      },
+      "createGame": {
+        "heading": "Creating a VR game",
+        "content": {
+          "0": "When creating a game, you can configure all conditions and difficulties yourself and tailor them to the players. Press 'Games' in the main menu to start.",
+          "1": "A plus icon will appear in the bottom right. Selecting it lets you create a new game. Choose 'Virtual world'.",
+          "2": "Pick a virtual world. It can be changed for every new task. Think about which properties the world should have (how many streets, houses, trees, other landmarks…).",
+          "3": "Now create the tasks. The individual task types and an example are explained under the 'Task types' tab."
+        }
+      },
+      "editGame": {
+        "heading": "Editing / deleting / saving a game",
+        "content": {
+          "0": "You can delete games you created. You can also edit them if you noticed mistakes or want to change something. Curate them if you think other people would benefit from your game too.",
+          "1": "After logging in, go to 'My games'. Note that only games matching the current game environment and mode are shown. Click the 'Edit' icon to the right of a game.",
+          "2": "You can now edit, delete, or save the game. Editing looks the same as creating a new game and offers the same features.",
+          "3": "Press the save icon at the top right to save. Enter the game name and location. If the tasks require it, the map section can be adjusted. Now save the game permanently."
+        }
+      }
+    },
+    "taskTypesVR": {
+      "sectionTitle": "Task types VR",
+      "navigation": {
+        "heading": "Navigation tasks",
+        "content": {
+          "0": "Navigation tasks always require players to reach a specific location to solve the task. Different task types define which conditions apply and which hints and reference points players receive. Each task type is explained in more detail under 'Learn'.\nFirst, pick a task type from the list.",
+          "1": "Optionally set the avatar's start position and view direction. This lets you control which path players take and whether they start facing the right direction.",
+          "2": "Define the destination. The more reference points there are around the flag, the easier it is to find. Optionally use the special tools (explained under 'Further settings') to fine-tune difficulty and the learning experience for your testing.\nDefine the radius that counts as successfully reaching the destination. If the radius is too small, players may solve the task correctly without it being recognised. If too large, the task may be flagged as solved when it isn't. We recommend trying out your game yourself.\nClick on Map features to set the properties of the map and the markers. Map and marker properties are explained in their own tab."
+        }
+      },
+      "orientation": {
+        "heading": "Orientation tasks",
+        "content": {
+          "0": "First, pick a task type from the list. Depending on the task type, you'll have to specify it further. A tab navigation will appear automatically.",
+          "1": "Optionally set the avatar's start position and view direction. This lets you control which path players take and whether they start facing the right direction. This way you vary the difficulty and can test exactly what you want.",
+          "2": "Now place the task-specific targets (search area, search object, orientation) on the map and configure further settings (feedback, multiple attempts, map features)."
+        }
+      },
+      "free": {
+        "heading": "Free tasks",
+        "content": {
+          "0": "Free tasks allow many possibilities, classified into single-choice tasks and question-and-answer tasks.\nIn both task types, players can answer by selecting or creating a photo or text. Optionally the avatar and its view direction can be placed on the map.",
+          "1": "In single-choice tasks, exactly one answer must be correct. To still allow more answer options, feedback must be turned off."
+        }
+      },
+      "info": {
+        "heading": "Information block",
+        "content": {
+          "0": "This block is mainly used to prepare players for upcoming tasks. Here you can add explanations and special instructions for the next tasks.\nOptionally add photos and graphics. Write an information text with the details for the upcoming tasks.",
+          "1": "Optionally set the avatar's start position and view direction. Add photos and graphics if you wish — they can serve as further explanation.\nClick on Map features to set the properties of the map and the markers. Map and marker properties are explained in their own tab."
+        }
+      }
+    },
+    "mapFeatures": {
+      "sectionTitle": "Map features",
+      "overview": {
+        "heading": "Map features",
+        "content": {
+          "0": "Zoom: choose whether the zoom should be set to the task, to the game, by the player, or not at all.",
+          "1": "Map section: choose whether the entire map section or a specific one is always visible, or whether the map section moves along with the player and can therefore shift.",
+          "2": "Map rotation: set the orientation of the map (does the player always look up, or is north always at the top?)",
+          "3": "Position marker: the position-marker setting changes the task significantly. If turned off, players have to orient themselves only by their surroundings to decide where they are. If turned on, they can orient themselves by the marker. If turned on only at the start of the task, they can orient themselves once at the start; if on demand, they can decide themselves how often they need this hint.",
+          "4": "View-direction marker: the same notes apply as for the position marker. In addition, this marker shows not only the location but also the direction the player is facing. This feature only works if the position marker is enabled.",
+          "5": "Track recording: when you enable track recording, players can see and follow their own movement live on the map. Children enjoy 'drawing' shapes like circles or hearts on the map. Track recording only refers to visualising on the map — in the background GeoGami always records the track.",
+          "6": "Street highlighting: you can highlight the street section the player is currently on in red. Unlike the position marker, this does not reveal the exact position.",
+          "7": "Highlight landmarks: use this to point out things in the landscape that, for example, can make orientation easier."
+        }
+      }
+    },
+    "furtherSettings": {
+      "sectionTitle": "'Further settings' for tasks",
+      "settings": {
+        "heading": "Further settings",
+        "content": {
+          "0": "Depending on the task type, you can configure further settings that improve the play experience or better address the goal of the task.\nEnable or disable input confirmation: this controls whether players themselves have to confirm that they solved the task correctly.",
+          "1": "Show flag: this sets the difficulty of the task by determining whether the destination flag is visible on the map.",
+          "2": "Enable or disable feedback: this determines whether players immediately learn whether they solved the task correctly.",
+          "3": "Keep flag on the map: this determines whether the destination of this task remains visible during the next tasks.",
+          "4": "Enable multiple attempts: this determines whether players get a new chance if they solve the task incorrectly (only for thematic tasks).",
+          "5": "Accuracy: set how close to the destination players must be to be considered 'in the right place'. Due to GPS inaccuracies, do not choose too small a distance.",
+          "6": "Under Map features you can configure further settings for the position marker and for interaction with the map itself. These can be tried out under 'Learn' in the main menu.",
+          "7": "Highlight landmarks: use this to point out things in the landscape that, for example, can make orientation easier."
+        }
+      }
+    }
   }
 }
