@@ -7,18 +7,27 @@
         text="{{ 'General.back_button' | translate }}"
       ></ion-back-button>
     </ion-buttons>
-    <!-- <ion-title>{{ "Showroom.titleShowroom" | translate }}</ion-title> -->
-    <ion-title>Handbook</ion-title>
+    <ion-title>{{ "Handbook.title" | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-select
+        interface="popover"
+        [value]="languageService.selected"
+        (ionChange)="onLanguageChange($event)"
+        aria-label="Language"
+      >
+        <ion-select-option *ngFor="let lang of languages" [value]="lang.value">
+          {{ lang.text }}
+        </ion-select-option>
+      </ion-select>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="page-padding">
-    <!--------------->
-    <!-- accordion 1-->
     <ng-container *ngFor="let section of sections">
       <div>
-        <h1>{{ section.sectionTitle }}</h1>
+        <h1>{{ section.titleKey | translate }}</h1>
         <ion-accordion-group>
           <ng-container
             *ngFor="
@@ -28,19 +37,15 @@
               last as last
             "
           >
-            <ion-accordion value="{{ subsection.heading }}">
-              <!---------------------->
-              <!-- section - header -->
+            <ion-accordion value="{{ subsection.headingKey }}">
               <ion-item
-              lines="none"
+                lines="none"
                 slot="header"
                 style="border: 0.5px solid #757575"
                 [ngStyle]="{ 'border-top': first ? '0.5px solid #757575' : 'none' }"
               >
-                <ion-label>{{ subsection.heading }}</ion-label>
+                <ion-label>{{ subsection.headingKey | translate }}</ion-label>
               </ion-item>
-              <!----------------------->
-              <!-- section - content -->
               <div
                 class="ion-padding"
                 slot="content"
@@ -48,28 +53,23 @@
                 [ngStyle]="{ 'border-bottom': last ? '0.5px solid' : 'none' }"
               >
                 <ng-container *ngFor="let content of subsection.content">
-                  <!-- inner-section-content -->
                   <div>
-                    <!-- images-side -->
                     <div class="images-side">
-                      <!-- images container -->
                       <div>
                         <ng-container
                           *ngFor="let image of content.images; index as i"
                         >
-                          <!-- images-list -->
                           <div>
                             <img
                               src="{{ subsection.path }}/{{ image }}frame.jpeg"
-                              alt="Kein Bild"
+                              alt=""
                             />
                           </div>
                         </ng-container>
                       </div>
                     </div>
-                    <!-- text-side -->
                     <div class="text-side">
-                      {{ content.text }}
+                      {{ content.textKey | translate }}
                     </div>
                   </div>
                 </ng-container>
@@ -81,5 +81,3 @@
     </ng-container>
   </div>
 </ion-content>
-
-<!-- To Do: 1. remove border from middle -->
