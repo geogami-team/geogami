@@ -8,6 +8,15 @@ import { LanguageService } from "src/app/services/language.service";
 })
 export class HandbookComponent implements OnInit {
   languages = this.languageService.getLangauges();
+  // True when the page is rendered inside an iframe (e.g. embedded on a third-party site).
+  // Cross-origin access to window.top can throw SecurityError in legacy WebViews; treat that as embedded.
+  isEmbedded = (() => {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  })();
 
   sections = [
     /* Real world */

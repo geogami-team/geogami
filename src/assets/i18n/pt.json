@@ -411,158 +411,158 @@
     "pleaseWait": "Aguarde antes de tentar novamente."
   },
   "Handbook": {
-    "title": "Handbook",
+    "title": "Manual",
     "realWorld": {
-      "sectionTitle": "Outside in the real world",
+      "sectionTitle": "No mundo real, ao ar livre",
       "playGame": {
-        "heading": "Playing a game",
+        "heading": "Jogar um jogo",
         "content": {
-          "0": "In GeoGami you can play games created by yourself or by others. To see a list of games, choose 'Games' from the main menu, or scan a QR code if you have one.",
-          "1": "Make sure 'Real world' is selected in the dropdown menu at the top, and choose between single- and multiplayer (single is the default). You can now search for your game. The map button at the bottom right lets you find games near you.",
-          "2": "Once you have selected a game, enter your player name. To play GeoGami, the app uses your current GPS position but does not store it. If you give your consent, GPS and interaction data will be stored in a GDPR-compliant way (see 'Sharing data for teaching and research') and can later be used by the game's creator for analysis."
+          "0": "No GeoGami pode jogar jogos criados por si ou por outras pessoas. Para ver a lista de jogos, escolha « Jogos » no menu principal, ou leia um código QR se tiver um.",
+          "1": "Verifique se « Mundo real » está selecionado no menu suspenso no topo e escolha entre o modo singular ou multijogador (singular é a opção predefinida). Agora pode procurar o seu jogo. O botão do mapa no canto inferior direito permite encontrar jogos próximos.",
+          "2": "Depois de selecionar um jogo, introduza o seu nome de jogador. Para jogar, o GeoGami utiliza a sua posição GPS atual, mas não a guarda. Se der o seu consentimento, os dados de GPS e de interação serão guardados em conformidade com o RGPD (consulte « Partilhar dados para fins pedagógicos e de investigação ») e poderão posteriormente ser utilizados pelo criador do jogo para análise."
         }
       },
       "createGame": {
-        "heading": "Creating a game",
+        "heading": "Criar um jogo",
         "content": {
-          "0": "When creating a game, you can configure all conditions and difficulties yourself and tailor them to the players. Press 'Games' in the main menu to start.",
-          "1": "A plus icon will now appear in the bottom right. Selecting it lets you create a new game. Choose 'Real world'.",
-          "2": "Now create the tasks. The individual task types and an example are explained under the 'Task types' tab."
+          "0": "Ao criar um jogo, pode configurar todas as condições e dificuldades e adaptá-las aos jogadores. Para começar, prima « Jogos » no menu principal.",
+          "1": "Aparecerá agora um ícone de mais no canto inferior direito. Ao selecioná-lo, pode criar um novo jogo. Escolha « Mundo real ».",
+          "2": "Crie agora as tarefas. Os diferentes tipos de tarefas e um exemplo são explicados no separador « Tipos de tarefas »."
         }
       },
       "editGame": {
-        "heading": "Editing / deleting / saving a game",
+        "heading": "Editar / eliminar / guardar um jogo",
         "content": {
-          "0": "You can delete games you created if they are no longer needed. You can also edit them again if you noticed mistakes or want to change something.",
-          "1": "After logging in, go to 'My games'. Note that only games matching the current game environment and mode are shown. Click the 'Edit' icon to the right of a game.",
-          "2": "You can now edit, delete, or save the game. Editing looks the same as creating a new game and offers the same features.",
-          "3": "Press the save icon at the top right to save. Enter the game name and location. If the tasks require it, the map section can be adjusted. Now save the game permanently."
+          "0": "Pode eliminar os jogos que criou caso já não sejam necessários. Também pode editá-los novamente se tiver detetado erros ou quiser fazer alterações.",
+          "1": "Após iniciar sessão, vá a « Os meus jogos ». Tenha em conta que apenas são apresentados os jogos correspondentes ao ambiente e modo de jogo atuais. Clique no ícone « Editar » à direita do jogo.",
+          "2": "Pode agora editar, eliminar ou guardar o jogo. A edição é apresentada da mesma forma que a criação de um novo jogo e oferece as mesmas funcionalidades.",
+          "3": "Prima o ícone de guardar no canto superior direito para guardar. Introduza o nome e o local do jogo. Se as tarefas o exigirem, a secção do mapa pode ser ajustada. Guarde agora o jogo definitivamente."
         }
       }
     },
     "taskTypes": {
-      "sectionTitle": "Task types",
+      "sectionTitle": "Tipos de tarefas",
       "navigation": {
-        "heading": "Navigation tasks",
+        "heading": "Tarefas de navegação",
         "content": {
-          "0": "Navigation tasks always require players to reach a specific location to solve the task. Different task types define which conditions apply and which hints and reference points players receive. Each task type is explained in more detail under 'Learn'.\nFirst, pick a task type from the list.",
-          "1": "Define the question and the destination. The more reference points there are around the flag, the easier it is to find.",
-          "2": "Optionally use the special tools (explained under 'Further settings') to fine-tune difficulty and the learning experience for your testing.\nDefine the radius that counts as successfully reaching the destination. If the radius is too small, players may solve the task correctly without it being recognised. If too large, the task may be flagged as solved when it isn't. We recommend trying out your game yourself.\nClick on Map features to set the properties of the map and the markers. These are important for setting the difficulty and shaping the task to test exactly what you want. Map and marker properties are explained in their own tab."
+          "0": "Nas tarefas de navegação, os jogadores têm sempre de chegar a um local específico para resolver a tarefa. Diferentes tipos de tarefas definem que condições se aplicam e que pistas e pontos de referência os jogadores recebem. Cada tipo de tarefa é explicado com mais detalhe em « Aprender ».\nEscolha primeiro um tipo de tarefa na lista.",
+          "1": "Defina a pergunta e o destino. Quantos mais pontos de referência houver à volta da bandeira, mais fácil será encontrá-la.",
+          "2": "Opcionalmente, use as ferramentas especiais (explicadas em « Definições adicionais ») para ajustar a dificuldade e a experiência de aprendizagem aos seus testes.\nDefina o raio que conta como ter chegado com sucesso ao destino. Se o raio for demasiado pequeno, os jogadores podem resolver a tarefa corretamente sem que isso seja reconhecido. Se for demasiado grande, a tarefa pode ser dada como resolvida sem o estar. Recomendamos que experimente o seu jogo.\nClique em « Características do mapa » para definir as propriedades do mapa e dos marcadores. Estas são importantes para definir a dificuldade e moldar a tarefa de forma a testar exatamente o que pretende. As propriedades do mapa e dos marcadores são explicadas no seu próprio separador."
         }
       },
       "orientation": {
-        "heading": "Orientation tasks",
+        "heading": "Tarefas de orientação",
         "content": {
-          "0": "In orientation tasks, players have to locate themselves or objects, determine which direction they are looking, or solve free-form tasks. The various task types are listed under the 'Learn' tab in the main menu.\nFirst, pick a task type from the list.",
-          "1": "Depending on the task type, you'll have to specify the task further. A tab navigation will appear automatically. See the 'Learn' tab in the main menu for details.",
-          "2": "Further task-specific settings will appear automatically. The required inputs depend on the task.\nOptionally use the special tools (explained under 'Further settings') to fine-tune difficulty and the learning experience for your testing.\nClick on Map features to set the properties of the map and the markers. These are important for setting the difficulty and shaping the task. Map and marker properties are explained in their own tab."
+          "0": "Nas tarefas de orientação, os jogadores têm de se localizar a si próprios ou a objetos, determinar em que direção estão a olhar, ou resolver tarefas livres. Os vários tipos de tarefas estão listados no separador « Aprender » no menu principal.\nEscolha primeiro um tipo de tarefa na lista.",
+          "1": "Consoante o tipo de tarefa, terá de a especificar mais. Será apresentada automaticamente uma navegação por separadores. Consulte o separador « Aprender » no menu principal para mais detalhes.",
+          "2": "Aparecerão automaticamente outras definições específicas da tarefa. Os campos a preencher dependem da tarefa.\nOpcionalmente, use as ferramentas especiais (explicadas em « Definições adicionais ») para ajustar a dificuldade e a experiência de aprendizagem aos seus testes.\nClique em « Características do mapa » para definir as propriedades do mapa e dos marcadores. Estas são importantes para definir a dificuldade e moldar a tarefa. As propriedades do mapa e dos marcadores são explicadas no seu próprio separador."
         }
       },
       "free": {
-        "heading": "Free tasks",
+        "heading": "Tarefas livres",
         "content": {
-          "0": "Free tasks allow many possibilities, classified into single-choice tasks and question-and-answer tasks.\nIn both task types, players can answer by selecting or creating a photo or text.",
-          "1": "In single-choice tasks, exactly one answer must be correct. To still allow more answer options, feedback must be turned off."
+          "0": "As tarefas livres permitem muitas possibilidades, classificadas em tarefas de escolha única e tarefas de pergunta-e-resposta.\nEm ambos os tipos, os jogadores podem responder selecionando ou criando uma fotografia ou texto.",
+          "1": "Em tarefas de escolha única, apenas uma resposta deve estar correta. Para permitir, ainda assim, mais opções de resposta, é necessário desativar o feedback."
         }
       },
       "info": {
-        "heading": "Information block",
+        "heading": "Bloco de informação",
         "content": {
-          "0": "This block is mainly used to prepare players for upcoming tasks. Here you can add explanations and special instructions for the next tasks.\nWrite an information text with the details for the upcoming tasks.\nOptionally add photos and graphics for further explanation.\nClick on Map features to set the properties of the map and the markers. Map and marker properties are explained in their own tab."
+          "0": "Este bloco é utilizado sobretudo para preparar os jogadores para as tarefas seguintes. Aqui pode adicionar explicações e instruções especiais para as próximas tarefas.\nEscreva um texto de informação com os detalhes para as tarefas que se seguem.\nOpcionalmente, adicione fotografias e gráficos para complementar a explicação.\nClique em « Características do mapa » para definir as propriedades do mapa e dos marcadores. As propriedades do mapa e dos marcadores são explicadas no seu próprio separador."
         }
       }
     },
     "virtualWorld": {
-      "sectionTitle": "Virtual world",
+      "sectionTitle": "Mundo virtual",
       "playGame": {
-        "heading": "Playing a game",
+        "heading": "Jogar um jogo",
         "content": {
-          "0": "In GeoGami you can play games created by yourself or by others. To see a list of games, choose 'Games' from the main menu, or scan a QR code if you have one.",
-          "1": "Select 'Virtual world' from the dropdown menu and choose between single- and multiplayer (single is the default). You can now search for your game.",
-          "2": "Once you have selected a game, enter your player name. To play GeoGami, the app uses your current GPS position but does not store it. If you give your consent, GPS and interaction data will be stored in a GDPR-compliant way (see 'Sharing data for teaching and research') and can later be used by the game's creator for analysis."
+          "0": "No GeoGami pode jogar jogos criados por si ou por outras pessoas. Para ver a lista de jogos, escolha « Jogos » no menu principal, ou leia um código QR se tiver um.",
+          "1": "Selecione « Mundo virtual » no menu suspenso e escolha entre o modo singular ou multijogador (singular é a opção predefinida). Agora pode procurar o seu jogo.",
+          "2": "Depois de selecionar um jogo, introduza o seu nome de jogador. Para jogar, o GeoGami utiliza a sua posição GPS atual, mas não a guarda. Se der o seu consentimento, os dados de GPS e de interação serão guardados em conformidade com o RGPD (consulte « Partilhar dados para fins pedagógicos e de investigação ») e poderão posteriormente ser utilizados pelo criador do jogo para análise."
         }
       },
       "createGame": {
-        "heading": "Creating a VR game",
+        "heading": "Criar um jogo VR",
         "content": {
-          "0": "When creating a game, you can configure all conditions and difficulties yourself and tailor them to the players. Press 'Games' in the main menu to start.",
-          "1": "A plus icon will appear in the bottom right. Selecting it lets you create a new game. Choose 'Virtual world'.",
-          "2": "Pick a virtual world. It can be changed for every new task. Think about which properties the world should have (how many streets, houses, trees, other landmarks…).",
-          "3": "Now create the tasks. The individual task types and an example are explained under the 'Task types' tab."
+          "0": "Ao criar um jogo, pode configurar todas as condições e dificuldades e adaptá-las aos jogadores. Para começar, prima « Jogos » no menu principal.",
+          "1": "Aparecerá um ícone de mais no canto inferior direito. Ao selecioná-lo, pode criar um novo jogo. Escolha « Mundo virtual ».",
+          "2": "Escolha um mundo virtual. Pode ser alterado a cada nova tarefa. Pense nas propriedades que o mundo deve ter (quantas ruas, casas, árvores, outros pontos de referência…).",
+          "3": "Crie agora as tarefas. Os diferentes tipos de tarefas e um exemplo são explicados no separador « Tipos de tarefas »."
         }
       },
       "editGame": {
-        "heading": "Editing / deleting / saving a game",
+        "heading": "Editar / eliminar / guardar um jogo",
         "content": {
-          "0": "You can delete games you created. You can also edit them if you noticed mistakes or want to change something. Curate them if you think other people would benefit from your game too.",
-          "1": "After logging in, go to 'My games'. Note that only games matching the current game environment and mode are shown. Click the 'Edit' icon to the right of a game.",
-          "2": "You can now edit, delete, or save the game. Editing looks the same as creating a new game and offers the same features.",
-          "3": "Press the save icon at the top right to save. Enter the game name and location. If the tasks require it, the map section can be adjusted. Now save the game permanently."
+          "0": "Pode eliminar os jogos que criou. Também pode editá-los caso tenha detetado erros ou queira fazer alterações. Promova-os caso considere que outras pessoas também poderiam beneficiar do seu jogo.",
+          "1": "Após iniciar sessão, vá a « Os meus jogos ». Tenha em conta que apenas são apresentados os jogos correspondentes ao ambiente e modo de jogo atuais. Clique no ícone « Editar » à direita do jogo.",
+          "2": "Pode agora editar, eliminar ou guardar o jogo. A edição é apresentada da mesma forma que a criação de um novo jogo e oferece as mesmas funcionalidades.",
+          "3": "Prima o ícone de guardar no canto superior direito para guardar. Introduza o nome e o local do jogo. Se as tarefas o exigirem, a secção do mapa pode ser ajustada. Guarde agora o jogo definitivamente."
         }
       }
     },
     "taskTypesVR": {
-      "sectionTitle": "Task types VR",
+      "sectionTitle": "Tipos de tarefas VR",
       "navigation": {
-        "heading": "Navigation tasks",
+        "heading": "Tarefas de navegação",
         "content": {
-          "0": "Navigation tasks always require players to reach a specific location to solve the task. Different task types define which conditions apply and which hints and reference points players receive. Each task type is explained in more detail under 'Learn'.\nFirst, pick a task type from the list.",
-          "1": "Optionally set the avatar's start position and view direction. This lets you control which path players take and whether they start facing the right direction.",
-          "2": "Define the destination. The more reference points there are around the flag, the easier it is to find. Optionally use the special tools (explained under 'Further settings') to fine-tune difficulty and the learning experience for your testing.\nDefine the radius that counts as successfully reaching the destination. If the radius is too small, players may solve the task correctly without it being recognised. If too large, the task may be flagged as solved when it isn't. We recommend trying out your game yourself.\nClick on Map features to set the properties of the map and the markers. Map and marker properties are explained in their own tab."
+          "0": "Nas tarefas de navegação, os jogadores têm sempre de chegar a um local específico para resolver a tarefa. Diferentes tipos de tarefas definem que condições se aplicam e que pistas e pontos de referência os jogadores recebem. Cada tipo de tarefa é explicado com mais detalhe em « Aprender ».\nEscolha primeiro um tipo de tarefa na lista.",
+          "1": "Opcionalmente, defina a posição inicial e a direção do olhar do avatar. Assim pode controlar que caminho os jogadores percorrem e se começam virados na direção correta.",
+          "2": "Defina o destino. Quantos mais pontos de referência houver à volta da bandeira, mais fácil será encontrá-la. Opcionalmente, use as ferramentas especiais (explicadas em « Definições adicionais ») para ajustar a dificuldade e a experiência de aprendizagem aos seus testes.\nDefina o raio que conta como ter chegado com sucesso ao destino. Se o raio for demasiado pequeno, os jogadores podem resolver a tarefa corretamente sem que isso seja reconhecido. Se for demasiado grande, a tarefa pode ser dada como resolvida sem o estar. Recomendamos que experimente o seu jogo.\nClique em « Características do mapa » para definir as propriedades do mapa e dos marcadores. As propriedades do mapa e dos marcadores são explicadas no seu próprio separador."
         }
       },
       "orientation": {
-        "heading": "Orientation tasks",
+        "heading": "Tarefas de orientação",
         "content": {
-          "0": "First, pick a task type from the list. Depending on the task type, you'll have to specify it further. A tab navigation will appear automatically.",
-          "1": "Optionally set the avatar's start position and view direction. This lets you control which path players take and whether they start facing the right direction. This way you vary the difficulty and can test exactly what you want.",
-          "2": "Now place the task-specific targets (search area, search object, orientation) on the map and configure further settings (feedback, multiple attempts, map features)."
+          "0": "Escolha primeiro um tipo de tarefa na lista. Consoante o tipo de tarefa, terá de a especificar mais. Será apresentada automaticamente uma navegação por separadores.",
+          "1": "Opcionalmente, defina a posição inicial e a direção do olhar do avatar. Assim pode controlar que caminho os jogadores percorrem e se começam virados na direção correta. Desta forma varia a dificuldade e pode testar exatamente o que pretende.",
+          "2": "Coloque agora os alvos específicos da tarefa (área de pesquisa, objeto a procurar, orientação) no mapa e configure as definições adicionais (feedback, várias tentativas, características do mapa)."
         }
       },
       "free": {
-        "heading": "Free tasks",
+        "heading": "Tarefas livres",
         "content": {
-          "0": "Free tasks allow many possibilities, classified into single-choice tasks and question-and-answer tasks.\nIn both task types, players can answer by selecting or creating a photo or text. Optionally the avatar and its view direction can be placed on the map.",
-          "1": "In single-choice tasks, exactly one answer must be correct. To still allow more answer options, feedback must be turned off."
+          "0": "As tarefas livres permitem muitas possibilidades, classificadas em tarefas de escolha única e tarefas de pergunta-e-resposta.\nEm ambos os tipos, os jogadores podem responder selecionando ou criando uma fotografia ou texto. Opcionalmente, o avatar e a direção do seu olhar podem ser colocados no mapa.",
+          "1": "Em tarefas de escolha única, apenas uma resposta deve estar correta. Para permitir, ainda assim, mais opções de resposta, é necessário desativar o feedback."
         }
       },
       "info": {
-        "heading": "Information block",
+        "heading": "Bloco de informação",
         "content": {
-          "0": "This block is mainly used to prepare players for upcoming tasks. Here you can add explanations and special instructions for the next tasks.\nOptionally add photos and graphics. Write an information text with the details for the upcoming tasks.",
-          "1": "Optionally set the avatar's start position and view direction. Add photos and graphics if you wish — they can serve as further explanation.\nClick on Map features to set the properties of the map and the markers. Map and marker properties are explained in their own tab."
+          "0": "Este bloco é utilizado sobretudo para preparar os jogadores para as tarefas seguintes. Aqui pode adicionar explicações e instruções especiais para as próximas tarefas.\nOpcionalmente, adicione fotografias e gráficos. Escreva um texto de informação com os detalhes para as tarefas que se seguem.",
+          "1": "Opcionalmente, defina a posição inicial e a direção do olhar do avatar. Adicione fotografias e gráficos se desejar — podem servir como explicação adicional.\nClique em « Características do mapa » para definir as propriedades do mapa e dos marcadores. As propriedades do mapa e dos marcadores são explicadas no seu próprio separador."
         }
       }
     },
     "mapFeatures": {
-      "sectionTitle": "Map features",
+      "sectionTitle": "Características do mapa",
       "overview": {
-        "heading": "Map features",
+        "heading": "Características do mapa",
         "content": {
-          "0": "Zoom: choose whether the zoom should be set to the task, to the game, by the player, or not at all.",
-          "1": "Map section: choose whether the entire map section or a specific one is always visible, or whether the map section moves along with the player and can therefore shift.",
-          "2": "Map rotation: set the orientation of the map (does the player always look up, or is north always at the top?)",
-          "3": "Position marker: the position-marker setting changes the task significantly. If turned off, players have to orient themselves only by their surroundings to decide where they are. If turned on, they can orient themselves by the marker. If turned on only at the start of the task, they can orient themselves once at the start; if on demand, they can decide themselves how often they need this hint.",
-          "4": "View-direction marker: the same notes apply as for the position marker. In addition, this marker shows not only the location but also the direction the player is facing. This feature only works if the position marker is enabled.",
-          "5": "Track recording: when you enable track recording, players can see and follow their own movement live on the map. Children enjoy 'drawing' shapes like circles or hearts on the map. Track recording only refers to visualising on the map — in the background GeoGami always records the track.",
-          "6": "Street highlighting: you can highlight the street section the player is currently on in red. Unlike the position marker, this does not reveal the exact position.",
-          "7": "Highlight landmarks: use this to point out things in the landscape that, for example, can make orientation easier."
+          "0": "Zoom: escolha se o zoom deve ser definido pela tarefa, pelo jogo, pelo jogador, ou não ser definido.",
+          "1": "Secção do mapa: escolha se a secção completa do mapa ou uma secção específica está sempre visível, ou se a secção do mapa se desloca com o jogador podendo assim mover-se.",
+          "2": "Rotação do mapa: defina a orientação do mapa (o jogador olha sempre para cima, ou o norte está sempre no topo?)",
+          "3": "Marcador de posição: a definição do marcador de posição altera a tarefa de forma significativa. Se estiver desativado, os jogadores têm de se orientar apenas pelo ambiente para decidir onde estão. Se estiver ativado, podem orientar-se pelo marcador. Se estiver ativado apenas no início da tarefa, podem orientar-se uma vez no início; se estiver « a pedido », os jogadores decidem quantas vezes precisam desta ajuda.",
+          "4": "Marcador de direção do olhar: aplicam-se as mesmas notas que ao marcador de posição. Adicionalmente, este marcador mostra não só a localização, mas também a direção para onde o jogador está virado. Esta funcionalidade só funciona se o marcador de posição estiver ativado.",
+          "5": "Registo de percurso: ao ativar o registo de percurso, os jogadores podem ver e acompanhar em tempo real o seu próprio movimento no mapa. As crianças gostam de « desenhar » formas como círculos ou corações no mapa. O registo de percurso refere-se apenas à visualização no mapa — em segundo plano, o GeoGami regista sempre o percurso.",
+          "6": "Realce de rua: pode realçar a vermelho a secção da rua em que o jogador se encontra. Ao contrário do marcador de posição, esta opção não revela a posição exata.",
+          "7": "Realce de pontos de referência: utilize esta opção para destacar elementos da paisagem que, por exemplo, podem facilitar a orientação."
         }
       }
     },
     "furtherSettings": {
-      "sectionTitle": "'Further settings' for tasks",
+      "sectionTitle": "« Definições adicionais » para tarefas",
       "settings": {
-        "heading": "Further settings",
+        "heading": "Definições adicionais",
         "content": {
-          "0": "Depending on the task type, you can configure further settings that improve the play experience or better address the goal of the task.\nEnable or disable input confirmation: this controls whether players themselves have to confirm that they solved the task correctly.",
-          "1": "Show flag: this sets the difficulty of the task by determining whether the destination flag is visible on the map.",
-          "2": "Enable or disable feedback: this determines whether players immediately learn whether they solved the task correctly.",
-          "3": "Keep flag on the map: this determines whether the destination of this task remains visible during the next tasks.",
-          "4": "Enable multiple attempts: this determines whether players get a new chance if they solve the task incorrectly (only for thematic tasks).",
-          "5": "Accuracy: set how close to the destination players must be to be considered 'in the right place'. Due to GPS inaccuracies, do not choose too small a distance.",
-          "6": "Under Map features you can configure further settings for the position marker and for interaction with the map itself. These can be tried out under 'Learn' in the main menu.",
-          "7": "Highlight landmarks: use this to point out things in the landscape that, for example, can make orientation easier."
+          "0": "Consoante o tipo de tarefa, pode configurar definições adicionais que melhoram a experiência de jogo ou se adequam melhor ao objetivo da tarefa.\nAtivar ou desativar a confirmação de resposta: isto determina se os próprios jogadores têm de confirmar que resolveram corretamente a tarefa.",
+          "1": "Mostrar bandeira: isto define a dificuldade da tarefa ao determinar se a bandeira de destino é visível no mapa.",
+          "2": "Ativar ou desativar feedback: isto determina se os jogadores ficam imediatamente a saber se resolveram corretamente a tarefa.",
+          "3": "Manter bandeira no mapa: isto determina se o destino desta tarefa permanece visível durante as tarefas seguintes.",
+          "4": "Ativar várias tentativas: isto determina se os jogadores recebem uma nova oportunidade caso resolvam a tarefa incorretamente (apenas em tarefas temáticas).",
+          "5": "Precisão: defina a que distância do destino os jogadores devem estar para serem considerados « no local correto ». Devido a imprecisões do GPS, não escolha uma distância demasiado pequena.",
+          "6": "Em « Características do mapa » pode configurar outras definições para o marcador de posição e para a interação com o próprio mapa. Estas podem ser experimentadas em « Aprender » no menu principal.",
+          "7": "Realce de pontos de referência: utilize esta opção para destacar elementos da paisagem que, por exemplo, podem facilitar a orientação."
         }
       }
     }

@@ -1,6 +1,7 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
+    <!-- Hide back button when handbook is embedded in an iframe on a third-party site -->
+    <ion-buttons slot="start" *ngIf="!isEmbedded">
       <ion-back-button
         color="dark"
         defaultHref="start"
