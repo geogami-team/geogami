@@ -301,7 +301,6 @@ export class TrackerService {
           : this.waypoints_list,
       events:
         this.isSingleMode || isGameTrackStored ? this.events : this.events_list,
-      answers: null,
       players:
         this.isSingleMode || isGameTrackStored
           ? this.players
