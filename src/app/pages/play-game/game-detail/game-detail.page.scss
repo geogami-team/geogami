@@ -3,6 +3,14 @@
   width: 100%;
 }
 
+/* Centred spinner shown while the game loads */
+.loading-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 0;
+}
+
 .dot {
   height: 9px;
   width: 9px;
@@ -54,6 +62,31 @@
 } */
 
 /* qr-code generator style- in global.scss */
+
+/* Class QR modal (Phase 2) */
+.class-qr-modal {
+  text-align: center;
+
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+  }
+
+  .qr-wrapper {
+    margin: 0.5rem 0 1rem;
+  }
+
+  p {
+    margin: 0 0 1rem;
+    color: #555;
+  }
+
+  .instructor-line {
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+    color: #333;
+  }
+}
 
 // copy multi-player game link style
 .copy-link {

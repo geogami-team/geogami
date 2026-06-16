@@ -19,6 +19,8 @@ import { Coords } from "src/app/models/coords";
 export class TrackerService {
   private game: string;
   private gameName: string;
+  // Phase 3: instructor id for single-player class plays (null otherwise).
+  private instructor: string;
   private device: DeviceInfo;
   private waypoints: any[];
   private events: any[];
@@ -77,13 +79,15 @@ export class TrackerService {
     initialAvatarLoc: any,
     isSingleMode: boolean,
     numPlayers: number,
-    playerNo: number
+    playerNo: number,
+    instructor: string = null
   ) {
     this.isVirtualWorld = isVirtualWorld;
     this.initialAvatarLoc = initialAvatarLoc;
     this.isSingleMode = isSingleMode;
     this.numPlayers = numPlayers;
     this.playerNo = playerNo;
+    this.instructor = instructor;
 
     if (!isVirtualWorld) {
       this.positionWatch =
@@ -288,6 +292,8 @@ export class TrackerService {
       _id: isGameTrackStored ? gameTrack_Id : undefined,
       playerNo: isGameTrackStored ? this.playerNo : undefined,
       game: this.game,
+      // Phase 3: attribute single-player class plays to the instructor.
+      instructor: this.instructor || undefined,
       name: this.gameName,
       start: this.start,
       end: new Date().toISOString(),

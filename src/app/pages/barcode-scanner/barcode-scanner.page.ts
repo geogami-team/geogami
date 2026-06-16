@@ -4,6 +4,7 @@ import { Plugins } from "@capacitor/core";
 import { ModalController, NavController } from '@ionic/angular';
 import { SocketService } from 'src/app/services/socket.service';
 import { UtilService } from 'src/app/services/util.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-barcode-scanner',
@@ -16,6 +17,7 @@ export class BarcodeScannerPage implements OnInit {
     private utilService: UtilService,
     public modalController: ModalController,
     private navCtrl: NavController,
+    private translate: TranslateService,
     // private socketService: SocketService
   ) { }
 
@@ -54,13 +56,45 @@ export class BarcodeScannerPage implements OnInit {
 
       /* if the result has content */
       if (result.hasContent) {
-        console.log(result.content); // log the raw scanned content
-        /* show toast msg */
-        // this.utilService.showToast(`Qr-Code: ${result.content}`, "dark", 3500);
+        const content: string = result.content;
+        console.log(content); // log the raw scanned content
 
-        this.utilService.setQRCodeValue(result.content);
+        // Two recognised QR formats:
+        //  - Class QR (single-player): a full URL with query params, e.g.
+        //    .../play-game/game-detail?gameId=X&uId=Y
+        //  - Old multiplayer teacher code: a bare string uId(24) + "-" + gameId
+        let gameId = "";
+        let uId = "";
+        let iName = "";
+        if (content.includes("game-detail") || content.startsWith("http")) {
+          try {
+            const params = new URL(content).searchParams;
+            gameId = params.get("gameId") || "";
+            uId = params.get("uId") || params.get("instructor") || "";
+            iName = params.get("iName") || "";
+          } catch (e) {
+            console.log("Unrecognised QR URL:", content);
+          }
+        } else {
+          // Old multiplayer teacher-code format — kept for backward compat.
+          uId = content.slice(0, 24);
+          gameId = content.slice(25);
+          this.utilService.setQRCodeValue(content);
+        }
 
-        this.navCtrl.navigateForward(`play-game/game-detail?gameId=${result.content.slice(25)}&uId=${result.content.slice(0,24)}`);
+        if (gameId) {
+          let target = `play-game/game-detail?gameId=${gameId}&uId=${uId}`;
+          if (iName) {
+            target += `&iName=${encodeURIComponent(iName)}`;
+          }
+          this.navCtrl.navigateForward(target);
+        } else {
+          this.utilService.showToast(
+            this.translate.instant("PlayGame.unrecognisedQr"),
+            "dark",
+            3000
+          );
+        }
       }
     }
   }

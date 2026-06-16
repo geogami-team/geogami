@@ -259,7 +259,14 @@
     "pinDialogCancel": "Abbrechen",
     "pinDialogConfirm": "Bestätigen",
     "pinDialogWrong": "Falsche PIN. Bitte versuche es erneut.",
-    "pinDialogSkipCount": "Überspringen"
+    "pinDialogSkipCount": "Überspringen",
+    "classQrTitle": "Klassen-QR-Code",
+    "classQrHint": "Spieler, die diesen Code scannen oder den Link öffnen, spielen dieses Spiel, und ihre Ergebnisse erscheinen in deinem Dashboard.",
+    "copyLink": "Link kopieren",
+    "linkCopied": "Link kopiert",
+    "classConsentLocked": "Dieses Spiel wurde über den Link deiner Lehrkraft geöffnet. Das Teilen deiner Ergebnisse ist daher zum Spielen erforderlich.",
+    "instructorLabel": "Lehrkraft",
+    "unrecognisedQr": "QR-Code nicht erkannt."
   },
   "Showroom": {
     "titleShowroom": "Lerne GeoGami kennen",
