@@ -8,7 +8,16 @@
       ></ion-back-button>
     </ion-buttons>
     <ion-title *ngIf="game">{{ game.name }}</ion-title>
-    <ion-buttons slot="primary"></ion-buttons>
+    <ion-buttons slot="primary">
+      <!-- Class QR (Phase 2): only for logged-in users (classQrLink is set then) -->
+      <ion-button
+        *ngIf="classQrLink"
+        (click)="openClassQrModal()"
+        title="{{ 'PlayGame.classQrTitle' | translate }}"
+      >
+        <ion-icon slot="icon-only" name="qr-code-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -62,6 +71,12 @@
           >{{ "PlayGame.shareDataAgreement" | translate }}</ion-label
         >
         <ion-checkbox slot="start" [disabled]="disableShareData_cbox" [(ngModel)]="shareData_cbox"></ion-checkbox>
+      </ion-item>
+      <!-- Phase 3: explain why consent is locked for a class play -->
+      <ion-item lines="none" *ngIf="consentLockedByInstructor">
+        <ion-note color="medium" class="ion-text-wrap">
+          {{ 'PlayGame.classConsentLocked' | translate }}
+        </ion-note>
       </ion-item>
     </ion-card>
   </div>
@@ -212,3 +227,57 @@
     >
   </ion-toolbar>
 </ion-footer>
+
+<!-- Class QR code modal (Phase 2) -->
+<ion-modal [isOpen]="isClassQrModalOpen" (didDismiss)="isClassQrModalOpen = false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ 'PlayGame.classQrTitle' | translate }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeClassQrModal()">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <div class="class-qr-modal">
+        <h2 *ngIf="game">{{ game.name }}</h2>
+
+        <div class="qr-wrapper">
+          <ngx-qrcode
+            [elementType]="qrElementType"
+            [value]="classQrLink"
+            cssClass="qr-code"
+            [errorCorrectionLevel]="qrErrorCorrectionLevel"
+          >
+          </ngx-qrcode>
+        </div>
+
+        <p>{{ 'PlayGame.classQrHint' | translate }}</p>
+
+        <!-- Copy-link fallback (mirrors the multi-player copy-link UI) -->
+        <div class="copy-link">
+          <input
+            type="text"
+            class="copy-link-input"
+            value="{{ classQrLink }}"
+            readonly
+          />
+          <button
+            type="button"
+            class="copy-link-button"
+            (click)="copyClassQrLink()"
+          >
+            <span class="material-icons">content_copy</span>
+          </button>
+        </div>
+
+        <ion-button expand="block" (click)="copyClassQrLink()">
+          {{ 'PlayGame.copyLink' | translate }}
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

@@ -259,7 +259,12 @@
     "pinDialogCancel": "إلغاء",
     "pinDialogConfirm": "تأكيد",
     "pinDialogWrong": "رمز PIN غير صحيح. يرجى المحاولة مرة أخرى.",
-    "pinDialogSkipCount": "تخطيات"
+    "pinDialogSkipCount": "تخطيات",
+    "classQrTitle": "رمز QR للصف",
+    "classQrHint": "اللاعبون الذين يمسحون هذا الرمز أو يفتحون هذا الرابط سيلعبون هذه اللعبة، وستظهر نتائجهم في لوحة التحكم الخاصة بك.",
+    "copyLink": "نسخ الرابط",
+    "linkCopied": "تم نسخ الرابط",
+    "classConsentLocked": "تم فتح هذه اللعبة من رابط معلّمك، لذا فإن مشاركة نتائجك مطلوبة للعب."
   },
   "Showroom": {
     "titleShowroom": "اكتشف GeoGami",

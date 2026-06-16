@@ -12,6 +12,10 @@ import { Storage } from "@ionic/storage";
 import { environment } from "src/environments/environment";
 import mapboxgl from "mapbox-gl";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
+import {
+  NgxQrcodeElementTypes,
+  NgxQrcodeErrorCorrectionLevels,
+} from "@techiediaries/ngx-qrcode";
 
 @Component({
   selector: "app-game-detail",
@@ -61,6 +65,18 @@ export class GameDetailPage implements OnInit {
 
   disableShareData_cbox: boolean = false; // to disable shareData checkbox when game setting disableShareData is true
 
+  // Class QR (Phase 2): any logged-in user can show a QR/link that opens this
+  // game pre-tagged with their user id (via `uId`), so plays are attributed to
+  // them as instructor. Set once the game loads and a user is logged in.
+  classQrLink: string = "";
+  isClassQrModalOpen: boolean = false;
+  // Phase 3: true when this play was opened from a class QR/link (instructor in
+  // the URL) on a single-player game — consent is then forced on and locked.
+  consentLockedByInstructor: boolean = false;
+  // Bound to <ngx-qrcode> via the library's enums (avoids raw-string type errors).
+  qrElementType = NgxQrcodeElementTypes.IMG;
+  qrErrorCorrectionLevel = NgxQrcodeErrorCorrectionLevels.MEDIUM;
+
   constructor(
     public navCtrl: NavController,
     private route: ActivatedRoute,
@@ -96,12 +112,30 @@ export class GameDetailPage implements OnInit {
         .then((game) => {
           this.game = game;
 
+          // Class QR (Phase 2): single-player games only. Multiplayer keeps its
+          // existing room-based QR (showInstructionView) — participant count is
+          // limited there and the play logic depends on it, so the class-sharing
+          // QR doesn't apply. Reuses the `uId` param; the resulting track stores
+          // it as `instructor`.
+          if (this.authService.getUserValue() && !game.isMultiplayerGame) {
+            this.classQrLink = `${environment.uiURL}/play-game/game-detail?gameId=${game._id}&uId=${this.authService.getUserId()}`;
+          }
+
           // set share data checkbox status based on game setting
           if(this.game.disableShareData !== undefined){
             this.disableShareData_cbox = this.game.disableShareData;  // set disableShareData checkbox status based on game setting
             if(this.disableShareData_cbox){
               this.shareData_cbox = true; // if disableShareData is true, check shareData checkbox
             }
+          }
+
+          // Phase 3: a class play (single-player game opened from an instructor
+          // QR/link) must share data so the track reaches the instructor — force
+          // consent on and lock the toggle.
+          if (!game.isMultiplayerGame && this.instructorId) {
+            this.shareData_cbox = true;
+            this.disableShareData_cbox = true;
+            this.consentLockedByInstructor = true;
           }
           
           // VR world
@@ -340,6 +374,9 @@ export class GameDetailPage implements OnInit {
         : this.teacherCode.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ""),
       isSingleMode: this.isSingleMode,
       shareData_cbox: this.shareData_cbox,
+      // Phase 3: attribute single-player class plays to the instructor (from the
+      // QR/link uId). undefined for normal plays and for multiplayer.
+      instructor: this.isSingleMode ? this.instructorId : undefined,
     };
   }
 
@@ -607,5 +644,23 @@ export class GameDetailPage implements OnInit {
    */
   copyGameLink() {
     this.clipboard.copy(this.multiplayerGameLink);
+  }
+
+  /* Class QR (Phase 2) */
+  openClassQrModal() {
+    this.isClassQrModalOpen = true;
+  }
+
+  closeClassQrModal() {
+    this.isClassQrModalOpen = false;
+  }
+
+  copyClassQrLink() {
+    this.clipboard.copy(this.classQrLink);
+    this.utilService.showToast(
+      this.translate.instant("PlayGame.linkCopied"),
+      "dark",
+      2000
+    );
   }
 }

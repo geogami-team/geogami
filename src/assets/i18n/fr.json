@@ -259,7 +259,12 @@
     "pinDialogCancel": "Annuler",
     "pinDialogConfirm": "Confirmer",
     "pinDialogWrong": "PIN incorrect. Veuillez réessayer.",
-    "pinDialogSkipCount": "Sauts"
+    "pinDialogSkipCount": "Sauts",
+    "classQrTitle": "QR code de classe",
+    "classQrHint": "Les joueurs qui scannent ce code ou ouvrent ce lien joueront à ce jeu, et leurs résultats apparaîtront dans votre tableau de bord.",
+    "copyLink": "Copier le lien",
+    "linkCopied": "Lien copié",
+    "classConsentLocked": "Ce jeu a été ouvert depuis le lien de votre instructeur ; le partage de vos résultats est donc requis pour jouer."
   },
   "Showroom": {
     "titleShowroom": "Découvrez GeoGami",
