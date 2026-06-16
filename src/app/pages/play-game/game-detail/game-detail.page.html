@@ -22,7 +22,13 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
+  <!-- Loading state until the game data arrives, so the play screen comes up
+       complete rather than half-populated. -->
+  <div *ngIf="!game" class="loading-wrap">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <ion-card *ngIf="game">
     <!-- <div #map class="map"></div> -->
     <ion-card-header>
       <ion-card-title *ngIf="game">{{ game.name }}</ion-card-title>
@@ -44,7 +50,7 @@
   </ion-card>
 
   <!-- Uesr name and share data consent. -->
-  <div *ngIf="!showInstructionView">
+  <div *ngIf="game && !showInstructionView">
     <!-- Enter name -->
     <ion-card>
       <!-- <ion-card> -->
@@ -223,7 +229,7 @@
   </ion-card>
 </ion-content>
 
-<ion-footer *ngIf="!showInstructionView">
+<ion-footer *ngIf="game && !showInstructionView">
   <ion-toolbar>
     <ion-button expand="block" (click)="startGame()" [disabled]="!playerName"
       >{{ "General.start" | translate }}</ion-button

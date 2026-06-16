@@ -3,6 +3,14 @@
   width: 100%;
 }
 
+/* Centred spinner shown while the game loads */
+.loading-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 0;
+}
+
 .dot {
   height: 9px;
   width: 9px;
