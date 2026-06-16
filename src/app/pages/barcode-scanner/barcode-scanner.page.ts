@@ -4,6 +4,7 @@ import { Plugins } from "@capacitor/core";
 import { ModalController, NavController } from '@ionic/angular';
 import { SocketService } from 'src/app/services/socket.service';
 import { UtilService } from 'src/app/services/util.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-barcode-scanner',
@@ -16,6 +17,7 @@ export class BarcodeScannerPage implements OnInit {
     private utilService: UtilService,
     public modalController: ModalController,
     private navCtrl: NavController,
+    private translate: TranslateService,
     // private socketService: SocketService
   ) { }
 

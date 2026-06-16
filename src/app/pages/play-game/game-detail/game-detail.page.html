@@ -8,12 +8,27 @@
       ></ion-back-button>
     </ion-buttons>
     <ion-title *ngIf="game">{{ game.name }}</ion-title>
-    <ion-buttons slot="primary"></ion-buttons>
+    <ion-buttons slot="primary">
+      <!-- Class QR (Phase 2): only for logged-in users (classQrLink is set then) -->
+      <ion-button
+        *ngIf="classQrLink"
+        (click)="openClassQrModal()"
+        title="{{ 'PlayGame.classQrTitle' | translate }}"
+      >
+        <ion-icon slot="icon-only" name="qr-code-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-card>
+  <!-- Loading state until the game data arrives, so the play screen comes up
+       complete rather than half-populated. -->
+  <div *ngIf="!game" class="loading-wrap">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <ion-card *ngIf="game">
     <!-- <div #map class="map"></div> -->
     <ion-card-header>
       <ion-card-title *ngIf="game">{{ game.name }}</ion-card-title>
@@ -35,7 +50,7 @@
   </ion-card>
 
   <!-- Uesr name and share data consent. -->
-  <div *ngIf="!showInstructionView">
+  <div *ngIf="game && !showInstructionView">
     <!-- Enter name -->
     <ion-card>
       <!-- <ion-card> -->
@@ -62,6 +77,15 @@
           >{{ "PlayGame.shareDataAgreement" | translate }}</ion-label
         >
         <ion-checkbox slot="start" [disabled]="disableShareData_cbox" [(ngModel)]="shareData_cbox"></ion-checkbox>
+      </ion-item>
+      <!-- Phase 3: explain why consent is locked for a class play -->
+      <ion-item lines="none" *ngIf="consentLockedByInstructor">
+        <ion-note color="medium" class="ion-text-wrap">
+          {{ 'PlayGame.classConsentLocked' | translate }}
+          <span *ngIf="instructorName">
+            <br />{{ 'PlayGame.instructorLabel' | translate }}: {{ instructorName }}
+          </span>
+        </ion-note>
       </ion-item>
     </ion-card>
   </div>
@@ -205,10 +229,68 @@
   </ion-card>
 </ion-content>
 
-<ion-footer *ngIf="!showInstructionView">
+<ion-footer *ngIf="game && !showInstructionView">
   <ion-toolbar>
     <ion-button expand="block" (click)="startGame()" [disabled]="!playerName"
       >{{ "General.start" | translate }}</ion-button
     >
   </ion-toolbar>
 </ion-footer>
+
+<!-- Class QR code modal (Phase 2) -->
+<ion-modal [isOpen]="isClassQrModalOpen" (didDismiss)="isClassQrModalOpen = false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ 'PlayGame.classQrTitle' | translate }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeClassQrModal()">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <div class="class-qr-modal">
+        <h2 *ngIf="game">{{ game.name }}</h2>
+        <p class="instructor-line" *ngIf="myName">
+          {{ 'PlayGame.instructorLabel' | translate }}: {{ myName }}
+        </p>
+
+        <div class="qr-wrapper">
+          <ngx-qrcode
+            [elementType]="qrElementType"
+            [value]="classQrLink"
+            cssClass="class-qr-code"
+            [width]="300"
+            [errorCorrectionLevel]="qrErrorCorrectionLevel"
+          >
+          </ngx-qrcode>
+        </div>
+
+        <p>{{ 'PlayGame.classQrHint' | translate }}</p>
+
+        <!-- Copy-link fallback (mirrors the multi-player copy-link UI) -->
+        <div class="copy-link">
+          <input
+            type="text"
+            class="copy-link-input"
+            value="{{ classQrLink }}"
+            readonly
+          />
+          <button
+            type="button"
+            class="copy-link-button"
+            (click)="copyClassQrLink()"
+          >
+            <span class="material-icons">content_copy</span>
+          </button>
+        </div>
+
+        <ion-button expand="block" (click)="copyClassQrLink()">
+          {{ 'PlayGame.copyLink' | translate }}
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

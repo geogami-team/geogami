@@ -36,6 +36,7 @@ This repository contains the **front-end client** — an Angular + Ionic applica
 - [Project structure](#project-structure)
 - [Building for mobile (iOS / Android)](#building-for-mobile-ios--android)
 - [Internationalisation](#internationalisation)
+- [Class QR codes (instructor sharing)](#class-qr-codes-instructor-sharing)
 - [Contributing](#contributing)
 - [Map Features and Task Types in GeoGami](#map-features-and-task-types-in-geogami)
 - [Contact](#contact)
@@ -142,6 +143,16 @@ The `ios/` and `android/` folders are tracked in this repo so push notifications
 ## Internationalisation
 
 Translation files live at `src/assets/i18n/<locale>.json`. Currently shipped: `en`, `de`, `fr`, `pt`, `ar`. Add a new key under the appropriate namespace; the UI uses Angular `| translate` pipes everywhere, including dynamic strings such as toasts.
+
+## Class QR codes (instructor sharing)
+
+A logged-in user viewing a **single-player** game can open a **Class QR code** (the QR button in the game-detail header). The QR/link encodes the game plus the sharing user's id and display name, so it doubles as a classroom hand-out:
+
+- A student who scans it (phone camera or the in-app scanner) lands on the game with it pre-selected.
+- Data-sharing consent is **forced on and locked**, with a note naming the instructor — the play must be shared for the teacher to receive it.
+- When the session ends, the track is saved with that user as its **instructor**, so the play appears in the **instructor's** dashboard rather than the game creator's.
+
+Multiplayer games are unchanged — they keep their existing room-based QR (limited, fixed participant count). Normal solo plays (no instructor in the link) still attribute to the game creator as before. Who can see which track, and per-track sharing, are handled server-side — see the server README's "Class sharing (instructor QR) & track access" section.
 
 ## Contributing
 
