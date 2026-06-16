@@ -265,7 +265,8 @@
     "copyLink": "Link kopieren",
     "linkCopied": "Link kopiert",
     "classConsentLocked": "Dieses Spiel wurde über den Link deiner Lehrkraft geöffnet. Das Teilen deiner Ergebnisse ist daher zum Spielen erforderlich.",
-    "instructorLabel": "Lehrkraft"
+    "instructorLabel": "Lehrkraft",
+    "unrecognisedQr": "QR-Code nicht erkannt."
   },
   "Showroom": {
     "titleShowroom": "Lerne GeoGami kennen",

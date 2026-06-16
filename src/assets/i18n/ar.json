@@ -265,7 +265,8 @@
     "copyLink": "نسخ الرابط",
     "linkCopied": "تم نسخ الرابط",
     "classConsentLocked": "تم فتح هذه اللعبة من رابط معلّمك، لذا فإن مشاركة نتائجك مطلوبة للعب.",
-    "instructorLabel": "المعلّم"
+    "instructorLabel": "المعلّم",
+    "unrecognisedQr": "رمز QR غير معروف."
   },
   "Showroom": {
     "titleShowroom": "اكتشف GeoGami",

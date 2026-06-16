@@ -265,7 +265,8 @@
     "copyLink": "Copy link",
     "linkCopied": "Link copied",
     "classConsentLocked": "This game was opened from your instructor's link, so sharing your results is required to play.",
-    "instructorLabel": "Instructor"
+    "instructorLabel": "Instructor",
+    "unrecognisedQr": "Unrecognised QR code."
   },
   "Showroom": {
     "titleShowroom": "Get to know GeoGami",
