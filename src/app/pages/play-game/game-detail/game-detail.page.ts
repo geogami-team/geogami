@@ -16,6 +16,7 @@ import {
   NgxQrcodeElementTypes,
   NgxQrcodeErrorCorrectionLevels,
 } from "@techiediaries/ngx-qrcode";
+import { Plugins } from "@capacitor/core";
 
 @Component({
   selector: "app-game-detail",
@@ -73,6 +74,11 @@ export class GameDetailPage implements OnInit {
   // Phase 3: true when this play was opened from a class QR/link (instructor in
   // the URL) on a single-player game — consent is then forced on and locked.
   consentLockedByInstructor: boolean = false;
+  // Display names: myName = the logged-in instructor (shown in the QR modal);
+  // instructorName = the instructor of a scanned class link (shown to students
+  // under the locked consent). Carried in the link as `iName` (display only).
+  myName: string = "";
+  instructorName: string = "";
   // Bound to <ngx-qrcode> via the library's enums (avoids raw-string type errors).
   qrElementType = NgxQrcodeElementTypes.IMG;
   qrErrorCorrectionLevel = NgxQrcodeErrorCorrectionLevels.MEDIUM;
@@ -106,6 +112,11 @@ export class GameDetailPage implements OnInit {
         this.instructorId = params["uId"];
       }
 
+      // instructor display name carried in the class link (display only)
+      if (params["iName"]) {
+        this.instructorName = params["iName"];
+      }
+
       this.gamesService
         .getGame(params["gameId"])
         .then((res) => res.content)
@@ -118,7 +129,13 @@ export class GameDetailPage implements OnInit {
           // QR doesn't apply. Reuses the `uId` param; the resulting track stores
           // it as `instructor`.
           if (this.authService.getUserValue() && !game.isMultiplayerGame) {
-            this.classQrLink = `${environment.uiURL}/play-game/game-detail?gameId=${game._id}&uId=${this.authService.getUserId()}`;
+            const user = this.authService.getUserValue();
+            this.myName = user["name"] || user["username"] || "";
+            this.classQrLink =
+              `${environment.uiURL}/play-game/game-detail` +
+              `?gameId=${game._id}` +
+              `&uId=${this.authService.getUserId()}` +
+              `&iName=${encodeURIComponent(this.myName)}`;
           }
 
           // set share data checkbox status based on game setting
@@ -655,8 +672,14 @@ export class GameDetailPage implements OnInit {
     this.isClassQrModalOpen = false;
   }
 
-  copyClassQrLink() {
-    this.clipboard.copy(this.classQrLink);
+  async copyClassQrLink() {
+    try {
+      // Capacitor Clipboard works on native and web; the CDK clipboard fails
+      // inside Ionic modals because the modal traps focus.
+      await Plugins.Clipboard.write({ string: this.classQrLink });
+    } catch (e) {
+      this.clipboard.copy(this.classQrLink); // fallback
+    }
     this.utilService.showToast(
       this.translate.instant("PlayGame.linkCopied"),
       "dark",

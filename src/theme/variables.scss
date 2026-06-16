@@ -365,6 +365,15 @@ button.alert-button.alert-button-download-track {
   }
 }
 
+/* class QR (Phase 2) — larger, fixed display size */
+.class-qr-code {
+  >img {
+    width: 260px !important;
+    max-width: 80%;
+    height: auto;
+  }
+}
+
 // less than 830px tablet & phone
 @media only screen and (max-width: 830px) {
   /* qr code generator */

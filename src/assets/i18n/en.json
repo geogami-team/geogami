@@ -264,7 +264,8 @@
     "classQrHint": "Players who scan this code or open this link will play this game, and their results will appear in your dashboard.",
     "copyLink": "Copy link",
     "linkCopied": "Link copied",
-    "classConsentLocked": "This game was opened from your instructor's link, so sharing your results is required to play."
+    "classConsentLocked": "This game was opened from your instructor's link, so sharing your results is required to play.",
+    "instructorLabel": "Instructor"
   },
   "Showroom": {
     "titleShowroom": "Get to know GeoGami",

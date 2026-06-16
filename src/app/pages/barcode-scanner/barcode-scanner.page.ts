@@ -63,11 +63,13 @@ export class BarcodeScannerPage implements OnInit {
         //  - Old multiplayer teacher code: a bare string uId(24) + "-" + gameId
         let gameId = "";
         let uId = "";
+        let iName = "";
         if (content.includes("game-detail") || content.startsWith("http")) {
           try {
             const params = new URL(content).searchParams;
             gameId = params.get("gameId") || "";
             uId = params.get("uId") || params.get("instructor") || "";
+            iName = params.get("iName") || "";
           } catch (e) {
             console.log("Unrecognised QR URL:", content);
           }
@@ -79,9 +81,11 @@ export class BarcodeScannerPage implements OnInit {
         }
 
         if (gameId) {
-          this.navCtrl.navigateForward(
-            `play-game/game-detail?gameId=${gameId}&uId=${uId}`
-          );
+          let target = `play-game/game-detail?gameId=${gameId}&uId=${uId}`;
+          if (iName) {
+            target += `&iName=${encodeURIComponent(iName)}`;
+          }
+          this.navCtrl.navigateForward(target);
         } else {
           this.utilService.showToast("Unrecognised QR code.", "dark", 3000);
         }

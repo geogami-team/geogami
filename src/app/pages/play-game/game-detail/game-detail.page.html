@@ -76,6 +76,9 @@
       <ion-item lines="none" *ngIf="consentLockedByInstructor">
         <ion-note color="medium" class="ion-text-wrap">
           {{ 'PlayGame.classConsentLocked' | translate }}
+          <span *ngIf="instructorName">
+            <br />{{ 'PlayGame.instructorLabel' | translate }}: {{ instructorName }}
+          </span>
         </ion-note>
       </ion-item>
     </ion-card>
@@ -244,12 +247,16 @@
     <ion-content class="ion-padding">
       <div class="class-qr-modal">
         <h2 *ngIf="game">{{ game.name }}</h2>
+        <p class="instructor-line" *ngIf="myName">
+          {{ 'PlayGame.instructorLabel' | translate }}: {{ myName }}
+        </p>
 
         <div class="qr-wrapper">
           <ngx-qrcode
             [elementType]="qrElementType"
             [value]="classQrLink"
-            cssClass="qr-code"
+            cssClass="class-qr-code"
+            [width]="300"
             [errorCorrectionLevel]="qrErrorCorrectionLevel"
           >
           </ngx-qrcode>
