@@ -119,10 +119,10 @@
         <!-- ToDo: put it back -->
         <div style="width: 100%; text-align: center">
           <ngx-qrcode
-            elementType="img"
+            [elementType]="qrElementType"
             [value]="teacherCode"
             cssClass="qr-code"
-            errorCorrectionLevel="L"
+            [errorCorrectionLevel]="qrErrorCorrectionLevelLow"
           >
           </ngx-qrcode>
         </div>

@@ -226,6 +226,7 @@ export class FeedbackComponent {
     clickDirection,
     numberInput,
     textInput,
+    draw,
   }) {
     let isCorrect = true;
     let answer: any = {};
@@ -532,6 +533,19 @@ export class FeedbackComponent {
           correct: isCorrect,
         };
       }
+    }
+
+    // Free DRAW tasks: store the final drawing geometry (the MapboxDraw
+    // FeatureCollection from DrawControl.getAll()) rather than relying on the
+    // raw ON_MAP_CLICKED stream. The FeatureCollection already reflects any
+    // edits/deletions and carries each feature's geometry.type
+    // (Point / LineString / Polygon).
+    if (this.task.answer.type == AnswerType.DRAW) {
+      isCorrect = true;
+      answer = {
+        drawing: draw,
+        correct: isCorrect,
+      };
     }
 
     this.trackerService.addEvent({
