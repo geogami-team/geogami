@@ -82,6 +82,8 @@ export class GameDetailPage implements OnInit {
   // Bound to <ngx-qrcode> via the library's enums (avoids raw-string type errors).
   qrElementType = NgxQrcodeElementTypes.IMG;
   qrErrorCorrectionLevel = NgxQrcodeErrorCorrectionLevels.MEDIUM;
+  // Low level kept for the existing multiplayer teacher-code QR (unchanged).
+  qrErrorCorrectionLevelLow = NgxQrcodeErrorCorrectionLevels.LOW;
 
   constructor(
     public navCtrl: NavController,

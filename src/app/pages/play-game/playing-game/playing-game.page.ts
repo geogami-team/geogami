@@ -1435,31 +1435,37 @@ export class PlayingGamePage implements OnInit, OnDestroy {
         }
       }
 
-      this.trackerService.addEvent({
-        type: "ON_MAP_CLICKED",
-        clickPosition: {
-          latitude: e.lngLat.lat,
-          longitude: e.lngLat.lng,
-        },
-        clickDirection,
-        map: mapType,
-        answer: this.feedbackControl.getMapClickAnswer(
-          {
-            selectedPhoto: this.selectedPhoto,
-            isCorrectPhotoSelected: this.isCorrectPhotoSelected,
-            selectedChoice: this.selectedChoice,
-            isCorrectChoiceSelected: this.isCorrectChoiceSelected,
-            photo: this.photo,
-            photoURL: this.photoURL,
-            directionBearing: this.directionBearing,
-            compassHeading: this.compassHeading,
-            clickDirection: this.clickDirection,
-            numberInput: this.numberInput,
-            textInput: this.textInput,
+      // Free DRAW tasks persist the final drawing geometry on ON_OK_CLICKED
+      // (answer.drawing, from DrawControl.getAll()). Logging every tap here
+      // would also record vertices the player later edited or deleted, which
+      // produced an inaccurate drawing in the dashboard, so skip it for DRAW.
+      if (this.task.answer.type !== AnswerType.DRAW) {
+        this.trackerService.addEvent({
+          type: "ON_MAP_CLICKED",
+          clickPosition: {
+            latitude: e.lngLat.lat,
+            longitude: e.lngLat.lng,
           },
-          [e.lngLat.lng, e.lngLat.lat]
-        ),
-      });
+          clickDirection,
+          map: mapType,
+          answer: this.feedbackControl.getMapClickAnswer(
+            {
+              selectedPhoto: this.selectedPhoto,
+              isCorrectPhotoSelected: this.isCorrectPhotoSelected,
+              selectedChoice: this.selectedChoice,
+              isCorrectChoiceSelected: this.isCorrectChoiceSelected,
+              photo: this.photo,
+              photoURL: this.photoURL,
+              directionBearing: this.directionBearing,
+              compassHeading: this.compassHeading,
+              clickDirection: this.clickDirection,
+              numberInput: this.numberInput,
+              textInput: this.textInput,
+            },
+            [e.lngLat.lng, e.lngLat.lat]
+          ),
+        });
+      }
     }
   }
 
