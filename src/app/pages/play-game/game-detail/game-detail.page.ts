@@ -17,6 +17,7 @@ import {
   NgxQrcodeErrorCorrectionLevels,
 } from "@techiediaries/ngx-qrcode";
 import { Plugins } from "@capacitor/core";
+import { downloadClassQrPdf } from "src/app/helpers/class-qr-pdf";
 
 @Component({
   selector: "app-game-detail",
@@ -709,5 +710,29 @@ export class GameDetailPage implements OnInit {
     // otherwise the inline modal is left orphaned on screen.
     await this.classQrModal?.dismiss();
     await this.startGame();
+  }
+
+  /**
+   * Download the class QR as a professionally laid-out A4 PDF. Grabs the QR
+   * image already rendered in the modal and hands the layout off to the
+   * class-qr-pdf helper.
+   */
+  async downloadQrPdf() {
+    const qrImg = document.querySelector(
+      ".class-qr-code img"
+    ) as HTMLImageElement | null;
+    if (!qrImg || !qrImg.src) {
+      return;
+    }
+
+    await downloadClassQrPdf({
+      qrDataUrl: qrImg.src,
+      gameName: this.game?.name || "GeoGami",
+      instructorLabel: this.translate.instant("PlayGame.instructorLabel"),
+      instructorName: this.myName,
+      scanCaption: this.translate.instant("PlayGame.scanToPlay"),
+      link: this.classQrLink,
+      logoUrl: "/assets/icons/icon-512x512.png",
+    });
   }
 }

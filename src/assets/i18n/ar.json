@@ -267,7 +267,9 @@
     "classConsentLocked": "تم فتح هذه اللعبة من رابط معلّمك، لذا فإن مشاركة نتائجك مطلوبة للعب.",
     "instructorLabel": "المعلّم",
     "unrecognisedQr": "رمز QR غير معروف.",
-    "playNow": "العب الآن"
+    "playNow": "العب الآن",
+    "downloadPdf": "تنزيل PDF",
+    "scanToPlay": "امسح هذا الرمز للعب"
   },
   "Showroom": {
     "titleShowroom": "اكتشف GeoGami",
