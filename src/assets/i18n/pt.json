@@ -266,7 +266,8 @@
     "linkCopied": "Ligação copiada",
     "classConsentLocked": "Este jogo foi aberto a partir do link do seu instrutor, por isso é necessário partilhar os seus resultados para jogar.",
     "instructorLabel": "Instrutor",
-    "unrecognisedQr": "Código QR não reconhecido."
+    "unrecognisedQr": "Código QR não reconhecido.",
+    "playNow": "Jogar agora"
   },
   "Showroom": {
     "titleShowroom": "Conheça o GeoGami",
