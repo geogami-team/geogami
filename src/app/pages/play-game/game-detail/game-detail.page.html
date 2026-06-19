@@ -262,7 +262,7 @@
             [elementType]="qrElementType"
             [value]="classQrLink"
             cssClass="class-qr-code"
-            [width]="300"
+            [width]="600"
             [errorCorrectionLevel]="qrErrorCorrectionLevel"
           >
           </ngx-qrcode>
@@ -289,6 +289,12 @@
 
         <ion-button expand="block" (click)="copyClassQrLink()">
           {{ 'PlayGame.copyLink' | translate }}
+        </ion-button>
+
+        <!-- Download the QR as a printable PDF handout -->
+        <ion-button expand="block" fill="outline" (click)="downloadQrPdf()">
+          <ion-icon slot="start" name="document-outline"></ion-icon>
+          {{ 'PlayGame.downloadPdf' | translate }}
         </ion-button>
 
         <!-- Play now: the logged-in user plays immediately; the track is
