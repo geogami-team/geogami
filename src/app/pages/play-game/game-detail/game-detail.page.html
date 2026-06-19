@@ -238,7 +238,7 @@
 </ion-footer>
 
 <!-- Class QR code modal (Phase 2) -->
-<ion-modal [isOpen]="isClassQrModalOpen" (didDismiss)="isClassQrModalOpen = false">
+<ion-modal #classQrModal [isOpen]="isClassQrModalOpen" (didDismiss)="isClassQrModalOpen = false">
   <ng-template>
     <ion-header>
       <ion-toolbar>
@@ -289,6 +289,13 @@
 
         <ion-button expand="block" (click)="copyClassQrLink()">
           {{ 'PlayGame.copyLink' | translate }}
+        </ion-button>
+
+        <!-- Play now: the logged-in user plays immediately; the track is
+             attributed to them as instructor (no copy/scan needed). -->
+        <ion-button expand="block" color="success" (click)="playAsInstructor()">
+          <ion-icon slot="start" name="play"></ion-icon>
+          {{ 'PlayGame.playNow' | translate }}
         </ion-button>
       </div>
     </ion-content>
