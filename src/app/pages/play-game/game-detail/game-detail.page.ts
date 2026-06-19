@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from "@angular/core";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { ActivatedRoute } from "@angular/router";
-import { AlertController, NavController } from "@ionic/angular";
+import { AlertController, IonModal, NavController } from "@ionic/angular";
 import { GamesService } from "../../../services/games.service";
 import { PopoverController } from "@ionic/angular";
 import { TranslateService } from "@ngx-translate/core";
@@ -25,6 +25,7 @@ import { Plugins } from "@capacitor/core";
 })
 export class GameDetailPage implements OnInit {
   @ViewChild("monitorMap") mapContainer;
+  @ViewChild("classQrModal") classQrModal!: IonModal;
 
   game: any;
   activities: any[];
@@ -687,5 +688,26 @@ export class GameDetailPage implements OnInit {
       "dark",
       2000
     );
+  }
+
+  /**
+   * Play this game now as the logged-in instructor — no copy/scan needed.
+   * Attributes the resulting track to them (instructor = their id) and forces
+   * data-sharing on, so the play is stored and lands in their own dashboard.
+   */
+  async playAsInstructor() {
+    this.instructorId = this.authService.getUserId();
+    this.instructorName = this.myName;
+    this.shareData_cbox = true;
+    this.disableShareData_cbox = true;
+    this.consentLockedByInstructor = true;
+    // Default the player name to the instructor's name if none was entered.
+    if (!this.playerName) {
+      this.playerName = this.myName;
+    }
+    // Fully dismiss the modal (await the close animation) before navigating,
+    // otherwise the inline modal is left orphaned on screen.
+    await this.classQrModal?.dismiss();
+    await this.startGame();
   }
 }
