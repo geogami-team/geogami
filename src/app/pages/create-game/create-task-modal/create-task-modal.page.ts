@@ -189,17 +189,41 @@ export class CreateTaskModalPage implements OnInit {
     return !!answer?.type && !this.fillableAnswerTypes.includes(answer.type);
   }
 
-  private hasTaskInstruction(): boolean {
-    // Every task type offers both an information-text field and an audio recorder,
-    // so either one counts as a valid instruction.
-    const question = this.asArray(this.task?.question)[0];
-    return !!(question?.text?.trim() || question?.audio);
+  // nav-photo is the only navigation task guided by a photo of the place to reach;
+  // it uses the NAV_INSTRUCTION_PHOTO question. Both the instruction and destination
+  // checks treat that photo as valid content, so they share this predicate.
+  private isPhotoNavQuestion(question: any): boolean {
+    return question?.type === QuestionType.NAV_INSTRUCTION_PHOTO;
   }
 
-  // Shown when an author tries to save a task that has neither instruction text nor audio.
+  private hasTaskInstruction(): boolean {
+    // Every task type offers both an information-text field and an audio recorder,
+    // so either one counts as a valid instruction. nav-photo additionally accepts a
+    // photo of the place as its instruction — without this, a photo-only nav-photo
+    // task would be wrongly blocked here before its photo is ever considered.
+    const question = this.asArray(this.task?.question)[0];
+    if (question?.text?.trim() || question?.audio) {
+      return true;
+    }
+    return this.isPhotoNavQuestion(question) && !!question?.photo;
+  }
+
+  // Shown when an author tries to save a task with no instruction. The acceptable
+  // options differ by task type, so nav-photo gets a message that also lists the
+  // photo — otherwise the author would only be told to add text or audio even though
+  // a photo would satisfy the task too.
   private async presentTaskInstructionRequiredToast() {
+    const question = this.asArray(this.task?.question)[0];
+    const messageKey = this.isPhotoNavQuestion(question)
+      ? "CreateGame.instructionAudioOrPhotoRequired"
+      : "CreateGame.instructionOrAudioRequired";
     const toast = await this.toastController.create({
-      message: this.translate.instant("CreateGame.instructionOrAudioRequired"),
+      message: this.translate.instant(messageKey),
+      color: "danger",
+      duration: 3000,
+    });
+    toast.present();
+  }
       color: "danger",
       duration: 3000,
     });
