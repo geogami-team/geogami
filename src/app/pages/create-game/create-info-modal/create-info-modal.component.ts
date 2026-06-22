@@ -14,6 +14,7 @@ import { standardMapFeatures } from "src/app/models/standardMapFeatures";
 import { cloneDeep } from "lodash";
 import { VirEnvHeaders } from "src/app/models/virEnvsHeader";
 import { UtilService } from "src/app/services/util.service";
+import { TranslateService } from "@ngx-translate/core";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
 import { VEBuildingUtilService } from "src/app/services/ve-building-util.service";
 
@@ -56,7 +57,8 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
     public modalController: ModalController,
     public popoverController: PopoverController,
     public utilService: UtilService,
-    private veBuildingUtilService: VEBuildingUtilService
+    private veBuildingUtilService: VEBuildingUtilService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -159,6 +161,18 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
     }
     if (dismissType == "close") {
       this.modalController.dismiss();
+      return;
+    }
+
+    // An info task only shows its content to the player, so block saving an empty one
+    // (no text, photo or audio) — otherwise the player just gets a bare "okay" button.
+    const question = this.task?.question;
+    const hasContent = !!(question?.text?.trim() || question?.photo || question?.audio);
+    if (!hasContent) {
+      this.utilService.showToast(
+        this.translate.instant("CreateGame.infoContentRequired"),
+        "danger"
+      );
       return;
     }
 

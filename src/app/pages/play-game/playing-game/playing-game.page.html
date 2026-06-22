@@ -174,13 +174,13 @@
           </div>
         </div>
         
+        <!-- Confirmation hint: only nav-flag ("arrive") and multiple-choice ("select an
+             answer") show one. Answer tasks (text/number/photo) and "press okay only"
+             tasks deliberately show no generic "Press okay!" hint — they rely on the
+             task instruction above so players aren't nudged to confirm prematurely. -->
         <div class="task-text" *ngIf="!panelMinimized">
           <p *ngIf="task?.settings?.confirmation && task?.type == 'nav-flag'">
             {{ "PlayGame.pressOKdestination" | translate }}
-          </p>
-          <p
-            *ngIf="task?.settings?.confirmation && task?.type != 'nav-flag' && !task?.answer?.type.includes('MULTIPLE_CHOICE')">
-            {{ "PlayGame.pressOK" | translate }}
           </p>
           <!-- To show differnt message with MULTIPLE_CHOICE questions -->
           <p

@@ -159,6 +159,9 @@
     "download": "download"
   },
   "CreateGame": {
+    "taskInstructionRequired": "Please add an Information text so players know what to do.",
+    "instructionOrAudioRequired": "Please add an Information text or an Audio message so players know what to do.",
+    "infoContentRequired": "Please add an Information text, a photo, or an Audio message to this info task.",
     "titleCreateGame": "Develop your GeoGami",
     "titleCreateGameMenu": "Select the game environment",
     "realWorldDescription": "Develop a GeoGami to play outside.",
