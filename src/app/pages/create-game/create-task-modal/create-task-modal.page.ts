@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { ModalController } from "@ionic/angular";
+import { ModalController, ToastController } from "@ionic/angular";
 import { cloneDeep } from "lodash";
 
 import { navtasks } from "../../../models/navigation-tasks";
@@ -149,8 +149,62 @@ export class CreateTaskModalPage implements OnInit {
     public modalController: ModalController,
     public popoverController: PopoverController,
     private translate: TranslateService,
-    private veBuildingUtilService: VEBuildingUtilService
+    private veBuildingUtilService: VEBuildingUtilService,
+    private toastController: ToastController
   ) {}
+
+  // Answer types that render a fill-in input the player must complete before confirming.
+  private readonly fillableAnswerTypes: string[] = [
+    AnswerType.TEXT,
+    AnswerType.NUMBER,
+    AnswerType.PHOTO,
+    AnswerType.MULTIPLE_CHOICE,
+    AnswerType.MULTIPLE_CHOICE_TEXT,
+  ];
+
+  // question/answer is a single object in single mode and an array in multiplayer mode.
+  // isSingleMode isn't passed by every modal opener (e.g. create-game-map), so normalise
+  // by the actual data shape instead of relying on that flag.
+  private asArray(value: any): any[] {
+    if (Array.isArray(value)) {
+      return value;
+    }
+    return value != null ? [value] : [];
+  }
+
+  // "Press okay only" tasks: the player just confirms with OK and has no answer to
+  // enter, so the task instruction is the only on-screen guidance. These tasks must
+  // have an author-written instruction (we don't auto-fill a generic default for them).
+  isPressOkOnlyTask(): boolean {
+    // nav-flag has its own "press okay when you arrive" hint, handled separately.
+    if (this.task?.type === "nav-flag") {
+      return false;
+    }
+    // Only confirmation tasks end with a bare OK press (theme tasks always confirm).
+    if (!this.task?.settings?.confirmation && !this.task?.category?.includes("theme")) {
+      return false;
+    }
+    // Okay-only = there is no fill-in answer input for the player to complete first.
+    const answer = this.asArray(this.task?.answer)[0];
+    return !!answer?.type && !this.fillableAnswerTypes.includes(answer.type);
+  }
+
+  private hasTaskInstruction(): boolean {
+    // Every task type offers both an information-text field and an audio recorder,
+    // so either one counts as a valid instruction.
+    const question = this.asArray(this.task?.question)[0];
+    return !!(question?.text?.trim() || question?.audio);
+  }
+
+  // Shown when an author tries to save a task that has neither instruction text nor audio.
+  private async presentTaskInstructionRequiredToast() {
+    const toast = await this.toastController.create({
+      message: this.translate.instant("CreateGame.instructionOrAudioRequired"),
+      color: "danger",
+      duration: 3000,
+    });
+    toast.present();
+  }
 
   ngOnInit() {
     if (this.type == "nav") {
@@ -809,6 +863,13 @@ export class CreateTaskModalPage implements OnInit {
       return;
     }
 
+    // Every task needs a question/instruction so the player knows what to do —
+    // block saving without one. (Info tasks are validated in their own modal.)
+    if (!this.hasTaskInstruction()) {
+      this.presentTaskInstructionRequiredToast();
+      return;
+    }
+
     if (this.mapFeatures == undefined) {
       this.mapFeatures = cloneDeep(standardMapFeatures);
     }
@@ -1054,6 +1115,11 @@ export class CreateTaskModalPage implements OnInit {
   }
 
   checkAndUpdateQuestionText() {
+    // "Press okay only" tasks must carry an author-written instruction, so don't
+    // backfill a generic default question for them — leave the field empty to prompt input.
+    if (this.isPressOkOnlyTask()) {
+      return;
+    }
     if (this.isSingleMode) {
       if (!this.task.question.text?.trim()) {
         this.task.question.text = this.translate.instant(this.task.question.key);

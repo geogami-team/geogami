@@ -159,6 +159,9 @@
     "download": "herunterladen"
   },
   "CreateGame": {
+    "taskInstructionRequired": "Bitte füge einen Informationstext hinzu, damit die Spieler:innen wissen, was zu tun ist.",
+    "instructionOrAudioRequired": "Bitte füge einen Informationstext oder eine Audiobotschaft hinzu, damit die Spieler:innen wissen, was zu tun ist.",
+    "infoContentRequired": "Bitte füge diesem Info-Task einen Informationstext, ein Foto oder eine Audiobotschaft hinzu.",
     "titleCreateGame": "Entwickle dein GeoGami",
     "titleCreateGameMenu": "Wähle die Spielumgebung",
     "realWorldDescription": "Entwickle ein GeoGami, um es draußen zu spielen.",

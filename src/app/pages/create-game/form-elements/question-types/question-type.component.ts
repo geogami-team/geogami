@@ -22,6 +22,9 @@ import { virEnvLayers } from "src/app/models/virEnvsLayers";
 export class QuestionTypeComponent implements OnInit, OnChanges {
   @Input() question: any;
   @Input() taskType: string;
+  // "Press okay only" tasks require an author-written instruction, so the parent asks
+  // us not to backfill a generic default question for them.
+  @Input() skipDefaultInstruction: boolean = false;
 
   // VR world
   @Input() isVirtualWorld: boolean;
@@ -117,6 +120,11 @@ export class QuestionTypeComponent implements OnInit, OnChanges {
   }
 
   checkAndUpdateQuestionText() {
+    // Parent sets skipDefaultInstruction for "press okay only" tasks so the instruction
+    // field stays empty and the author must provide real text, rather than a default.
+    if (this.skipDefaultInstruction) {
+      return;
+    }
     if (this.isSingleMode) {
       if (!this.question.text?.trim()) {
         this.question.text = this.translate.instant(this.question.key);
