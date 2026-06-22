@@ -159,6 +159,9 @@
     "download": "télécharger"
   },
   "CreateGame": {
+    "taskInstructionRequired": "Veuillez ajouter un Texte d'information afin que les joueurs sachent quoi faire.",
+    "instructionOrAudioRequired": "Veuillez ajouter un Texte d'information ou un Message audio afin que les joueurs sachent quoi faire.",
+    "infoContentRequired": "Veuillez ajouter un Texte d'information, une photo ou un Message audio à cette tâche d'information.",
     "titleCreateGame": "Développez votre jeu GeoGami",
     "titleCreateGameMenu": "Sélectionnez l'environnement de jeu",
     "realWorldDescription": "Développez un jeu GeoGami pour jouer dehors.",

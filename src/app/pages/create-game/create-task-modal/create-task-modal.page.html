@@ -314,6 +314,7 @@
     <question-type
       [(question)]="task.question"
       [taskType]="task.category"
+      [skipDefaultInstruction]="isPressOkOnlyTask()"
       [isVirtualWorld]="isVirtualWorld"
       [isVRMirrored]="isVRMirrored"
       [virEnvType]="virEnvType"
