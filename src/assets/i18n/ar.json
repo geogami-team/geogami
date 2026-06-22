@@ -161,6 +161,8 @@
   "CreateGame": {
     "taskInstructionRequired": "يرجى إضافة نص معلومات حتى يعرف اللاعبون ما يجب فعله.",
     "instructionOrAudioRequired": "يرجى إضافة نص معلومات أو رسالة صوتية حتى يعرف اللاعبون ما يجب فعله.",
+    "instructionAudioOrPhotoRequired": "يرجى إضافة نص معلومات أو رسالة صوتية أو صورة حتى يعرف اللاعبون ما يجب فعله.",
+    "destinationRequired": "يرجى تحديد وجهة على الخريطة قبل حفظ هذه المهمة.",
     "infoContentRequired": "يرجى إضافة نص معلومات أو صورة أو رسالة صوتية إلى مهمة المعلومات هذه.",
     "titleCreateGame": "طور GeoGami الخاص بك",
     "titleCreateGameMenu": "اختر بيئة اللعبة",

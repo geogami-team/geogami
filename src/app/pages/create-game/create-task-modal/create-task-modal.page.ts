@@ -189,17 +189,131 @@ export class CreateTaskModalPage implements OnInit {
     return !!answer?.type && !this.fillableAnswerTypes.includes(answer.type);
   }
 
-  private hasTaskInstruction(): boolean {
-    // Every task type offers both an information-text field and an audio recorder,
-    // so either one counts as a valid instruction.
-    const question = this.asArray(this.task?.question)[0];
-    return !!(question?.text?.trim() || question?.audio);
+  // nav-photo is the only navigation task guided by a photo of the place to reach;
+  // it uses the NAV_INSTRUCTION_PHOTO question. Both the instruction and destination
+  // checks treat that photo as valid content, so they share this predicate.
+  private isPhotoNavQuestion(question: any): boolean {
+    return question?.type === QuestionType.NAV_INSTRUCTION_PHOTO;
   }
 
-  // Shown when an author tries to save a task that has neither instruction text nor audio.
+  private hasTaskInstruction(): boolean {
+    // Every task type offers both an information-text field and an audio recorder,
+    // so either one counts as a valid instruction. nav-photo additionally accepts a
+    // photo of the place as its instruction — without this, a photo-only nav-photo
+    // task would be wrongly blocked here before its photo is ever considered.
+    const question = this.asArray(this.task?.question)[0];
+    if (question?.text?.trim() || question?.audio) {
+      return true;
+    }
+    return this.isPhotoNavQuestion(question) && !!question?.photo;
+  }
+
+  // Shown when an author tries to save a task with no instruction. The acceptable
+  // options differ by task type, so nav-photo gets a message that also lists the
+  // photo — otherwise the author would only be told to add text or audio even though
+  // a photo would satisfy the task too.
   private async presentTaskInstructionRequiredToast() {
+    const question = this.asArray(this.task?.question)[0];
+    const messageKey = this.isPhotoNavQuestion(question)
+      ? "CreateGame.instructionAudioOrPhotoRequired"
+      : "CreateGame.instructionOrAudioRequired";
     const toast = await this.toastController.create({
-      message: this.translate.instant("CreateGame.instructionOrAudioRequired"),
+      message: this.translate.instant(messageKey),
+      color: "danger",
+      duration: 3000,
+    });
+    toast.present();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Destination validation
+  //
+  // Navigation tasks send the player to a point on the map and are graded by how
+  // close they get to it (evaluate: "distanceToPoint" — see navigation-tasks.ts).
+  // Without a destination the task simply can't be played or scored, yet the editor
+  // historically let authors save one anyway. hasDestination() is the gate that
+  // closes that hole; it runs on every save in dismissModal(), so it also catches
+  // older games that were created before the rule existed — opening such a task and
+  // saving it now forces the missing destination to be added first.
+  // ---------------------------------------------------------------------------
+
+  // A task needs a destination only when its answer is a POSITION. That covers all
+  // four navigation types (nav-flag, nav-arrow, nav-text, nav-photo) and nothing
+  // else, so we key off the answer type rather than hard-coding task names — that
+  // way it keeps working if more POSITION-based types are added later.
+  private requiresDestination(answer: any): boolean {
+    return answer?.type === AnswerType.POSITION;
+  }
+
+  // The destination is a GeoJSON point the author drops on the map, stored as
+  // answer.position. It only counts once it actually carries coordinates: a fresh
+  // task starts as { position: undefined } and a cleared marker leaves an empty
+  // object, both of which must be treated as "no destination set".
+  private hasPositionSet(answer: any): boolean {
+    return !!answer?.position?.geometry?.coordinates?.length;
+  }
+
+  // nav-photo is the one exception: it shows the player a photo of the place to
+  // reach, which can stand in for a pinned map point. The photo lives on the
+  // question (question.photo), not the answer, and only this task type uses the
+  // NAV_INSTRUCTION_PHOTO question — so a photo is accepted as a destination only
+  // there, never for nav-flag/nav-arrow/nav-text.
+  private hasDestinationPhoto(question: any): boolean {
+    return this.isPhotoNavQuestion(question) && !!question?.photo;
+  }
+
+  // Returns true when the task either doesn't need a destination or has a valid one.
+  private hasDestination(): boolean {
+    // Single- and multiplayer tasks store question/answer differently: single mode
+    // keeps a plain object, multiplayer keeps one entry per player in an array. Use
+    // the actual shape to branch, since isSingleMode isn't passed by every opener.
+    if (!Array.isArray(this.task?.answer)) {
+      const answer = this.task?.answer;
+      // Non-navigation tasks (no POSITION answer) have nothing to validate here.
+      if (!this.requiresDestination(answer)) {
+        return true;
+      }
+      // A pinned point is always valid; a photo is valid for nav-photo only.
+      return (
+        this.hasPositionSet(answer) ||
+        this.hasDestinationPhoto(this.task?.question)
+      );
+    }
+
+    // Multiplayer: every active player who has a POSITION answer needs a destination.
+    const answers = this.task.answer;
+    const questions = this.asArray(this.task?.question);
+    // Authors can opt to give every player the same destination/photo via these
+    // toggles; the values are only copied from player 1 onto players 2/3 later, in
+    // updatePlayersAnswers() during save. So at validation time those inheriting
+    // players may still look empty — resolve them back to player 1 before checking,
+    // otherwise we'd wrongly reject a perfectly valid shared setup.
+    const sharedPosition = !!answers[0]?.allHasSameDes;
+    const sharedPhoto = !!questions[0]?.allHasSameInstPhoto;
+    for (let i = 0; i < this.numPlayers; i++) {
+      const answer = answers[i];
+      // Only the players actually navigating to a point need a destination; e.g. in
+      // a 1-1 collaboration another player might have a different answer type.
+      if (!this.requiresDestination(answer)) {
+        continue;
+      }
+      const resolvedAnswer = sharedPosition && i > 0 ? answers[0] : answer;
+      const resolvedQuestion = sharedPhoto && i > 0 ? questions[0] : questions[i];
+      // This player passes only if it ends up with a point or (nav-photo) a photo.
+      if (
+        !this.hasPositionSet(resolvedAnswer) &&
+        !this.hasDestinationPhoto(resolvedQuestion)
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Shown when an author tries to save a navigation task without a destination.
+  private async presentDestinationRequiredToast() {
+    const toast = await this.toastController.create({
+      message: this.translate.instant("CreateGame.destinationRequired"),
       color: "danger",
       duration: 3000,
     });
@@ -867,6 +981,16 @@ export class CreateTaskModalPage implements OnInit {
     // block saving without one. (Info tasks are validated in their own modal.)
     if (!this.hasTaskInstruction()) {
       this.presentTaskInstructionRequiredToast();
+      return;
+    }
+
+    // Navigation tasks (flag, arrow, text, photo) send the player to a point on the map,
+    // so a destination must be set before saving. hasDestination() also accepts a photo
+    // for nav-photo, and because this guard runs on every save it forces older tasks that
+    // predate the rule to get a destination when they're edited. Bail out with a toast
+    // (rather than silently saving) so the author knows what's missing.
+    if (!this.hasDestination()) {
+      this.presentDestinationRequiredToast();
       return;
     }
 
