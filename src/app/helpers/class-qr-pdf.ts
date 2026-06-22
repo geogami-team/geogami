@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import { Plugins, Capacitor, FilesystemDirectory } from "@capacitor/core";
 
 export interface ClassQrPdfOptions {
   /** The QR image as a data URL (e.g. from the rendered <ngx-qrcode> img). */
@@ -92,7 +93,28 @@ export async function downloadClassQrPdf(
   });
 
   const safeName = gameName.replace(/[^a-z0-9]+/gi, "_");
-  doc.save(`GeoGami-${safeName}.pdf`);
+  const fileName = `GeoGami-${safeName}.pdf`;
+
+  if (Capacitor.isNative) {
+    // Native webviews can't do a browser download, and jsPDF's fallback opens
+    // the PDF inside the webview with no way to close it. Instead, write the
+    // file and open the OS share/save sheet (which is dismissable).
+    const dataUri = doc.output("datauristring");
+    const base64 = dataUri.substring(dataUri.indexOf("base64,") + 7);
+    const written = await Plugins.Filesystem.writeFile({
+      path: fileName,
+      data: base64,
+      directory: FilesystemDirectory.Cache,
+    });
+    await Plugins.Share.share({
+      title: gameName,
+      url: written.uri,
+      dialogTitle: gameName,
+    });
+  } else {
+    // Browser: trigger a normal download.
+    doc.save(fileName);
+  }
 }
 
 /** Loads an image and resolves once it's ready (for embedding in the PDF). */
