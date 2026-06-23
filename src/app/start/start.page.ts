@@ -39,6 +39,9 @@ export class StartPage implements OnInit {
   latestAppVersionInfo: any;
   isWebPlatform = (Capacitor.platform == 'web');
 
+  // web app version (latest GitHub release) — native platforms read it from the device instead
+  webAppVersion: string = "";
+
   constructor(
     public navCtrl: NavController,
     public toastController: ToastController,
@@ -62,6 +65,12 @@ export class StartPage implements OnInit {
     // get updated app version to notify user of app update
     if (Capacitor.platform != "web") {
       this.checkNewAppVersion();
+    } else {
+      // on web, just show the latest GitHub release version
+      this.gamesService
+        .getGithubLatestVersion()
+        .then((res) => (this.webAppVersion = res?.content?.version))
+        .catch(() => {});
     }
 
     // (translation) get languages

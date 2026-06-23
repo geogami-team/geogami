@@ -132,10 +132,14 @@
     </ion-card-content>
   </ion-card>
 
-  <div class="ion-text-center" *ngIf="device && device.appBuild">
+  <div class="ion-text-center" *ngIf="!isWebPlatform && device && device.appBuild">
     <p>
       V. {{device?.appVersion}} {{['admin', 'contentAdmin'].includes( (user |
       async)?.roles[0])? "("+device.appBuild+")":""}}
     </p>
+  </div>
+
+  <div class="ion-text-center" *ngIf="isWebPlatform && webAppVersion">
+    <p>V. {{webAppVersion}}</p>
   </div>
 </ion-content>
