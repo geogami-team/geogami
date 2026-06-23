@@ -36,6 +36,8 @@ export class EventFormModalComponent implements OnInit {
 
   allGames: any[] = [];
   searchTerm = "";
+  // Game-world filter for the picker: real-world vs virtual (VR) games.
+  gameWorld: "real" | "virtual" = "real";
   loadingGames = true;
   saving = false;
 
@@ -64,8 +66,10 @@ export class EventFormModalComponent implements OnInit {
       // minimal + registeredUser → every visible game (name/place/owner),
       // including games the user doesn't own (point 3b).
       const res = await this.gamesService.getGames(true, true);
-      this.allGames = (res?.content || []).sort((a, b) =>
-        (a.name || "").localeCompare(b.name || "")
+      // Newest first. The minimal endpoint omits createdAt, so derive the
+      // creation time from the Mongo _id (its first 4 bytes are a timestamp).
+      this.allGames = (res?.content || []).sort(
+        (a, b) => this.createdTime(b) - this.createdTime(a)
       );
     } catch (err) {
       console.log(err);
@@ -78,14 +82,34 @@ export class EventFormModalComponent implements OnInit {
     }
   }
 
+  // Creation time (seconds since epoch) from a Mongo ObjectId's first 4 bytes.
+  private createdTime(game: any): number {
+    const id = game?._id;
+    if (typeof id !== "string" || id.length < 8) return 0;
+    return parseInt(id.substring(0, 8), 16) || 0;
+  }
+
   get filteredGames(): any[] {
     const term = this.searchTerm.trim().toLowerCase();
-    if (!term) return this.allGames;
-    return this.allGames.filter(
-      (g) =>
-        (g.name || "").toLowerCase().includes(term) ||
-        (g.place || "").toLowerCase().includes(term)
-    );
+    return this.allGames.filter((g) => {
+      // Single-player games only for now.
+      if (g.isMultiplayerGame) return false;
+      // World filter: virtual (VR) games vs real-world games.
+      const isVirtual = !!g.isVRWorld;
+      if (this.gameWorld === "virtual" && !isVirtual) return false;
+      if (this.gameWorld === "real" && isVirtual) return false;
+      // Free-text search on name / place.
+      if (
+        term &&
+        !(
+          (g.name || "").toLowerCase().includes(term) ||
+          (g.place || "").toLowerCase().includes(term)
+        )
+      ) {
+        return false;
+      }
+      return true;
+    });
   }
 
   get selectedCount(): number {

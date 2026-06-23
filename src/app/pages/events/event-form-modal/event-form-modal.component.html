@@ -41,8 +41,8 @@
 
 <ion-content class="ion-padding">
   <!-- Step 1: name + description -->
-  <div *ngIf="step === 1">
-    <ion-item>
+  <div *ngIf="step === 1" class="step-details">
+    <ion-item lines="full">
       <ion-label position="stacked">
         {{ "Events.name" | translate }} *
       </ion-label>
@@ -52,7 +52,7 @@
         placeholder="{{ 'Events.namePlaceholder' | translate }}"
       ></ion-input>
     </ion-item>
-    <ion-item>
+    <ion-item lines="full">
       <ion-label position="stacked">
         {{ "Events.description" | translate }}
       </ion-label>
@@ -68,6 +68,15 @@
 
   <!-- Step 2: choose games -->
   <div *ngIf="step === 2">
+    <ion-segment [(ngModel)]="gameWorld" mode="md">
+      <ion-segment-button value="real">
+        <ion-label>{{ "Events.realWorld" | translate }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="virtual">
+        <ion-label>{{ "Events.virtual" | translate }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
     <ion-searchbar
       [(ngModel)]="searchTerm"
       placeholder="{{ 'Events.searchGames' | translate }}"
@@ -75,6 +84,9 @@
 
     <p class="selected-count">
       {{ "Events.selectedCount" | translate: { count: selectedCount } }}
+      <span class="single-player-note">
+        · {{ "Events.singlePlayerOnly" | translate }}
+      </span>
     </p>
 
     <div *ngIf="loadingGames" class="ion-text-center ion-padding">

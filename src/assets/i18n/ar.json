@@ -170,7 +170,10 @@
     "pdfComingSoon": "تصدير PDF قريبًا",
     "pdfNoGames": "أضف لعبة واحدة على الأقل قبل تصدير ملف PDF",
     "pdfError": "تعذر إنشاء ملف PDF",
-    "gamesHeading": "ألعاب هذه الفعالية"
+    "gamesHeading": "ألعاب هذه الفعالية",
+    "realWorld": "العالم الحقيقي",
+    "virtual": "افتراضي",
+    "singlePlayerOnly": "لاعب واحد فقط"
   },
   "Start": {
     "myEvents": "فعالياتي",

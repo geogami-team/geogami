@@ -58,6 +58,27 @@
   margin: 4px 4px 8px;
 }
 
+.single-player-note {
+  color: var(--ion-color-medium);
+}
+
+/* Step 1 (details): clearer, better-spaced field labels. */
+.step-details {
+  ion-item {
+    margin-bottom: 14px;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+  }
+
+  ion-label[position="stacked"] {
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ion-text-color);
+    white-space: normal;
+  }
+}
+
 .review-name {
   font-weight: 700;
   margin-bottom: 4px;

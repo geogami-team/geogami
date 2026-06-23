@@ -170,7 +170,10 @@
     "pdfComingSoon": "Exportação para PDF em breve",
     "pdfNoGames": "Adicione pelo menos um jogo antes de exportar um PDF",
     "pdfError": "Não foi possível gerar o PDF",
-    "gamesHeading": "Jogos deste evento"
+    "gamesHeading": "Jogos deste evento",
+    "realWorld": "Mundo real",
+    "virtual": "Virtual",
+    "singlePlayerOnly": "Apenas um jogador"
   },
   "Start": {
     "myEvents": "Os meus eventos",
