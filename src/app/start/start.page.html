@@ -51,6 +51,22 @@
 
   <ion-card
     *ngIf="(user | async)?.roles && ['admin', 'contentAdmin', 'scholar'].includes( (user | async)?.roles[0] )"
+    id="start_card_events"
+    (click)="navigateEventsPage()"
+    color="secondary"
+  >
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="flag"></ion-icon> {{ "Start.myEvents" | translate }}
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      {{ "Start.myEventsDescription" | translate }}
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card
+    *ngIf="(user | async)?.roles && ['admin', 'contentAdmin', 'scholar'].includes( (user | async)?.roles[0] )"
     id="start_card_analyze"
     (click)="navigateAnalyzePage()"
     color="secondary"

@@ -243,6 +243,12 @@ const routes: Routes = [
     path: 'analyze/dashboard',
     loadChildren: () => import('./pages/analyze-game/dashboard/dashboard.module').then( m => m.DashboardPageModule)
   },
+  {
+    path: "events",
+    loadChildren: () =>
+      import("./pages/events/events.module").then((m) => m.EventsPageModule),
+    canActivate: [AuthGuard],
+  },
 ];
 @NgModule({
   imports: [

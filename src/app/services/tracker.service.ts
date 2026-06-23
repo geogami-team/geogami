@@ -21,6 +21,9 @@ export class TrackerService {
   private gameName: string;
   // Phase 3: instructor id for single-player class plays (null otherwise).
   private instructor: string;
+  // Event id for single-player event plays (null otherwise); tags the track
+  // with the study it was collected for.
+  private event: string;
   private device: DeviceInfo;
   private waypoints: any[];
   private events: any[];
@@ -80,7 +83,8 @@ export class TrackerService {
     isSingleMode: boolean,
     numPlayers: number,
     playerNo: number,
-    instructor: string = null
+    instructor: string = null,
+    event: string = null
   ) {
     this.isVirtualWorld = isVirtualWorld;
     this.initialAvatarLoc = initialAvatarLoc;
@@ -88,6 +92,7 @@ export class TrackerService {
     this.numPlayers = numPlayers;
     this.playerNo = playerNo;
     this.instructor = instructor;
+    this.event = event;
 
     if (!isVirtualWorld) {
       this.positionWatch =
@@ -294,6 +299,8 @@ export class TrackerService {
       game: this.game,
       // Phase 3: attribute single-player class plays to the instructor.
       instructor: this.instructor || undefined,
+      // Phase 3: tag single-player event plays with the event id.
+      event: this.event || undefined,
       name: this.gameName,
       start: this.start,
       end: new Date().toISOString(),

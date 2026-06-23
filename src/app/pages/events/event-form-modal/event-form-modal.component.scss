@@ -1,0 +1,90 @@
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px 10px;
+  gap: 4px;
+}
+
+.stepper-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--ion-color-medium);
+  flex: 0 0 auto;
+
+  .dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--ion-color-light-shade, #d7d8da);
+    color: var(--ion-color-medium);
+  }
+
+  .label {
+    font-size: 11px;
+    margin-top: 3px;
+    max-width: 80px;
+    text-align: center;
+  }
+
+  &.active .dot,
+  &.done .dot {
+    background: var(--ion-color-primary);
+    color: #fff;
+  }
+
+  &.active .label {
+    color: var(--ion-color-primary);
+    font-weight: 600;
+  }
+}
+
+.stepper-line {
+  flex: 1 1 auto;
+  height: 2px;
+  max-width: 48px;
+  background: var(--ion-color-light-shade, #d7d8da);
+}
+
+.selected-count {
+  font-size: 13px;
+  color: var(--ion-color-medium);
+  margin: 4px 4px 8px;
+}
+
+.single-player-note {
+  color: var(--ion-color-medium);
+}
+
+/* Step 1 (details): clearer, better-spaced field labels. */
+.step-details {
+  ion-item {
+    margin-bottom: 14px;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+  }
+
+  ion-label[position="stacked"] {
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ion-text-color);
+    white-space: normal;
+  }
+}
+
+.review-name {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.review-desc {
+  color: var(--ion-color-medium);
+  margin-top: 0;
+}
