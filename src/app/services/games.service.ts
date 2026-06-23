@@ -111,6 +111,13 @@ export class GamesService {
       .toPromise();
   }
 
+  // To retreive the latest GitHub release version (used by the web build)
+  getGithubLatestVersion(): Promise<any> {
+    return this.http
+      .get(`${environment.apiURL}/appversion/github-latest`)
+      .toPromise();
+  }
+
   //* To retreive user games info that has at least on track
   getUserGamesWithTrackInfo() {
     return this.http
