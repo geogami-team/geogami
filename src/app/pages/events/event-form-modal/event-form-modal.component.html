@@ -1,0 +1,167 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{ (event?._id ? "Events.editTitle" : "Events.createTitle") | translate }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Step indicator -->
+  <ion-toolbar>
+    <div class="stepper">
+      <div
+        class="stepper-step"
+        [class.active]="step === 1"
+        [class.done]="step > 1"
+      >
+        <span class="dot">1</span>
+        <span class="label">{{ "Events.step1" | translate }}</span>
+      </div>
+      <div class="stepper-line"></div>
+      <div
+        class="stepper-step"
+        [class.active]="step === 2"
+        [class.done]="step > 2"
+      >
+        <span class="dot">2</span>
+        <span class="label">{{ "Events.step2" | translate }}</span>
+      </div>
+      <div class="stepper-line"></div>
+      <div class="stepper-step" [class.active]="step === 3">
+        <span class="dot">3</span>
+        <span class="label">{{ "Events.step3" | translate }}</span>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Step 1: name + description -->
+  <div *ngIf="step === 1" class="step-details">
+    <ion-item lines="full">
+      <ion-label position="stacked">
+        {{ "Events.name" | translate }} *
+      </ion-label>
+      <ion-input
+        [(ngModel)]="name"
+        maxlength="80"
+        placeholder="{{ 'Events.namePlaceholder' | translate }}"
+      ></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label position="stacked">
+        {{ "Events.description" | translate }}
+      </ion-label>
+      <ion-textarea
+        [(ngModel)]="description"
+        [autoGrow]="true"
+        rows="3"
+        maxlength="500"
+        placeholder="{{ 'Events.descriptionPlaceholder' | translate }}"
+      ></ion-textarea>
+    </ion-item>
+  </div>
+
+  <!-- Step 2: choose games -->
+  <div *ngIf="step === 2">
+    <ion-segment [(ngModel)]="gameWorld" mode="md">
+      <ion-segment-button value="real">
+        <ion-label>{{ "Events.realWorld" | translate }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="virtual">
+        <ion-label>{{ "Events.virtual" | translate }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-searchbar
+      [(ngModel)]="searchTerm"
+      placeholder="{{ 'Events.searchGames' | translate }}"
+    ></ion-searchbar>
+
+    <p class="selected-count">
+      {{ "Events.selectedCount" | translate: { count: selectedCount } }}
+      <span class="single-player-note">
+        · {{ "Events.singlePlayerOnly" | translate }}
+      </span>
+    </p>
+
+    <div *ngIf="loadingGames" class="ion-text-center ion-padding">
+      <ion-spinner></ion-spinner>
+    </div>
+
+    <ion-list *ngIf="!loadingGames">
+      <ion-item
+        *ngFor="let game of filteredGames"
+        button
+        (click)="toggleGame(game)"
+      >
+        <ion-checkbox
+          slot="start"
+          [checked]="isSelected(game)"
+          (click)="$event.preventDefault()"
+        ></ion-checkbox>
+        <ion-label>
+          <h2>{{ game.name }}</h2>
+          <p *ngIf="game.place">{{ game.place }}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item *ngIf="filteredGames.length === 0" lines="none">
+        <ion-label class="ion-text-center">
+          {{ "Events.noGamesFound" | translate }}
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- Step 3: review -->
+  <div *ngIf="step === 3">
+    <h2 class="review-name">{{ name }}</h2>
+    <p *ngIf="description" class="review-desc">{{ description }}</p>
+
+    <ion-list-header>
+      {{ "Events.selectedCount" | translate: { count: selectedCount } }}
+    </ion-list-header>
+    <ion-list>
+      <ion-item *ngFor="let game of selectedGames">
+        <ion-icon slot="start" name="game-controller"></ion-icon>
+        <ion-label>{{ game.name }}</ion-label>
+      </ion-item>
+      <ion-item *ngIf="selectedCount === 0" lines="none">
+        <ion-label color="medium">{{ "Events.noGamesYet" | translate }}</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button *ngIf="step > 1" (click)="back()" [disabled]="saving">
+        {{ "Events.back" | translate }}
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button
+        *ngIf="step < totalSteps"
+        fill="solid"
+        color="primary"
+        (click)="next()"
+      >
+        {{ "Events.next" | translate }}
+      </ion-button>
+      <ion-button
+        *ngIf="step === totalSteps"
+        fill="solid"
+        color="primary"
+        (click)="save()"
+        [disabled]="saving"
+      >
+        {{ "Events.save" | translate }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

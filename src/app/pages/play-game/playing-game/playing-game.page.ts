@@ -212,6 +212,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   // Phase 3: instructor id for single-player class plays (from game-detail
   // bundle). undefined for normal plays and multiplayer.
   instructor: string = undefined;
+  // Phase 3: event id for single-player event plays (from game-detail bundle).
+  event: string = undefined;
 
   // Draw control all enabled
   DrawControl_all = new MapboxDraw({
@@ -548,6 +550,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.playersNames[0] = JSON.parse(params.bundle).playerName;
       this.shareDataBox = JSON.parse(params.bundle).shareData_cbox;
       this.instructor = JSON.parse(params.bundle).instructor;
+      this.event = JSON.parse(params.bundle).event;
       this.isRejoin = JSON.parse(params.bundle).isRejoin;
       this.sPlayerNo = JSON.parse(params.bundle).sPlayerNo;
       this.cJoindPlayersCount = JSON.parse(params.bundle).cJoindPlayersCount;
@@ -1729,7 +1732,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.isSingleMode, // multiplayer - track
       this.numPlayers,
       this.playerNo,
-      this.instructor // Phase 3: single-player class plays only
+      this.instructor, // Phase 3: single-player class plays only
+      this.event // Phase 3: single-player event plays only
     );
   // console.log(this.game);
 

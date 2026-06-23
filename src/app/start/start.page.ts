@@ -150,6 +150,10 @@ export class StartPage implements OnInit {
     this.navCtrl.navigateForward("user/profile");
   }
 
+  navigateEventsPage() {
+    this.navCtrl.navigateForward("events");
+  }
+
   changeLng(lng: string) {
     this.languageService.setLanguage(lng);
   }

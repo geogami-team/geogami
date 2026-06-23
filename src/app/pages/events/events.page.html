@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ "Events.title" | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openCreate()">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Loading -->
+  <div *ngIf="loading" class="ion-text-center ion-padding">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <!-- Empty state -->
+  <div
+    *ngIf="!loading && events.length === 0"
+    class="empty-state ion-text-center"
+  >
+    <ion-icon name="flag-outline"></ion-icon>
+    <h2>{{ "Events.emptyTitle" | translate }}</h2>
+    <p>{{ "Events.emptyDescription" | translate }}</p>
+    <ion-button (click)="openCreate()">
+      <ion-icon slot="start" name="add"></ion-icon>
+      {{ "Events.createFirst" | translate }}
+    </ion-button>
+  </div>
+
+  <!-- Events list -->
+  <ion-list *ngIf="!loading && events.length > 0">
+    <ion-card *ngFor="let event of events">
+      <ion-card-header>
+        <ion-card-title>{{ event.name }}</ion-card-title>
+        <ion-card-subtitle>
+          {{ "Events.gameCount" | translate: { count: gameCount(event) } }}
+          <span *ngIf="!event.isOwner"> · {{ "Events.sharedWithYou" | translate }}</span>
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content *ngIf="event.description">
+        {{ event.description }}
+      </ion-card-content>
+
+      <div class="event-actions">
+        <ion-button
+          fill="clear"
+          size="small"
+          (click)="downloadPdf(event)"
+          [disabled]="generatingPdfFor === event._id"
+        >
+          <ion-spinner
+            *ngIf="generatingPdfFor === event._id"
+            slot="start"
+            name="dots"
+          ></ion-spinner>
+          <ion-icon
+            *ngIf="generatingPdfFor !== event._id"
+            slot="start"
+            name="qr-code-outline"
+          ></ion-icon>
+          {{ "Events.pdf" | translate }}
+        </ion-button>
+        <ion-button fill="clear" size="small" (click)="openEdit(event)">
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+          {{ "Events.edit" | translate }}
+        </ion-button>
+        <ion-button
+          *ngIf="event.isOwner"
+          fill="clear"
+          size="small"
+          color="danger"
+          (click)="confirmDelete(event)"
+        >
+          <ion-icon slot="start" name="trash-outline"></ion-icon>
+          {{ "Events.delete" | translate }}
+        </ion-button>
+      </div>
+    </ion-card>
+  </ion-list>
+
+  <!-- Floating add button -->
+  <ion-fab
+    *ngIf="!loading && events.length > 0"
+    vertical="bottom"
+    horizontal="end"
+    slot="fixed"
+  >
+    <ion-fab-button (click)="openCreate()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
