@@ -81,6 +81,8 @@ export class GameDetailPage implements OnInit {
   // under the locked consent). Carried in the link as `iName` (display only).
   myName: string = "";
   instructorName: string = "";
+  // Event id from an event QR/link; tags the resulting track with the event.
+  eventId: string;
   // Bound to <ngx-qrcode> via the library's enums (avoids raw-string type errors).
   qrElementType = NgxQrcodeElementTypes.IMG;
   qrErrorCorrectionLevel = NgxQrcodeErrorCorrectionLevels.MEDIUM;
@@ -119,6 +121,13 @@ export class GameDetailPage implements OnInit {
       // instructor display name carried in the class link (display only)
       if (params["iName"]) {
         this.instructorName = params["iName"];
+      }
+
+      // Event id carried in an event QR/link. Tags the resulting track with the
+      // event (alongside the instructor) so the dashboard can scope plays to a
+      // single study.
+      if (params["eventId"]) {
+        this.eventId = params["eventId"];
       }
 
       this.gamesService
@@ -398,6 +407,9 @@ export class GameDetailPage implements OnInit {
       // Phase 3: attribute single-player class plays to the instructor (from the
       // QR/link uId). undefined for normal plays and for multiplayer.
       instructor: this.isSingleMode ? this.instructorId : undefined,
+      // Event plays (single-player) also carry the event id so the track is
+      // tagged with the study it was collected for.
+      event: this.isSingleMode ? this.eventId : undefined,
     };
   }
 

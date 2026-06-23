@@ -167,7 +167,10 @@
     "deleteError": "Impossible de supprimer l'événement",
     "gameCount": "{{count}} jeu(x)",
     "sharedWithYou": "Partagé avec vous",
-    "pdfComingSoon": "Export PDF bientôt disponible"
+    "pdfComingSoon": "Export PDF bientôt disponible",
+    "pdfNoGames": "Ajoutez au moins un jeu avant d'exporter un PDF",
+    "pdfError": "Impossible de générer le PDF",
+    "gamesHeading": "Jeux de cet événement"
   },
   "Start": {
     "myEvents": "Mes événements",

@@ -167,7 +167,10 @@
     "deleteError": "تعذر حذف الفعالية",
     "gameCount": "{{count}} لعبة",
     "sharedWithYou": "تمت مشاركتها معك",
-    "pdfComingSoon": "تصدير PDF قريبًا"
+    "pdfComingSoon": "تصدير PDF قريبًا",
+    "pdfNoGames": "أضف لعبة واحدة على الأقل قبل تصدير ملف PDF",
+    "pdfError": "تعذر إنشاء ملف PDF",
+    "gamesHeading": "ألعاب هذه الفعالية"
   },
   "Start": {
     "myEvents": "فعالياتي",

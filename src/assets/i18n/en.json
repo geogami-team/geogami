@@ -167,7 +167,10 @@
     "deleteError": "Could not delete event",
     "gameCount": "{{count}} game(s)",
     "sharedWithYou": "Shared with you",
-    "pdfComingSoon": "PDF export coming soon"
+    "pdfComingSoon": "PDF export coming soon",
+    "pdfNoGames": "Add at least one game before exporting a PDF",
+    "pdfError": "Could not generate the PDF",
+    "gamesHeading": "Games in this event"
   },
   "Start": {
     "myEvents": "My Events",

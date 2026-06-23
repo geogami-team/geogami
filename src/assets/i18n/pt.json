@@ -167,7 +167,10 @@
     "deleteError": "Não foi possível eliminar o evento",
     "gameCount": "{{count}} jogo(s)",
     "sharedWithYou": "Partilhado consigo",
-    "pdfComingSoon": "Exportação para PDF em breve"
+    "pdfComingSoon": "Exportação para PDF em breve",
+    "pdfNoGames": "Adicione pelo menos um jogo antes de exportar um PDF",
+    "pdfError": "Não foi possível gerar o PDF",
+    "gamesHeading": "Jogos deste evento"
   },
   "Start": {
     "myEvents": "Os meus eventos",

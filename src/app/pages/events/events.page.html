@@ -47,8 +47,22 @@
       </ion-card-content>
 
       <div class="event-actions">
-        <ion-button fill="clear" size="small" (click)="downloadPdf(event)">
-          <ion-icon slot="start" name="qr-code-outline"></ion-icon>
+        <ion-button
+          fill="clear"
+          size="small"
+          (click)="downloadPdf(event)"
+          [disabled]="generatingPdfFor === event._id"
+        >
+          <ion-spinner
+            *ngIf="generatingPdfFor === event._id"
+            slot="start"
+            name="dots"
+          ></ion-spinner>
+          <ion-icon
+            *ngIf="generatingPdfFor !== event._id"
+            slot="start"
+            name="qr-code-outline"
+          ></ion-icon>
           {{ "Events.pdf" | translate }}
         </ion-button>
         <ion-button fill="clear" size="small" (click)="openEdit(event)">

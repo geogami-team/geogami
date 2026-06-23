@@ -11,7 +11,9 @@ export interface GeoEvent {
   name: string;
   description?: string;
   games: any[];
-  user?: string;
+  // Owner. A populated { _id, name, username } object from GET /event/userevents,
+  // or absent when the UI builds a payload to send.
+  user?: any;
   sharedWith?: string[];
   // Set by the server on GET /event/userevents so the UI can hide owner-only
   // actions (delete / share) for shared co-editors.
