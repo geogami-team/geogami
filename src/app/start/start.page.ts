@@ -203,13 +203,17 @@ export class StartPage implements OnInit {
   }
 
   /************/
-  /* convert version value to int */
+  /* convert a "major.minor.patch" version string to a comparable integer.
+     Each part gets its own 3-digit slot so multi-digit parts compare
+     correctly, e.g. 6.10.0 (6010000) > 6.9.0 (6009000). */
   versionToInt(VersionInString) {
     if (!VersionInString) {
       return 0;
     }
-    let v = VersionInString.split(".");
-    // console.log("v: ", v[0] * 100 + v[1] * 10 + v[2] * 1);
-    return v[0] * 100 + v[1] * 10 + v[2] * 1;
+    const parts = String(VersionInString)
+      .split(".")
+      .map((p) => parseInt(p, 10) || 0);
+    const [major = 0, minor = 0, patch = 0] = parts;
+    return major * 1000000 + minor * 1000 + patch;
   }
 }
