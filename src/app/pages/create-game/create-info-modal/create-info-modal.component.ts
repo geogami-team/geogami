@@ -76,6 +76,7 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
         },
         settings: {
           confirmation: true,
+          autoPlayAudio: false,
         },
         mapFeatures: null,
       };

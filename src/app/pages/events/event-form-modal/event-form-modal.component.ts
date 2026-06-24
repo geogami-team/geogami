@@ -91,7 +91,7 @@ export class EventFormModalComponent implements OnInit {
 
   get filteredGames(): any[] {
     const term = this.searchTerm.trim().toLowerCase();
-    return this.allGames.filter((g) => {
+    const matches = this.allGames.filter((g) => {
       // Single-player games only for now.
       if (g.isMultiplayerGame) return false;
       // World filter: virtual (VR) games vs real-world games.
@@ -110,6 +110,11 @@ export class EventFormModalComponent implements OnInit {
       }
       return true;
     });
+    // Selected games first, then the rest — each group keeps the newest-first
+    // order from load (stable partition).
+    const selected = matches.filter((g) => this.selectedIds.has(g._id));
+    const unselected = matches.filter((g) => !this.selectedIds.has(g._id));
+    return [...selected, ...unselected];
   }
 
   get selectedCount(): number {

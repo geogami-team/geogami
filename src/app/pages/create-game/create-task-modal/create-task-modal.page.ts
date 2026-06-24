@@ -172,6 +172,14 @@ export class CreateTaskModalPage implements OnInit {
     return value != null ? [value] : [];
   }
 
+  // True when an audio message exists on the task. Handles both single-player
+  // (question is one object) and multiplayer (question is an array, one entry
+  // per player). Used to disable the "auto-play audio" toggle while there is no
+  // recording to play; it re-evaluates when a recording is added or deleted.
+  hasTaskAudio(): boolean {
+    return this.asArray(this.task?.question).some((q) => !!q?.audio);
+  }
+
   // "Press okay only" tasks: the player just confirms with OK and has no answer to
   // enter, so the task instruction is the only on-screen guidance. These tasks must
   // have an author-written instruction (we don't auto-fill a generic default for them).
@@ -369,6 +377,7 @@ export class CreateTaskModalPage implements OnInit {
         keepMarker: false,
         keepDrawing: "current",
         drawPointOnly: false,
+        autoPlayAudio: false,
       };
 
       this.settingsChange();
@@ -548,6 +557,7 @@ export class CreateTaskModalPage implements OnInit {
         keepMarker: false,
         keepDrawing: "current",
         drawPointOnly: false,
+        autoPlayAudio: false,
       };
     }
 

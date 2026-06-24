@@ -226,6 +226,8 @@
     "informationText": "نص المعلومات",
     "markdownSupported": "يدعم Markdown",
     "audioMessage": "رسالة صوتية",
+    "autoPlayAudio": "تشغيل الصوت تلقائيًا",
+    "audioTooLong": "يجب ألا يتجاوز الصوت {{seconds}} ثانية.",
     "photos": "صور ورسومات",
     "addSettings": "إعدادات إضافية",
     "object": "الكائن المطلوب البحث عنه ...",
