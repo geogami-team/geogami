@@ -4,6 +4,7 @@ import {
   ViewChild,
   AfterViewInit,
   OnChanges,
+  OnDestroy,
   SimpleChanges,
 } from "@angular/core";
 
@@ -12,12 +13,21 @@ import {
   templateUrl: "./audio-player.component.html",
   styleUrls: ["./audio-player.component.scss"]
 })
-export class AudioPlayerComponent implements AfterViewInit, OnChanges {
+export class AudioPlayerComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input("audioSource") audioSource: string;
+
+  // When true, the audio starts playing on its own shortly after the task is
+  // shown, so the player no longer has to press the play button first.
+  @Input("autoPlay") autoPlay = false;
+
+  // Delay (ms) before auto-play kicks in once the task is initialised.
+  @Input("autoPlayDelay") autoPlayDelay = 1500;
 
   @ViewChild("audio") audio;
 
   public playing = false;
+
+  private autoPlayTimer: any;
 
   constructor() {}
 
@@ -35,9 +45,32 @@ export class AudioPlayerComponent implements AfterViewInit, OnChanges {
     });
   }
 
+  ngOnDestroy(): void {
+    clearTimeout(this.autoPlayTimer);
+  }
+
   loadAudio() {
+    clearTimeout(this.autoPlayTimer);
     this.playing = false;
     (this.audio.nativeElement as HTMLAudioElement).load();
+
+    if (this.autoPlay && this.audioSource != undefined) {
+      this.autoPlayTimer = setTimeout(() => this.startPlayback(), this.autoPlayDelay);
+    }
+  }
+
+  private startPlayback() {
+    const player = this.audio.nativeElement as HTMLAudioElement;
+    const playPromise = player.play();
+    this.playing = true;
+
+    // Browsers may block programmatic playback (autoplay policy); fall back to
+    // the manual play button if the promise rejects.
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        this.playing = false;
+      });
+    }
   }
 
   playPause() {

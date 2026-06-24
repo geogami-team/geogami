@@ -189,7 +189,8 @@
           </p>
         </div>
         <div class="ok-container" *ngIf="!panelMinimized">
-          <app-audio-player *ngIf="task.question.audio != undefined" [audioSource]="task.question.audio">
+          <app-audio-player *ngIf="task.question.audio != undefined" [audioSource]="task.question.audio"
+            [autoPlay]="task.settings?.autoPlayAudio">
           </app-audio-player>
           <ion-button slot="end" class="confirm" [disabled]="uploading"
             [color]="task.category.includes('nav') ? 'primary' : 'secondary'" (click)="onOkClicked()"
