@@ -227,6 +227,7 @@
     "markdownSupported": "Markdown é suportado",
     "audioMessage": "Mensagem de áudio",
     "autoPlayAudio": "Reproduzir áudio automaticamente",
+    "audioTooLong": "O áudio não pode exceder {{seconds}} segundos.",
     "photos": "Fotos e gráficos",
     "addSettings": "Configurações adicionais",
     "object": "O objeto procurado...",

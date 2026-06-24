@@ -227,6 +227,7 @@
     "markdownSupported": "Markdown pris en charge",
     "audioMessage": "Message audio",
     "autoPlayAudio": "Lire l'audio automatiquement",
+    "audioTooLong": "L'audio ne doit pas dépasser {{seconds}} secondes.",
     "photos": "Photos et graphiques",
     "addSettings": "Paramètres supplémentaires",
     "object": "L'objet à rechercher ...",
