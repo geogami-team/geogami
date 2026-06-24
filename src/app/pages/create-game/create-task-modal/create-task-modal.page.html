@@ -562,6 +562,22 @@
       ></ion-toggle>
     </ion-item>
 
+    <ion-item lines="none">
+      <ion-label>
+        {{ "CreateGame.autoPlayAudio" | translate }}
+        <ion-icon
+          name="information-circle"
+          (click)="showPopover($event, 'Popover.audioMessage')"
+        >
+        </ion-icon>
+      </ion-label>
+      <ion-toggle
+        [(ngModel)]="task.settings.autoPlayAudio"
+        [color]="task.category == 'nav' ? 'primary' : 'secondary'"
+        (ngModelChange)="settingsChange()"
+      ></ion-toggle>
+    </ion-item>
+
     <ion-item lines="none" *ngIf="showMultipleTries">
       <ion-label>
         {{ "CreateGame.severalTrials" | translate }}

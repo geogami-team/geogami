@@ -226,6 +226,7 @@
     "informationText": "Information text",
     "markdownSupported": "Markdown supported",
     "audioMessage": "Audio message",
+    "autoPlayAudio": "Play audio automatically",
     "photos": "Photos and graphics",
     "addSettings": "Additional settings",
     "object": "The object to be searched for ...",

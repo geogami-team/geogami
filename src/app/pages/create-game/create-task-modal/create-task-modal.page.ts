@@ -369,6 +369,7 @@ export class CreateTaskModalPage implements OnInit {
         keepMarker: false,
         keepDrawing: "current",
         drawPointOnly: false,
+        autoPlayAudio: false,
       };
 
       this.settingsChange();
@@ -548,6 +549,7 @@ export class CreateTaskModalPage implements OnInit {
         keepMarker: false,
         keepDrawing: "current",
         drawPointOnly: false,
+        autoPlayAudio: false,
       };
     }
 
