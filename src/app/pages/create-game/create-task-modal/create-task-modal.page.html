@@ -574,6 +574,7 @@
       <ion-toggle
         [(ngModel)]="task.settings.autoPlayAudio"
         [color]="task.category == 'nav' ? 'primary' : 'secondary'"
+        [disabled]="!hasTaskAudio()"
         (ngModelChange)="settingsChange()"
       ></ion-toggle>
     </ion-item>
