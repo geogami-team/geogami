@@ -177,6 +177,12 @@ export class PlayGameListPage implements OnInit {
     return game.isPublished === false;
   }
 
+  // Edit + publish/unpublish are limited to the game's owner or a full admin
+  // (contentAdmin can view drafts but not edit or change publish state).
+  canEdit(game): boolean {
+    return this.userId == game.user || this.userRole == "admin";
+  }
+
   // Recompute the per-tab game counts for the current environment + mode.
   computeTabCounts() {
     const games = this.all_games_segment || [];
@@ -608,6 +614,7 @@ export class PlayGameListPage implements OnInit {
     if (!fullGame) return;
 
     fullGame.name = newName;
+    fullGame.isPublished = false; // a copy starts as a draft, like any new game
 
     try {
       const res = await this.gamesService.postGame(fullGame);

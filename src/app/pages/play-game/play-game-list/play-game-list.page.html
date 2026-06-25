@@ -160,6 +160,7 @@
         </ion-card>
         <ion-buttons *ngIf="this.userId == game.user || userRole=='admin' || userRole=='contentAdmin'" class="game-actions">
           <ion-button
+            *ngIf="canEdit(game)"
             title="{{ (game.isPublished === false ? 'PlayGame.publish' : 'PlayGame.unpublish') | translate }}"
             (click)="togglePublish(game)"
           >
@@ -170,6 +171,7 @@
           </ion-button>
 
           <ion-button
+            *ngIf="canEdit(game)"
             title="{{'General.edit'| translate}}"
             (click)="EditGame(game._id)"
           >
