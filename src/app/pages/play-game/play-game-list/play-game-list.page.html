@@ -87,16 +87,16 @@
           <ion-label>{{ "PlayGame.published" | translate }} ({{ publishedCount }})</ion-label>
         </ion-segment-button>
 
-        <ion-segment-button value="mine" *ngIf="user">
-          <ion-label>{{ "PlayGame.myGames" | translate }} ({{ myGamesCount }})</ion-label>
-        </ion-segment-button>
-
         <!-- Drafts overview for content moderators -->
         <ion-segment-button
           value="drafts"
           *ngIf="userRole == 'admin' || userRole == 'contentAdmin'"
         >
           <ion-label>{{ "PlayGame.drafts" | translate }} ({{ draftsCount }})</ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="mine" *ngIf="user">
+          <ion-label>{{ "PlayGame.myGames" | translate }} ({{ myGamesCount }})</ion-label>
         </ion-segment-button>
       </ion-segment>
     </div>
@@ -135,14 +135,6 @@
                   </span>
                 </h2>
               </ion-label>
-              <!-- Draft badge for unpublished games -->
-              <ion-badge
-                class="draft-badge"
-                slot="end"
-                color="medium"
-                *ngIf="game.isPublished === false"
-                >{{ "PlayGame.draftBadge" | translate }}</ion-badge
-              >
               <ion-label
                 slot="end"
                 *ngIf="(game.isMultiplayerGame && game.isMultiplayerGame == true) || game.tasksCount"
@@ -154,6 +146,14 @@
                 (game.tasksCount >1 ?"GameList.tasks":"GameList.task") |
                 translate) : ""}}
               </ion-label>
+              <!-- Draft badge for unpublished games (top-right, after tasks count) -->
+              <ion-badge
+                class="draft-badge"
+                slot="end"
+                color="medium"
+                *ngIf="game.isPublished === false"
+                >{{ "PlayGame.draftBadge" | translate }}</ion-badge
+              >
             </ion-item>
             
           </ion-card-header>
