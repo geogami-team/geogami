@@ -168,7 +168,9 @@
             
           </ion-card-header>
         </ion-card>
-        <ion-buttons *ngIf="this.userId == game.user || userRole=='admin' || userRole=='contentAdmin'" class="game-actions">
+        <!-- Block shows for any logged-in user (so anyone can Copy); the
+             publish/edit/share buttons inside stay individually gated. -->
+        <ion-buttons *ngIf="user" class="game-actions">
           <ion-button
             *ngIf="canEdit(game)"
             title="{{ (game.isPublished === false ? 'PlayGame.publish' : 'PlayGame.unpublish') | translate }}"
@@ -198,6 +200,7 @@
 
 
           <ion-button
+            *ngIf="userRole != 'user'"
             title="Copy game"
             (click)="copyGame(game)"
           >

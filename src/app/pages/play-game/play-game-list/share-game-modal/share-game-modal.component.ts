@@ -70,9 +70,12 @@ export class ShareGameModalComponent implements OnInit {
         );
       }
     } catch (e) {
+      // When every email is rejected (e.g. no account) the server replies 400
+      // with a helpful message in the body — show that instead of a generic error.
+      const serverMsg = (e as any)?.error?.message;
       this.utilService.showToast(
-        this.translate.instant("PlayGame.shareError"),
-        "danger"
+        serverMsg || this.translate.instant("PlayGame.shareError"),
+        serverMsg ? "warning" : "danger"
       );
     } finally {
       this.busy = false;
@@ -88,9 +91,10 @@ export class ShareGameModalComponent implements OnInit {
       this.editors = res?.body?.editors || this.editors.filter((e) => e !== email);
       this.changed = true;
     } catch (e) {
+      const serverMsg = (e as any)?.error?.message;
       this.utilService.showToast(
-        this.translate.instant("PlayGame.shareError"),
-        "danger"
+        serverMsg || this.translate.instant("PlayGame.shareError"),
+        serverMsg ? "warning" : "danger"
       );
     } finally {
       this.busy = false;
