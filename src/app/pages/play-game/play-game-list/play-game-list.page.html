@@ -74,7 +74,8 @@
 
   <ng-container *ngIf="isListTabSelected">
     <!-- segment start -->
-    <div class="segment">
+    <!-- Logged-out users only ever see published games, so the tab bar is hidden -->
+    <div class="segment" *ngIf="user">
       <ion-segment
         (ionChange)="segmentChanged($event.detail.value)"
         [(ngModel)]="selectedSegment"
