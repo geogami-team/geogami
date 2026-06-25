@@ -19,6 +19,7 @@ export class Game {
     public isVisible: boolean,
     public isPublished: boolean,
     public disableShareData: boolean,
-    public skipTaskPin?: string
+    public skipTaskPin?: string,
+    public editors?: string[]
   ) { }
 }

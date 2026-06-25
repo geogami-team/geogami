@@ -146,6 +146,16 @@
                 (game.tasksCount >1 ?"GameList.tasks":"GameList.task") |
                 translate) : ""}}
               </ion-label>
+              <!-- Shared marker: this game is co-authored by me, not owned -->
+              <ion-badge
+                slot="end"
+                color="tertiary"
+                *ngIf="isShared(game)"
+                title="{{ 'PlayGame.sharedHint' | translate }}"
+              >
+                <ion-icon name="people-outline"></ion-icon>
+                {{ "PlayGame.sharedBadge" | translate }}
+              </ion-badge>
               <!-- Draft badge for unpublished games (top-right, after tasks count) -->
               <ion-badge
                 class="draft-badge"
@@ -176,6 +186,14 @@
             (click)="EditGame(game._id)"
           >
             <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+
+          <ion-button
+            *ngIf="canManageSharing(game)"
+            title="{{ 'PlayGame.shareTitle' | translate }}"
+            (click)="openShareModal(game)"
+          >
+            <ion-icon name="person-add-outline"></ion-icon>
           </ion-button>
 
 

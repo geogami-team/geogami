@@ -65,6 +65,38 @@ export class GamesService {
       .toPromise();
   }
 
+  // ── Game co-authors (editors) ─────────────────────────────────────────
+  // Current co-author emails of a game (owner/admin only).
+  getGameEditors(id: string): Promise<any> {
+    return this.http
+      .get(`${environment.apiURL}/game/${id}/editors`, {
+        headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
+  // Add co-author(s) by email.
+  addGameEditors(id: string, emails: string[]): Promise<any> {
+    return this.http
+      .post(
+        `${environment.apiURL}/game/${id}/editors`,
+        { emails },
+        { headers: this.createHeaders(), observe: "response" }
+      )
+      .toPromise();
+  }
+
+  // Remove a co-author by email.
+  removeGameEditors(id: string, emails: string[]): Promise<any> {
+    return this.http
+      .request("delete", `${environment.apiURL}/game/${id}/editors`, {
+        body: { emails },
+        headers: this.createHeaders(),
+        observe: "response",
+      })
+      .toPromise();
+  }
+
   getTracks(): Promise<any> {
     return this.http
       .get(`${environment.apiURL}/tracks`, {

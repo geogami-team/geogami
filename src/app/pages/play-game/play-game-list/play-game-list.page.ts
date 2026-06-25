@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 
-import { AlertController, NavController } from "@ionic/angular";
+import { AlertController, ModalController, NavController } from "@ionic/angular";
 
 import { GamesService } from "../../../services/games.service";
+import { ShareGameModalComponent } from "./share-game-modal/share-game-modal.component";
 
 // VR world
 import { ActivatedRoute } from "@angular/router";
@@ -44,6 +45,7 @@ export class PlayGameListPage implements OnInit {
   // to disable mine segment for unlogged user
   userRole: String = "unloggedUser";
   userId: String = "";
+  userEmail: string = ""; // used to detect games shared with me as a co-author
   user = this.authService.getUser();
 
   isVRMirrored: boolean = false; // temp
@@ -73,6 +75,7 @@ export class PlayGameListPage implements OnInit {
     private utilService: UtilService,
     private socketService: SocketService,
     private alertController: AlertController,
+    private modalController: ModalController,
     public _translate: TranslateService
   ) {}
 
@@ -97,6 +100,9 @@ export class PlayGameListPage implements OnInit {
         this.selectedSegment = "published";
         this.userRole = event["roles"][0];
         this.userId = this.authService.getUserId();
+        // IUser types email as an object (legacy), but the login response
+        // carries a plain string — cast to read it safely.
+        this.userEmail = (((event as any)?.email as string) || "").toLowerCase();
       } else {
         this.user = null;
       }
@@ -177,10 +183,38 @@ export class PlayGameListPage implements OnInit {
     return game.isPublished === false;
   }
 
-  // Edit + publish/unpublish are limited to the game's owner or a full admin
-  // (contentAdmin can view drafts but not edit or change publish state).
-  canEdit(game): boolean {
+  // True if the current user is a co-author (editor) of the game.
+  isEditorOf(game): boolean {
+    return (
+      !!this.userEmail &&
+      Array.isArray(game.editors) &&
+      game.editors.map((e) => e.toLowerCase()).includes(this.userEmail)
+    );
+  }
+
+  // A game belongs in "My games" when the user owns it OR co-authors it.
+  isMine(game): boolean {
+    return game.user == this.userId || this.isEditorOf(game);
+  }
+
+  // Within My games, a game shown that the user does not own is shared with them.
+  isShared(game): boolean {
+    return game.user != this.userId && this.isEditorOf(game);
+  }
+
+  // Only the owner or a full admin may manage the co-author list.
+  canManageSharing(game): boolean {
     return this.userId == game.user || this.userRole == "admin";
+  }
+
+  // Edit + publish/unpublish are limited to the game's owner, a co-author
+  // (editor), or a full admin (contentAdmin is view-only on others' games).
+  canEdit(game): boolean {
+    return (
+      this.userId == game.user ||
+      this.userRole == "admin" ||
+      this.isEditorOf(game)
+    );
   }
 
   // Recompute the per-tab game counts for the current environment + mode.
@@ -191,7 +225,7 @@ export class PlayGameListPage implements OnInit {
       (g) => !this.isDraft(g) && inMode(g)
     ).length;
     this.myGamesCount = games.filter(
-      (g) => g.user == this.userId && inMode(g)
+      (g) => this.isMine(g) && inMode(g)
     ).length;
     this.draftsCount = games.filter((g) => this.isDraft(g) && inMode(g)).length;
   }
@@ -204,7 +238,7 @@ export class PlayGameListPage implements OnInit {
     if (segVal == "mine") {
       this.games_view = this.all_games_segment?.filter(
         (game) =>
-          game.user == this.userId &&
+          this.isMine(game) &&
           game.isMultiplayerGame == this.isMutiplayerGame
       );
 
@@ -250,7 +284,7 @@ export class PlayGameListPage implements OnInit {
     if (this.selectedSegment == "mine") {
       this.games_view = this.all_games_segment.filter(
         (game) =>
-          game.user == this.userId &&
+          this.isMine(game) &&
           (game.name.toLowerCase().includes(searchPhrase.toLowerCase()) ||
             (game.place != undefined &&
               game.place.toLowerCase().includes(searchPhrase.toLowerCase())))
@@ -654,6 +688,20 @@ export class PlayGameListPage implements OnInit {
         buttons: ["OK"],
       });
       await errorAlert.present();
+    }
+  }
+
+  // Open the co-author (share) modal for a game. Owner/admin only.
+  async openShareModal(game: any) {
+    const modal = await this.modalController.create({
+      component: ShareGameModalComponent,
+      componentProps: { game },
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    // Refresh so the game's editors (and any new "shared" state) are current.
+    if (data?.changed) {
+      this.getGamesData();
     }
   }
 
