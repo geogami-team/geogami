@@ -44,6 +44,59 @@ export class GamesService {
     return this.http.get(`${environment.apiURL}/game/allwithlocs`).toPromise();
   }
 
+  // Draft (unpublished) games visible to the caller: admin/contentAdmin get all
+  // drafts, any other user gets only their own. Requires auth.
+  getDraftGames(): Promise<any> {
+    return this.http
+      .get(`${environment.apiURL}/game/drafts`, {
+        headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
+  // Publish / unpublish a single game (creator or admin/contentAdmin).
+  setPublishState(id: string, isPublished: boolean): Promise<any> {
+    return this.http
+      .put(
+        `${environment.apiURL}/game/${id}/publish`,
+        { isPublished },
+        { headers: this.createHeaders(), observe: "response" }
+      )
+      .toPromise();
+  }
+
+  // ── Game co-authors (editors) ─────────────────────────────────────────
+  // Current co-author emails of a game (owner/admin only).
+  getGameEditors(id: string): Promise<any> {
+    return this.http
+      .get(`${environment.apiURL}/game/${id}/editors`, {
+        headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
+  // Add co-author(s) by email.
+  addGameEditors(id: string, emails: string[]): Promise<any> {
+    return this.http
+      .post(
+        `${environment.apiURL}/game/${id}/editors`,
+        { emails },
+        { headers: this.createHeaders(), observe: "response" }
+      )
+      .toPromise();
+  }
+
+  // Remove a co-author by email.
+  removeGameEditors(id: string, emails: string[]): Promise<any> {
+    return this.http
+      .request("delete", `${environment.apiURL}/game/${id}/editors`, {
+        body: { emails },
+        headers: this.createHeaders(),
+        observe: "response",
+      })
+      .toPromise();
+  }
+
   getTracks(): Promise<any> {
     return this.http
       .get(`${environment.apiURL}/tracks`, {

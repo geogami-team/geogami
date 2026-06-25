@@ -74,29 +74,29 @@
 
   <ng-container *ngIf="isListTabSelected">
     <!-- segment start -->
-    <div class="segment">
+    <!-- Logged-out users only ever see published games, so the tab bar is hidden -->
+    <div class="segment" *ngIf="user">
       <ion-segment
         (ionChange)="segmentChanged($event.detail.value)"
         [(ngModel)]="selectedSegment"
         color="dark"
+        scrollable
       >
-        <ion-segment-button value="{{ ( user ? 'all' : 'curated') }}">
-          <ion-label
-            >{{ (user ? "PlayGame.allGames" : "PlayGame.curated") | translate
-            }}</ion-label
-          >
+        <!-- Public list (replaces curated): only published games -->
+        <ion-segment-button value="published">
+          <ion-label>{{ "PlayGame.published" | translate }} ({{ publishedCount }})</ion-label>
         </ion-segment-button>
 
-        <ion-segment-button value="{{ (user ? 'curated' : 'all') }}">
-          <ion-label
-            >{{ (user ? "PlayGame.curated" : "PlayGame.allGames") | translate
-            }}</ion-label
-          >
+        <!-- Drafts overview for content moderators -->
+        <ion-segment-button
+          value="drafts"
+          *ngIf="userRole == 'admin' || userRole == 'contentAdmin'"
+        >
+          <ion-label>{{ "PlayGame.drafts" | translate }} ({{ draftsCount }})</ion-label>
         </ion-segment-button>
 
-        <!-- <ion-segment-button value="mine" *ngIf="userRole != 'unloggedUser'"> -->
         <ion-segment-button value="mine" *ngIf="user">
-          <ion-label>{{ "PlayGame.myGames" | translate }}</ion-label>
+          <ion-label>{{ "PlayGame.myGames" | translate }} ({{ myGamesCount }})</ion-label>
         </ion-segment-button>
       </ion-segment>
     </div>
@@ -135,8 +135,6 @@
                   </span>
                 </h2>
               </ion-label>
-              <!-- Star for curated games -->
-              <ion-icon class="star-icon" slot="end" *ngIf="game.isCuratedGame" name="star" [color]="game.isCuratedGame? 'warning' : ''"></ion-icon>
               <ion-label
                 slot="end"
                 *ngIf="(game.isMultiplayerGame && game.isMultiplayerGame == true) || game.tasksCount"
@@ -148,20 +146,61 @@
                 (game.tasksCount >1 ?"GameList.tasks":"GameList.task") |
                 translate) : ""}}
               </ion-label>
+              <!-- Shared marker: this game is co-authored by me, not owned -->
+              <ion-badge
+                slot="end"
+                color="tertiary"
+                *ngIf="isShared(game)"
+                title="{{ 'PlayGame.sharedHint' | translate }}"
+              >
+                <ion-icon name="people-outline"></ion-icon>
+                {{ "PlayGame.sharedBadge" | translate }}
+              </ion-badge>
+              <!-- Draft badge for unpublished games (top-right, after tasks count) -->
+              <ion-badge
+                class="draft-badge"
+                slot="end"
+                color="medium"
+                *ngIf="game.isPublished === false"
+                >{{ "PlayGame.draftBadge" | translate }}</ion-badge
+              >
             </ion-item>
             
           </ion-card-header>
         </ion-card>
-        <ion-buttons *ngIf="this.userId == game.user || userRole=='contentAdmin'" class="game-actions">
+        <!-- Block shows for any logged-in user (so anyone can Copy); the
+             publish/edit/share buttons inside stay individually gated. -->
+        <ion-buttons *ngIf="user" class="game-actions">
           <ion-button
+            *ngIf="canEdit(game)"
+            title="{{ (game.isPublished === false ? 'PlayGame.publish' : 'PlayGame.unpublish') | translate }}"
+            (click)="togglePublish(game)"
+          >
+            <ion-icon
+              [name]="game.isPublished === false ? 'cloud-upload-outline' : 'cloud-offline-outline'"
+              [color]="game.isPublished === false ? 'success' : 'medium'"
+            ></ion-icon>
+          </ion-button>
+
+          <ion-button
+            *ngIf="canEdit(game)"
             title="{{'General.edit'| translate}}"
             (click)="EditGame(game._id)"
           >
             <ion-icon name="create-outline"></ion-icon>
           </ion-button>
 
+          <ion-button
+            *ngIf="canManageSharing(game)"
+            title="{{ 'PlayGame.shareTitle' | translate }}"
+            (click)="openShareModal(game)"
+          >
+            <ion-icon name="person-add-outline"></ion-icon>
+          </ion-button>
+
 
           <ion-button
+            *ngIf="userRole != 'user'"
             title="Copy game"
             (click)="copyGame(game)"
           >
@@ -184,7 +223,7 @@
 
   <div
     class="emptygamecontent"
-    *ngIf="['curated', 'all'].includes(selectedSegment) && ( games_view && games_view.length == 0)"
+    *ngIf="['published', 'drafts'].includes(selectedSegment) && ( games_view && games_view.length == 0)"
   >
     <h1>Empty list!</h1>
   </div>

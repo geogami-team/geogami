@@ -94,12 +94,12 @@
         >
         <!-- <ion-icon slot="end" *ngIf="['admin', 'contentAdmin'].includes(userRole)" name="star"
           [color]="game.isCuratedGame? 'warning' : ''"></ion-icon> -->
-        <ion-icon
+        <ion-badge
           slot="end"
-          *ngIf="game.isCuratedGame"
-          name="star"
-          color="warning"
-        ></ion-icon>
+          *ngIf="game.isPublished === false"
+          color="medium"
+          >{{ "PlayGame.draftBadge" | translate }}</ion-badge
+        >
       </ion-item>
     </ion-card-header>
   </ion-card>
