@@ -9,6 +9,7 @@ import { PlayGameListPage } from './play-game-list.page';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { PopupComponent } from 'src/app/components/popup/popup.component';
+import { ShareGameModalComponent } from './share-game-modal/share-game-modal.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     TranslateModule
   ],
-  declarations: [PlayGameListPage, PopupComponent ]
+  declarations: [PlayGameListPage, PopupComponent, ShareGameModalComponent ]
 })
 export class PlayGameListPageModule {}

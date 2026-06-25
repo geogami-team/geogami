@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 
-import { AlertController, NavController } from "@ionic/angular";
+import { AlertController, ModalController, NavController } from "@ionic/angular";
 
 import { GamesService } from "../../../services/games.service";
+import { ShareGameModalComponent } from "./share-game-modal/share-game-modal.component";
 
 // VR world
 import { ActivatedRoute } from "@angular/router";
@@ -36,10 +37,15 @@ export class PlayGameListPage implements OnInit {
 
   // To be able to update games list and switch between segments
   searchText: string = "";
-  selectedSegment: string = "curated";
+  selectedSegment: string = "published";
+  // Counts shown on the segment tabs (for the current env + mode).
+  publishedCount: number = 0;
+  myGamesCount: number = 0;
+  draftsCount: number = 0;
   // to disable mine segment for unlogged user
   userRole: String = "unloggedUser";
   userId: String = "";
+  userEmail: string = ""; // used to detect games shared with me as a co-author
   user = this.authService.getUser();
 
   isVRMirrored: boolean = false; // temp
@@ -69,6 +75,7 @@ export class PlayGameListPage implements OnInit {
     private utilService: UtilService,
     private socketService: SocketService,
     private alertController: AlertController,
+    private modalController: ModalController,
     public _translate: TranslateService
   ) {}
 
@@ -90,9 +97,12 @@ export class PlayGameListPage implements OnInit {
     // Get user role
     this.user.subscribe((event) => {
       if (event != null) {
-        this.selectedSegment = "all";
+        this.selectedSegment = "published";
         this.userRole = event["roles"][0];
         this.userId = this.authService.getUserId();
+        // IUser types email as an object (legacy), but the login response
+        // carries a plain string — cast to read it safely.
+        this.userEmail = (((event as any)?.email as string) || "").toLowerCase();
       } else {
         this.user = null;
       }
@@ -111,37 +121,46 @@ export class PlayGameListPage implements OnInit {
 
   ngAfterViewInit(): void {}
 
+  /* Fetch the games the caller may see: published games (everyone) plus, for a
+   * logged-in user, their own drafts — or every draft for admin/contentAdmin.
+   * The two sets never overlap (published vs. isPublished === false). */
+  async fetchGames() {
+    const isLoggedIn = this.userRole != "unloggedUser";
+    const publishedRes = await this.gamesService.getGames(true, isLoggedIn);
+    let games = publishedRes?.content || [];
+
+    if (isLoggedIn) {
+      try {
+        const draftsRes = await this.gamesService.getDraftGames();
+        games = games.concat(draftsRes?.content || []);
+      } catch (e) {
+        // drafts are best-effort; published list still shows
+      }
+    }
+    return games;
+  }
+
   // Get games data from server
   getGamesData() {
-    /* Only content admin can view multi-players games */
-    this.gamesService
-      .getGames(true, this.userRole != "unloggedUser")
-      .then((res) => res.content)
-      .then((games) => {
-        // Get either real or VE agmes based on selected environment
-        this.games_res = games;
+    this.fetchGames().then((games) => {
+      // Get either real or VE agmes based on selected environment
+      this.games_res = games;
 
-        /* filter games based on selected environment (default: real, standalone: virtual) */
-        if (this.isStandalone) {
-          this.filterVirtualEnvGames();
-        } else {
-          this.filterRealWorldGames();
-        }
+      /* filter games based on selected environment (default: real, standalone: virtual) */
+      if (this.isStandalone) {
+        this.filterVirtualEnvGames();
+      } else {
+        this.filterRealWorldGames();
+      }
 
-        // this.loading = true;
-
-        // Filter data of selected segment
-        this.segmentChanged(this.selectedSegment);
-      });
+      // Filter data of selected segment
+      this.segmentChanged(this.selectedSegment);
+    });
   }
 
   // ToDo: update the functions
   doRefresh(event) {
-    // Get games data from server
-    // Only content admin can view multi-players games
-    this.gamesService
-      .getGames(true, this.userRole != "unloggedUser")
-      .then((res) => res.content)
+    this.fetchGames()
       .then((games) => {
         this.games_res = games;
         this.filterGamesEnv(this.gameEnvSelected);
@@ -158,33 +177,88 @@ export class PlayGameListPage implements OnInit {
     this.navCtrl.navigateForward(`play-game/game-detail?gameId=${game._id}`);
   }
 
-  // segment (my games - all games - curated game)
+  // A game is a draft only when isPublished is explicitly false. Legacy games
+  // (undefined) and newly published games (true) both count as published.
+  isDraft(game): boolean {
+    return game.isPublished === false;
+  }
+
+  // True if the current user is a co-author (editor) of the game.
+  isEditorOf(game): boolean {
+    return (
+      !!this.userEmail &&
+      Array.isArray(game.editors) &&
+      game.editors.map((e) => e.toLowerCase()).includes(this.userEmail)
+    );
+  }
+
+  // A game belongs in "My games" when the user owns it OR co-authors it.
+  isMine(game): boolean {
+    return game.user == this.userId || this.isEditorOf(game);
+  }
+
+  // Within My games, a game shown that the user does not own is shared with them.
+  isShared(game): boolean {
+    return game.user != this.userId && this.isEditorOf(game);
+  }
+
+  // Only the owner or a full admin may manage the co-author list.
+  canManageSharing(game): boolean {
+    return this.userId == game.user || this.userRole == "admin";
+  }
+
+  // Edit + publish/unpublish are limited to the game's owner, a co-author
+  // (editor), or a full admin (contentAdmin is view-only on others' games).
+  canEdit(game): boolean {
+    return (
+      this.userId == game.user ||
+      this.userRole == "admin" ||
+      this.isEditorOf(game)
+    );
+  }
+
+  // Recompute the per-tab game counts for the current environment + mode.
+  computeTabCounts() {
+    const games = this.all_games_segment || [];
+    const inMode = (g) => g.isMultiplayerGame == this.isMutiplayerGame;
+    this.publishedCount = games.filter(
+      (g) => !this.isDraft(g) && inMode(g)
+    ).length;
+    this.myGamesCount = games.filter(
+      (g) => this.isMine(g) && inMode(g)
+    ).length;
+    this.draftsCount = games.filter((g) => this.isDraft(g) && inMode(g)).length;
+  }
+
+  // segment (published - all - my games - drafts)
   segmentChanged(segVal) {
+    this.computeTabCounts();
     //--- ToDo check duplicate code and create a func for it
     // if mine is selected
     if (segVal == "mine") {
       this.games_view = this.all_games_segment?.filter(
         (game) =>
-          game.user == this.userId &&
+          this.isMine(game) &&
           game.isMultiplayerGame == this.isMutiplayerGame
       );
 
       // to update shown games based on search phrase
       this.updateGamesListSearchPhrase();
-    } else if (segVal == "all") {
-      // if all is selected
-      //onsole.log("all"); //temp
-      this.games_view = this.all_games_segment?.filter(
-        (game) => game.isMultiplayerGame == this.isMutiplayerGame
+    } else if (segVal == "published") {
+      // if published is selected (public list, replaces curated)
+      this.games_view = this.all_games_segment.filter(
+        (game) =>
+          !this.isDraft(game) &&
+          game.isMultiplayerGame == this.isMutiplayerGame
       );
 
       // to update shown games based on search phrase
       this.updateGamesListSearchPhrase();
-    } else if (segVal == "curated") {
-      // if curated is selected
+    } else if (segVal == "drafts") {
+      // if drafts is selected (admin/contentAdmin: all drafts)
       this.games_view = this.all_games_segment.filter(
         (game) =>
-          game.isCuratedGame == true &&
+          this.isDraft(game) &&
           game.isMultiplayerGame == this.isMutiplayerGame
       );
 
@@ -207,25 +281,26 @@ export class PlayGameListPage implements OnInit {
 
   // update list after selecting a segment
   filterSelectedSegementList(searchPhrase) {
-    if (this.selectedSegment == "all") {
+    if (this.selectedSegment == "mine") {
       this.games_view = this.all_games_segment.filter(
         (game) =>
-          game.name.toLowerCase().includes(searchPhrase.toLowerCase()) ||
-          (game.place != undefined &&
-            game.place.toLowerCase().includes(searchPhrase.toLowerCase()))
-      );
-    } else if (this.selectedSegment == "mine") {
-      this.games_view = this.all_games_segment.filter(
-        (game) =>
-          game.user == this.userId &&
+          this.isMine(game) &&
           (game.name.toLowerCase().includes(searchPhrase.toLowerCase()) ||
             (game.place != undefined &&
               game.place.toLowerCase().includes(searchPhrase.toLowerCase())))
       );
-    } else if (this.selectedSegment == "curated") {
+    } else if (this.selectedSegment == "published") {
       this.games_view = this.all_games_segment.filter(
         (game) =>
-          game.isCuratedGame == true &&
+          !this.isDraft(game) &&
+          (game.name.toLowerCase().includes(searchPhrase.toLowerCase()) ||
+            (game.place != undefined &&
+              game.place.toLowerCase().includes(searchPhrase.toLowerCase())))
+      );
+    } else if (this.selectedSegment == "drafts") {
+      this.games_view = this.all_games_segment.filter(
+        (game) =>
+          this.isDraft(game) &&
           (game.name.toLowerCase().includes(searchPhrase.toLowerCase()) ||
             (game.place != undefined &&
               game.place.toLowerCase().includes(searchPhrase.toLowerCase())))
@@ -573,16 +648,15 @@ export class PlayGameListPage implements OnInit {
     if (!fullGame) return;
 
     fullGame.name = newName;
+    fullGame.isPublished = false; // a copy starts as a draft, like any new game
 
     try {
       const res = await this.gamesService.postGame(fullGame);
       if (res.status == 201) {
-        this.gamesService.getGames(true, this.userRole != "unloggedUser")
-          .then((r) => r.content)
-          .then((games) => {
-            this.games_res = games;
-            this.filterGamesEnv(this.gameEnvSelected);
-          });
+        this.fetchGames().then((games) => {
+          this.games_res = games;
+          this.filterGamesEnv(this.gameEnvSelected);
+        });
       }
     } catch (e) {
       const errorAlert = await this.alertController.create({
@@ -591,6 +665,43 @@ export class PlayGameListPage implements OnInit {
         buttons: ['OK'],
       });
       await errorAlert.present();
+    }
+  }
+
+  // Publish a draft, or move a published game back to draft.
+  async togglePublish(game: any) {
+    const publish = this.isDraft(game); // draft -> publish, published -> unpublish
+    try {
+      const res = await this.gamesService.setPublishState(game._id, publish);
+      if (res.status == 200) {
+        // reflect the change locally, then re-apply the current view
+        game.isPublished = publish;
+        this.fetchGames().then((games) => {
+          this.games_res = games;
+          this.filterGamesEnv(this.gameEnvSelected);
+        });
+      }
+    } catch (e) {
+      const errorAlert = await this.alertController.create({
+        header: "Error",
+        message: this._translate.instant("PlayGame.publishError"),
+        buttons: ["OK"],
+      });
+      await errorAlert.present();
+    }
+  }
+
+  // Open the co-author (share) modal for a game. Owner/admin only.
+  async openShareModal(game: any) {
+    const modal = await this.modalController.create({
+      component: ShareGameModalComponent,
+      componentProps: { game },
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    // Refresh so the game's editors (and any new "shared" state) are current.
+    if (data?.changed) {
+      this.getGamesData();
     }
   }
 

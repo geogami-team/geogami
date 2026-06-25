@@ -72,17 +72,6 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card color="light" *ngIf="userRole == 'contentAdmin'">
-      <ion-card-content>
-        <ion-item lines="none" color="light">
-          <ion-label>
-            {{ "SaveGame.setCuratedGame" | translate }}
-          </ion-label>
-          <ion-toggle [(ngModel)]="isCuratedGame"></ion-toggle>
-        </ion-item>
-      </ion-card-content>
-    </ion-card>
-
     <ion-card color="light">
       <ion-card-content>
         <ion-item lines="none" color="light">
