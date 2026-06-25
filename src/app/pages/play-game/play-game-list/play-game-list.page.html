@@ -84,11 +84,11 @@
       >
         <!-- Public list (replaces curated): only published games -->
         <ion-segment-button value="published">
-          <ion-label>{{ "PlayGame.published" | translate }}</ion-label>
+          <ion-label>{{ "PlayGame.published" | translate }} ({{ publishedCount }})</ion-label>
         </ion-segment-button>
 
         <ion-segment-button value="mine" *ngIf="user">
-          <ion-label>{{ "PlayGame.myGames" | translate }}</ion-label>
+          <ion-label>{{ "PlayGame.myGames" | translate }} ({{ myGamesCount }})</ion-label>
         </ion-segment-button>
 
         <!-- Drafts overview for content moderators -->
@@ -96,7 +96,7 @@
           value="drafts"
           *ngIf="userRole == 'admin' || userRole == 'contentAdmin'"
         >
-          <ion-label>{{ "PlayGame.drafts" | translate }}</ion-label>
+          <ion-label>{{ "PlayGame.drafts" | translate }} ({{ draftsCount }})</ion-label>
         </ion-segment-button>
       </ion-segment>
     </div>

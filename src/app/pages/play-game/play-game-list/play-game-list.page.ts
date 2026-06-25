@@ -37,6 +37,10 @@ export class PlayGameListPage implements OnInit {
   // To be able to update games list and switch between segments
   searchText: string = "";
   selectedSegment: string = "published";
+  // Counts shown on the segment tabs (for the current env + mode).
+  publishedCount: number = 0;
+  myGamesCount: number = 0;
+  draftsCount: number = 0;
   // to disable mine segment for unlogged user
   userRole: String = "unloggedUser";
   userId: String = "";
@@ -173,8 +177,22 @@ export class PlayGameListPage implements OnInit {
     return game.isPublished === false;
   }
 
+  // Recompute the per-tab game counts for the current environment + mode.
+  computeTabCounts() {
+    const games = this.all_games_segment || [];
+    const inMode = (g) => g.isMultiplayerGame == this.isMutiplayerGame;
+    this.publishedCount = games.filter(
+      (g) => !this.isDraft(g) && inMode(g)
+    ).length;
+    this.myGamesCount = games.filter(
+      (g) => g.user == this.userId && inMode(g)
+    ).length;
+    this.draftsCount = games.filter((g) => this.isDraft(g) && inMode(g)).length;
+  }
+
   // segment (published - all - my games - drafts)
   segmentChanged(segVal) {
+    this.computeTabCounts();
     //--- ToDo check duplicate code and create a func for it
     // if mine is selected
     if (segVal == "mine") {
