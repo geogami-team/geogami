@@ -36,7 +36,7 @@ export class PlayGameListPage implements OnInit {
 
   // To be able to update games list and switch between segments
   searchText: string = "";
-  selectedSegment: string = "curated";
+  selectedSegment: string = "published";
   // to disable mine segment for unlogged user
   userRole: String = "unloggedUser";
   userId: String = "";
@@ -90,7 +90,7 @@ export class PlayGameListPage implements OnInit {
     // Get user role
     this.user.subscribe((event) => {
       if (event != null) {
-        this.selectedSegment = "all";
+        this.selectedSegment = "published";
         this.userRole = event["roles"][0];
         this.userId = this.authService.getUserId();
       } else {
@@ -111,37 +111,46 @@ export class PlayGameListPage implements OnInit {
 
   ngAfterViewInit(): void {}
 
+  /* Fetch the games the caller may see: published games (everyone) plus, for a
+   * logged-in user, their own drafts — or every draft for admin/contentAdmin.
+   * The two sets never overlap (published vs. isPublished === false). */
+  async fetchGames() {
+    const isLoggedIn = this.userRole != "unloggedUser";
+    const publishedRes = await this.gamesService.getGames(true, isLoggedIn);
+    let games = publishedRes?.content || [];
+
+    if (isLoggedIn) {
+      try {
+        const draftsRes = await this.gamesService.getDraftGames();
+        games = games.concat(draftsRes?.content || []);
+      } catch (e) {
+        // drafts are best-effort; published list still shows
+      }
+    }
+    return games;
+  }
+
   // Get games data from server
   getGamesData() {
-    /* Only content admin can view multi-players games */
-    this.gamesService
-      .getGames(true, this.userRole != "unloggedUser")
-      .then((res) => res.content)
-      .then((games) => {
-        // Get either real or VE agmes based on selected environment
-        this.games_res = games;
+    this.fetchGames().then((games) => {
+      // Get either real or VE agmes based on selected environment
+      this.games_res = games;
 
-        /* filter games based on selected environment (default: real, standalone: virtual) */
-        if (this.isStandalone) {
-          this.filterVirtualEnvGames();
-        } else {
-          this.filterRealWorldGames();
-        }
+      /* filter games based on selected environment (default: real, standalone: virtual) */
+      if (this.isStandalone) {
+        this.filterVirtualEnvGames();
+      } else {
+        this.filterRealWorldGames();
+      }
 
-        // this.loading = true;
-
-        // Filter data of selected segment
-        this.segmentChanged(this.selectedSegment);
-      });
+      // Filter data of selected segment
+      this.segmentChanged(this.selectedSegment);
+    });
   }
 
   // ToDo: update the functions
   doRefresh(event) {
-    // Get games data from server
-    // Only content admin can view multi-players games
-    this.gamesService
-      .getGames(true, this.userRole != "unloggedUser")
-      .then((res) => res.content)
+    this.fetchGames()
       .then((games) => {
         this.games_res = games;
         this.filterGamesEnv(this.gameEnvSelected);
@@ -158,7 +167,13 @@ export class PlayGameListPage implements OnInit {
     this.navCtrl.navigateForward(`play-game/game-detail?gameId=${game._id}`);
   }
 
-  // segment (my games - all games - curated game)
+  // A game is a draft only when isPublished is explicitly false. Legacy games
+  // (undefined) and newly published games (true) both count as published.
+  isDraft(game): boolean {
+    return game.isPublished === false;
+  }
+
+  // segment (published - all - my games - drafts)
   segmentChanged(segVal) {
     //--- ToDo check duplicate code and create a func for it
     // if mine is selected
@@ -171,20 +186,21 @@ export class PlayGameListPage implements OnInit {
 
       // to update shown games based on search phrase
       this.updateGamesListSearchPhrase();
-    } else if (segVal == "all") {
-      // if all is selected
-      //onsole.log("all"); //temp
-      this.games_view = this.all_games_segment?.filter(
-        (game) => game.isMultiplayerGame == this.isMutiplayerGame
+    } else if (segVal == "published") {
+      // if published is selected (public list, replaces curated)
+      this.games_view = this.all_games_segment.filter(
+        (game) =>
+          !this.isDraft(game) &&
+          game.isMultiplayerGame == this.isMutiplayerGame
       );
 
       // to update shown games based on search phrase
       this.updateGamesListSearchPhrase();
-    } else if (segVal == "curated") {
-      // if curated is selected
+    } else if (segVal == "drafts") {
+      // if drafts is selected (admin/contentAdmin: all drafts)
       this.games_view = this.all_games_segment.filter(
         (game) =>
-          game.isCuratedGame == true &&
+          this.isDraft(game) &&
           game.isMultiplayerGame == this.isMutiplayerGame
       );
 
@@ -207,14 +223,7 @@ export class PlayGameListPage implements OnInit {
 
   // update list after selecting a segment
   filterSelectedSegementList(searchPhrase) {
-    if (this.selectedSegment == "all") {
-      this.games_view = this.all_games_segment.filter(
-        (game) =>
-          game.name.toLowerCase().includes(searchPhrase.toLowerCase()) ||
-          (game.place != undefined &&
-            game.place.toLowerCase().includes(searchPhrase.toLowerCase()))
-      );
-    } else if (this.selectedSegment == "mine") {
+    if (this.selectedSegment == "mine") {
       this.games_view = this.all_games_segment.filter(
         (game) =>
           game.user == this.userId &&
@@ -222,10 +231,18 @@ export class PlayGameListPage implements OnInit {
             (game.place != undefined &&
               game.place.toLowerCase().includes(searchPhrase.toLowerCase())))
       );
-    } else if (this.selectedSegment == "curated") {
+    } else if (this.selectedSegment == "published") {
       this.games_view = this.all_games_segment.filter(
         (game) =>
-          game.isCuratedGame == true &&
+          !this.isDraft(game) &&
+          (game.name.toLowerCase().includes(searchPhrase.toLowerCase()) ||
+            (game.place != undefined &&
+              game.place.toLowerCase().includes(searchPhrase.toLowerCase())))
+      );
+    } else if (this.selectedSegment == "drafts") {
+      this.games_view = this.all_games_segment.filter(
+        (game) =>
+          this.isDraft(game) &&
           (game.name.toLowerCase().includes(searchPhrase.toLowerCase()) ||
             (game.place != undefined &&
               game.place.toLowerCase().includes(searchPhrase.toLowerCase())))
@@ -577,18 +594,39 @@ export class PlayGameListPage implements OnInit {
     try {
       const res = await this.gamesService.postGame(fullGame);
       if (res.status == 201) {
-        this.gamesService.getGames(true, this.userRole != "unloggedUser")
-          .then((r) => r.content)
-          .then((games) => {
-            this.games_res = games;
-            this.filterGamesEnv(this.gameEnvSelected);
-          });
+        this.fetchGames().then((games) => {
+          this.games_res = games;
+          this.filterGamesEnv(this.gameEnvSelected);
+        });
       }
     } catch (e) {
       const errorAlert = await this.alertController.create({
         header: 'Error',
         message: 'A game with this name already exists. Please choose a different name.',
         buttons: ['OK'],
+      });
+      await errorAlert.present();
+    }
+  }
+
+  // Publish a draft, or move a published game back to draft.
+  async togglePublish(game: any) {
+    const publish = this.isDraft(game); // draft -> publish, published -> unpublish
+    try {
+      const res = await this.gamesService.setPublishState(game._id, publish);
+      if (res.status == 200) {
+        // reflect the change locally, then re-apply the current view
+        game.isPublished = publish;
+        this.fetchGames().then((games) => {
+          this.games_res = games;
+          this.filterGamesEnv(this.gameEnvSelected);
+        });
+      }
+    } catch (e) {
+      const errorAlert = await this.alertController.create({
+        header: "Error",
+        message: this._translate.instant("PlayGame.publishError"),
+        buttons: ["OK"],
       });
       await errorAlert.present();
     }

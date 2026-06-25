@@ -17,7 +17,7 @@ export class Game {
     public isVRMirrored: boolean,
     public virEnvType: string,
     public isVisible: boolean,
-    public isCuratedGame: boolean,
+    public isPublished: boolean,
     public disableShareData: boolean,
     public skipTaskPin?: string
   ) { }

@@ -44,6 +44,27 @@ export class GamesService {
     return this.http.get(`${environment.apiURL}/game/allwithlocs`).toPromise();
   }
 
+  // Draft (unpublished) games visible to the caller: admin/contentAdmin get all
+  // drafts, any other user gets only their own. Requires auth.
+  getDraftGames(): Promise<any> {
+    return this.http
+      .get(`${environment.apiURL}/game/drafts`, {
+        headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
+  // Publish / unpublish a single game (creator or admin/contentAdmin).
+  setPublishState(id: string, isPublished: boolean): Promise<any> {
+    return this.http
+      .put(
+        `${environment.apiURL}/game/${id}/publish`,
+        { isPublished },
+        { headers: this.createHeaders(), observe: "response" }
+      )
+      .toPromise();
+  }
+
   getTracks(): Promise<any> {
     return this.http
       .get(`${environment.apiURL}/tracks`, {
