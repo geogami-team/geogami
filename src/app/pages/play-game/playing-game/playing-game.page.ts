@@ -909,12 +909,23 @@ export class PlayingGamePage implements OnInit, OnDestroy {
           (avatarPosition) => {
             // console.log("🚀 ~ initializeMap ~ avatarPosition:", avatarPosition)
 
+            //* Convert THIS emission to avatar coords up front and record it
+            //* directly. The tracker service subscribes to this stream after
+            //* this handler, so its own stored position lags one emission behind
+            //* and, right after a teleport, would still hold the previous task's
+            //* location. Passing currentAvatarPosition avoids that shift.
+            const currentAvatarPosition = new AvatarPosition(
+              0,
+              new Coords(
+                parseFloat(avatarPosition["z"]) / 111200,
+                parseFloat(avatarPosition["x"]) / 111000
+              )
+            );
+
             //* First position received after the avatar was teleported to the
             //* new task's initial position: it now belongs to the new task, so
             //* resume recording (paused in nextTask to drop stale transition
-            //* points). Updating avatarLastKnownPosition below happens before
-            //* addWaypoint, so this first stored waypoint already carries the
-            //* teleported position.
+            //* points recorded while the next task was loading).
             if (this.isAwaitingTeleportPosition) {
               this.isAwaitingTeleportPosition = false;
               this.trackerService.resumeWaypointRecording();
@@ -923,7 +934,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
             // Store waypoint every second
             if (this.currentSecond != new Date().getSeconds()) {
               this.currentSecond = new Date().getSeconds();
-              this.trackerService.addWaypoint({});
+              this.trackerService.addWaypoint({}, currentAvatarPosition);
             }
 
             // Stotr avatar height
@@ -937,13 +948,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
                 new Coords(this.initialAvatarLoc.lat, this.initialAvatarLoc.lng)
               );
             } else {
-              this.avatarLastKnownPosition = new AvatarPosition(
-                0,
-                new Coords(
-                  parseFloat(avatarPosition["z"]) / 111200,
-                  parseFloat(avatarPosition["x"]) / 111000
-                )
-              );
+              this.avatarLastKnownPosition = currentAvatarPosition;
             }
 
             // update arrow heading

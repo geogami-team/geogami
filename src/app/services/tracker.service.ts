@@ -216,12 +216,24 @@ export class TrackerService {
     this.isWaypointRecordingPaused = false;
   }
 
-  addWaypoint(waypoint) {
+  // `positionOverride` lets the caller record the position from the *current*
+  // location emission. This service subscribes to the position stream after the
+  // playing-game page does, so its own `avatarPosition`/`position` lags one
+  // emission behind the page's addWaypoint() call. Right after a task switch
+  // that lag means the first stored point still holds the previous task's
+  // position, shifting the next task's trajectory. Passing the current position
+  // in avoids that lag.
+  addWaypoint(waypoint, positionOverride?: any) {
     if (this.waypoints != undefined && !this.isWaypointRecordingPaused) {
       this.waypoints.push({
         ...waypoint,
         timestamp: new Date().toISOString(),
-        position: this.isVirtualWorld ? this.avatarPosition : this.position,
+        position:
+          positionOverride !== undefined
+            ? positionOverride
+            : this.isVirtualWorld
+              ? this.avatarPosition
+              : this.position,
         mapViewport: {
           bounds: this.map.getBounds(),
           center: this.map.getCenter(),
