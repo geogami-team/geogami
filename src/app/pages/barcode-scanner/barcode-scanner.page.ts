@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-const { BarcodeScanner, SupportedFormat } = Plugins;
+// const { BarcodeScanner, SupportedFormat } = Plugins;
 import { Plugins } from "@capacitor/core";
 import { ModalController, NavController } from '@ionic/angular';
 import { SocketService } from 'src/app/services/socket.service';
@@ -31,8 +31,8 @@ export class BarcodeScannerPage implements OnInit {
     }
 
     /* prepare then start scanning */
-    BarcodeScanner.prepare();
-    this.startScan();
+    // BarcodeScanner.prepare();
+    // this.startScan();
   }
 
   ngOnDestroy() {
@@ -43,81 +43,49 @@ export class BarcodeScannerPage implements OnInit {
   /**********/
   // tutorial: https://www.youtube.com/watch?v=8GXfjDUCYjU
   async startScan() {
-    const allowed = await this.checkPermission()
-    if (allowed) {
-      // console.log("🚀 allowed")
+    // const allowed = await this.checkPermission()
+    // if (allowed) {
+    //   // console.log("🚀 allowed")
 
-      /* make background of WebView transparent, another step is adding some style to global.scss */
-      BarcodeScanner.hideBackground();
-      document.querySelector('body').classList.add('scanner-active');
+    //   /* make background of WebView transparent, another step is adding some style to global.scss */
+    //   BarcodeScanner.hideBackground();
+    //   document.querySelector('body').classList.add('scanner-active');
 
-      /* specified qr-code */
-      const result = await BarcodeScanner.startScan({ targetedFormats: ['QR_CODE'] }); // start scanning and wait for a result
+    //   /* specified qr-code */
+    //   const result = await BarcodeScanner.startScan({ targetedFormats: ['QR_CODE'] }); // start scanning and wait for a result
 
-      /* if the result has content */
-      if (result.hasContent) {
-        const content: string = result.content;
-        console.log(content); // log the raw scanned content
+    //   /* if the result has content */
+    //   if (result.hasContent) {
+    //     console.log(result.content); // log the raw scanned content
+    //     /* show toast msg */
+    //     // this.utilService.showToast(`Qr-Code: ${result.content}`, "dark", 3500);
 
-        // Two recognised QR formats:
-        //  - Class QR (single-player): a full URL with query params, e.g.
-        //    .../play-game/game-detail?gameId=X&uId=Y
-        //  - Old multiplayer teacher code: a bare string uId(24) + "-" + gameId
-        let gameId = "";
-        let uId = "";
-        let iName = "";
-        if (content.includes("game-detail") || content.startsWith("http")) {
-          try {
-            const params = new URL(content).searchParams;
-            gameId = params.get("gameId") || "";
-            uId = params.get("uId") || params.get("instructor") || "";
-            iName = params.get("iName") || "";
-          } catch (e) {
-            console.log("Unrecognised QR URL:", content);
-          }
-        } else {
-          // Old multiplayer teacher-code format — kept for backward compat.
-          uId = content.slice(0, 24);
-          gameId = content.slice(25);
-          this.utilService.setQRCodeValue(content);
-        }
+    //     this.utilService.setQRCodeValue(result.content);
 
-        if (gameId) {
-          let target = `play-game/game-detail?gameId=${gameId}&uId=${uId}`;
-          if (iName) {
-            target += `&iName=${encodeURIComponent(iName)}`;
-          }
-          this.navCtrl.navigateForward(target);
-        } else {
-          this.utilService.showToast(
-            this.translate.instant("PlayGame.unrecognisedQr"),
-            "dark",
-            3000
-          );
-        }
-      }
-    }
+        // this.navCtrl.navigateForward(`play-game/game-detail?gameId=${result.content.slice(25)}`);
+      // }
+    // }
   }
 
   /********/
   async stopScan() {
-    BarcodeScanner.showBackground();
-    document.querySelector('body').classList.remove('scanner-active');
-    /* stop scan */
-    BarcodeScanner.stopScan();
-  };
+  //   BarcodeScanner.showBackground();
+  //   document.querySelector('body').classList.remove('scanner-active');
+  //   /* stop scan */
+  //   BarcodeScanner.stopScan();
+  // };
 
-  async checkPermission() {
-    return new Promise(async (resolve, rejects) => {
-      const status = await BarcodeScanner.checkPermission({ force: true });
-      if (status.granted) {
-        resolve(true);
-      } else if (status.denied) {
-        // ToDo: update
-        BarcodeScanner.openAppSettings();
-      } else {
-        resolve(false);
-      }
-    });
+  // async checkPermission() {
+  //   return new Promise(async (resolve, rejects) => {
+  //     const status = await BarcodeScanner.checkPermission({ force: true });
+  //     if (status.granted) {
+  //       resolve(true);
+  //     } else if (status.denied) {
+  //       // ToDo: update
+  //       BarcodeScanner.openAppSettings();
+  //     } else {
+  //       resolve(false);
+  //     }
+  //   });
   }
 }
