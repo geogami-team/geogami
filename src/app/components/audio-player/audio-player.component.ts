@@ -34,13 +34,17 @@ export class AudioPlayerComponent implements AfterViewInit, OnChanges, OnDestroy
   ngOnChanges(changes: SimpleChanges): void {
     if (this.audio != undefined) {
       this.loadAudio();
+      this.scheduleAutoPlay();
     }
   }
 
   ngAfterViewInit(): void {
     this.loadAudio();
+    this.scheduleAutoPlay();
 
     this.audio.nativeElement.addEventListener("ended", () => {
+      // Reset to the start so the user can replay manually, but do NOT re-arm
+      // auto-play here — the instruction should play once, not on a loop.
       this.loadAudio();
     });
   }
@@ -53,7 +57,12 @@ export class AudioPlayerComponent implements AfterViewInit, OnChanges, OnDestroy
     clearTimeout(this.autoPlayTimer);
     this.playing = false;
     (this.audio.nativeElement as HTMLAudioElement).load();
+  }
 
+  // Auto-plays the audio once, shortly after the task is shown. Only called on
+  // init / when the audio source changes, never when playback ends.
+  private scheduleAutoPlay() {
+    clearTimeout(this.autoPlayTimer);
     if (this.autoPlay && this.audioSource != undefined) {
       this.autoPlayTimer = setTimeout(() => this.startPlayback(), this.autoPlayDelay);
     }
