@@ -67,6 +67,13 @@ export class TrackerService {
   private taskNo = 0;
   private taskCategory = "";
 
+  // While transitioning between tasks (e.g. the avatar is being teleported to
+  // the next task's initial position) the incoming position still reflects the
+  // previous task's last location. Recording is paused during that window so
+  // those stale points are not attributed to the new task. See nextTask/initTask
+  // in playing-game.page.ts.
+  private isWaypointRecordingPaused = false;
+
   constructor(
     private http: HttpClient,
     private geolocateService: OrigamiGeolocationService,
@@ -199,8 +206,18 @@ export class TrackerService {
     this.rotationCounter = 0;
   }
 
+  // Pause recording while the next task is loading / the avatar is being
+  // teleported, so transition-window positions aren't stored under the new task.
+  pauseWaypointRecording() {
+    this.isWaypointRecordingPaused = true;
+  }
+
+  resumeWaypointRecording() {
+    this.isWaypointRecordingPaused = false;
+  }
+
   addWaypoint(waypoint) {
-    if (this.waypoints != undefined) {
+    if (this.waypoints != undefined && !this.isWaypointRecordingPaused) {
       this.waypoints.push({
         ...waypoint,
         timestamp: new Date().toISOString(),
