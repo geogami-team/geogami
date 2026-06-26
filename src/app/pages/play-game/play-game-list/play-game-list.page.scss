@@ -153,3 +153,66 @@ ion-fab-list > ion-label{
 .star-icon {
   margin-right: 7px;
 }
+
+/* ── Responsive game rows ─────────────────────────────────────────────
+   Each row is [.game-card] + [.game-actions icons]. On tablet/desktop they
+   sit side by side (actions as a strip on the right); on phones the actions
+   drop BELOW the card so the name gets the full width. */
+.game-row {
+  display: flex; // side by side (tablet/desktop)
+}
+
+.game-card {
+  flex: 1;
+  min-width: 0;    // allow the card/name to shrink + wrap
+  margin-right: 0; // butt against the action strip
+}
+
+ion-card {
+  min-width: 0; // allow the card to shrink within the flex row (enables wrapping)
+}
+
+// game name always stays on a single line (truncate with ellipsis, never wrap)
+ion-card-header ion-label h2 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// keep the tasks-count chip from forcing the row wider
+.numplayersCard {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// tablets: tighten the spacing between the action icons
+@media only screen and (max-width: 1024px) {
+  .game-actions ion-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    margin: 0;
+  }
+}
+
+// smartphones: even tighter spacing + smaller action icons (and smaller name/meta)
+@media only screen and (max-width: 480px) {
+  ion-card-header h2 {
+    font-size: 14px;
+  }
+
+  .numplayersCard {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+
+  .game-actions ion-button {
+    --padding-start: 1px;
+    --padding-end: 1px;
+    margin: 0;
+  }
+
+  .game-actions ion-icon {
+    font-size: 17px; // smaller icons on phones
+  }
+}
+
