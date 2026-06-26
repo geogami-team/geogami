@@ -699,9 +699,11 @@ export class PlayGameListPage implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onWillDismiss();
-    // Refresh so the game's editors (and any new "shared" state) are current.
-    if (data?.changed) {
-      this.getGamesData();
+    // Update the in-memory editors so badges/permissions stay correct, without a
+    // full re-fetch (which would reset the current environment/segment view and
+    // make the game appear to vanish until a manual refresh).
+    if (data?.changed && Array.isArray(data.editors)) {
+      game.editors = data.editors;
     }
   }
 

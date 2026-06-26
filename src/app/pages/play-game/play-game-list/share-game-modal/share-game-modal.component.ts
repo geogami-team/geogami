@@ -102,6 +102,8 @@ export class ShareGameModalComponent implements OnInit {
   }
 
   close() {
-    this.modalController.dismiss({ changed: this.changed });
+    // Return the final editors list so the parent can update its in-memory copy
+    // without a full re-fetch (which would reset the env/segment view).
+    this.modalController.dismiss({ changed: this.changed, editors: this.editors });
   }
 }
