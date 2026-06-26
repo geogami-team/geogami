@@ -115,12 +115,12 @@
 
     <!-- list of games -->
     <div style="padding-bottom: 45px;">
-      <div *ngFor="let game of games_view" style="display: flex">
+      <div *ngFor="let game of games_view" class="game-row">
         <ion-card
           (click)="gameClick(game)"
           detail
           color="secondary"
-          style="width: 100%; margin-right: 0"
+          class="game-card"
         >
           <ion-card-header>
             <ion-item lines="none" color="secondary">
