@@ -145,6 +145,13 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   avatarLastKnownHeight: number;    // To keep height of avatar in VR world to use it in next tasks of same type. To resolve the issue of changing avatar height in VR world - 3d building envs
   previousTaskAvatarHeading: number;
 
+  //* While moving to the next task the avatar is teleported to the new task's
+  //* initial position. Until the VR app reports that new position the incoming
+  //* position still belongs to the previous task, so waypoint recording is
+  //* paused. This flag marks that we are waiting for the first post-teleport
+  //* position to resume recording (fixes trajectory shift between tasks).
+  private isAwaitingTeleportPosition = false;
+
   // degree for nav-arrow
   heading = 0;
   compassHeading = 0;
@@ -901,6 +908,18 @@ export class PlayingGamePage implements OnInit, OnDestroy {
         this.geolocationService.avatarGeolocationSubscription.subscribe(
           (avatarPosition) => {
             // console.log("🚀 ~ initializeMap ~ avatarPosition:", avatarPosition)
+
+            //* First position received after the avatar was teleported to the
+            //* new task's initial position: it now belongs to the new task, so
+            //* resume recording (paused in nextTask to drop stale transition
+            //* points). Updating avatarLastKnownPosition below happens before
+            //* addWaypoint, so this first stored waypoint already carries the
+            //* teleported position.
+            if (this.isAwaitingTeleportPosition) {
+              this.isAwaitingTeleportPosition = false;
+              this.trackerService.resumeWaypointRecording();
+            }
+
             // Store waypoint every second
             if (this.currentSecond != new Date().getSeconds()) {
               this.currentSecond = new Date().getSeconds();
@@ -2337,6 +2356,16 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     }
 
     this.task = this.game.tasks[this.taskIndex];
+
+    //* Pause waypoint recording until the avatar has been teleported to the new
+    //* task's initial position. Otherwise positions still reporting the previous
+    //* task's last location would be stored under the new task number, which
+    //* shifts the start of the next task's trajectory.
+    if (this.isVirtualWorld) {
+      this.isAwaitingTeleportPosition = true;
+      this.trackerService.pauseWaypointRecording();
+    }
+
     this.trackerService.updateTaskNo(this.taskIndex + 1, this.task.category); // to update taskNo stored in waypoints
     this.feedbackControl.setTask(this.task);
 
