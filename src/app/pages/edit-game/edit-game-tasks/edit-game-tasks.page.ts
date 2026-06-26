@@ -11,6 +11,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Task } from "src/app/models/task";
 import { UtilService } from "src/app/services/util.service";
 import { TranslateService } from "@ngx-translate/core";
+import { AuthService } from "src/app/services/auth-service.service";
 
 @Component({
   selector: "app-edit-game-tasks", // edit-game-tasks
@@ -55,8 +56,24 @@ export class EditGameTasksPage implements OnInit {
     private utilService: UtilService,
     private platform: Platform, //* used in html,
     private alertController: AlertController,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private authService: AuthService
   ) {}
+
+  // Only the owner or an admin/contentAdmin may delete a game. Co-authors
+  // (editors) can edit but not delete. getGame omits `user`, so we detect a
+  // co-author by email (the owner is never in the editors list) and otherwise
+  // allow it (admins, or the owner reaching their own game).
+  get canDelete(): boolean {
+    if (!this.game) return false;
+    const u: any = this.authService.getUserValue();
+    const role = u?.["roles"]?.[0];
+    if (role === "admin" || role === "contentAdmin") return true;
+    const email = (u?.email || "").toLowerCase();
+    const editors: string[] = (this.game as any).editors || [];
+    const isEditor = editors.map((e) => e.toLowerCase()).includes(email);
+    return !isEditor;
+  }
 
   ngOnInit() {
     // Get selected env. and game type
@@ -111,34 +128,7 @@ export class EditGameTasksPage implements OnInit {
     });
   }
 
-  ionViewWillEnter() {
-    // mapboxgl.accessToken =
-    //   "pk.eyJ1IjoiZmVsaXhhZXRlbSIsImEiOiI2MmE4YmQ4YjIzOTI2YjY3ZWFmNzUwOTU5NzliOTAxOCJ9.nshlehFGmK_6YmZarM2SHA";
-    // const map = new mapboxgl.Map({
-    //   container: "create-game-map",
-    //   style: "mapbox://styles/mapbox/streets-v9",
-    //   center: [8, 51.8],
-    //   zoom: 2
-    // });
-    // const geolocate = new mapboxgl.GeolocateControl({
-    //   positionOptions: {
-    //     enableHighAccuracy: true
-    //   },
-    //   fitBoundsOptions: {
-    //     maxZoom: 25
-    //   },
-    //   trackUserLocation: true
-    // });
-    // map.addControl(geolocate);
-    // // let watch = this.geolocation.watchPosition();
-    // // watch.subscribe((data) => {
-    // // // console.log(data)
-    // // });
-    // // Add geolocate control to the map.
-    // map.on("load", () => {
-    //   geolocate.trigger();
-    // });
-  }
+  ionViewWillEnter() {}
 
   async presentTaskModal(
     type: string = "nav",

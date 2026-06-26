@@ -235,7 +235,8 @@
     </ion-card> -->
 </ion-content>
 
-<ion-footer>
+<!-- Delete is owner/admin only — hidden from co-authors (editors) -->
+<ion-footer *ngIf="canDelete">
   <ion-toolbar
     ><ion-button expand="block" color="danger" (click)="deleteGame(game_id)">
       <ion-icon name="trash-outline" style="margin-right: 10px"></ion-icon>
