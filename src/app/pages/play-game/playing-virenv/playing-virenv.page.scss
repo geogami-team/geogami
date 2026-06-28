@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+// Pin the WebGL/Unity iframe so it fills the page exactly.
+//
+// Previously the frame was sized only by the height/width="100%" HTML
+// attributes on an otherwise unstyled iframe. An iframe defaults to
+// `display: inline` and carries a 2px browser border, so its border-box ended
+// up a few pixels larger than the `.ion-page` container (plus an inline
+// baseline/descender gap). At certain viewport widths that small overflow
+// crossed the scrollbar threshold and toggled a scrollbar on/off in a feedback
+// loop, which showed up as the frame flickering/shaking.
+//
+// Absolute-filling the host (a positioned `.ion-page`) removes the dependency
+// on flex sizing, percentage-height resolution, the default border and the
+// inline gap, so the frame stays rock-steady at every width.
+iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+}
