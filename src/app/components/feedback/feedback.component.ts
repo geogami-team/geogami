@@ -446,7 +446,10 @@ export class FeedbackComponent {
 
     if (this.task.answer.type == AnswerType.MAP_DIRECTION) {
       if (clickDirection != 0) {
-        if (this.task.question.type == QuestionType.MAP_DIRECTION_PHOTO) {
+        if (
+          this.task.question.type == QuestionType.MAP_DIRECTION_PHOTO &&
+          this.task.question.direction?.bearing != undefined
+        ) {
           this.initFeedback(
             this.Math.abs(
               clickDirection - this.task.question.direction.bearing
@@ -1267,7 +1270,10 @@ export class FeedbackComponent {
     if (this.task.answer.type == AnswerType.MAP_DIRECTION) {
       let isCorrect = false;
       if (clickDirection != 0) {
-        if (this.task.question.type == QuestionType.MAP_DIRECTION_PHOTO) {
+        if (
+          this.task.question.type == QuestionType.MAP_DIRECTION_PHOTO &&
+          this.task.question.direction?.bearing != undefined
+        ) {
           isCorrect =
             this.Math.abs(
               clickDirection - this.task.question.direction.bearing
