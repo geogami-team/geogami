@@ -66,7 +66,7 @@
   </ion-card>
 
   <ion-card
-    *ngIf="(user | async)?.roles && ['admin', 'contentAdmin', 'scholar'].includes( (user | async)?.roles[0] )"
+    *ngIf="(user | async)?.roles && ['admin', 'contentAdmin', 'scholar', 'user'].includes( (user | async)?.roles[0] )"
     id="start_card_analyze"
     (click)="navigateAnalyzePage()"
     color="secondary"
