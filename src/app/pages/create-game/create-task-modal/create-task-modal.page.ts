@@ -253,12 +253,14 @@ export class CreateTaskModalPage implements OnInit {
     return answer?.type === AnswerType.POSITION;
   }
 
-  // The destination is a GeoJSON point the author drops on the map, stored as
-  // answer.position. It only counts once it actually carries coordinates: a fresh
-  // task starts as { position: undefined } and a cleared marker leaves an empty
-  // object, both of which must be treated as "no destination set".
-  private hasPositionSet(answer: any): boolean {
-    return !!answer?.position?.geometry?.coordinates?.length;
+  // Checks a `.position` GeoJSON point the author drops on the map. It only counts
+  // once it actually carries coordinates: a fresh feature starts as
+  // { position: undefined } and a cleared marker leaves an empty object, both of
+  // which must be treated as "not set". Shared by destination validation (where the
+  // point lives on answer.position) and reference-direction validation (where it
+  // lives on question.direction.position) — pass whichever object holds .position.
+  private hasPositionSet(holder: any): boolean {
+    return !!holder?.position?.geometry?.coordinates?.length;
   }
 
   // nav-photo is the one exception: it shows the player a photo of the place to
@@ -322,6 +324,87 @@ export class CreateTaskModalPage implements OnInit {
   private async presentDestinationRequiredToast() {
     const toast = await this.toastController.create({
       message: this.translate.instant("CreateGame.destinationRequired"),
+      color: "danger",
+      duration: 3000,
+    });
+    toast.present();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Reference-direction validation
+  //
+  // Three direction-determination question types show the player a reference
+  // direction the author drops on the map (an arrow/marker, optionally with a
+  // photo): MAP_DIRECTION (indicatedByArrow), MAP_DIRECTION_MARKER (shownOnMap)
+  // and MAP_DIRECTION_PHOTO (displayedWithPhoto). All three store it on
+  // question.direction, and the play page reads question.direction.bearing /
+  // .position to render and grade the task — so a missing direction throws
+  // ("direction is undefined") the moment the player submits. This gate closes
+  // that hole the same way hasDestination() does for nav tasks; it also runs on
+  // every save, so older direction tasks must get a direction when re-edited.
+  //
+  // The TEXT variant (whereAreYouLooking) is intentionally excluded: there the
+  // direction is the player's own answer, not an author-set reference, so its
+  // question.direction is left empty on purpose.
+  // ---------------------------------------------------------------------------
+
+  private requiresReferenceDirection(question: any): boolean {
+    return (
+      question?.type === QuestionType.MAP_DIRECTION ||
+      question?.type === QuestionType.MAP_DIRECTION_MARKER ||
+      question?.type === QuestionType.MAP_DIRECTION_PHOTO
+    );
+  }
+
+  // The author sets the reference by dropping a direction marker on the map; the
+  // editor then stores question.direction = { position: <point>, bearing: <deg> }.
+  // That position is the same kind of GeoJSON point as a nav destination, so we
+  // reuse hasPositionSet() to validate it: it only counts once the marker carries
+  // coordinates, and an untouched task has no direction object at all — exactly the
+  // state that crashes at play time.
+  private hasReferenceDirection(question: any): boolean {
+    return this.hasPositionSet(question?.direction);
+  }
+
+  // Returns true when the task either doesn't need a reference direction or has one.
+  private hasDirectionReference(): boolean {
+    // Single mode keeps question as a plain object, multiplayer as one entry per
+    // player; branch on the actual shape since isSingleMode isn't always passed.
+    if (!Array.isArray(this.task?.question)) {
+      const question = this.task?.question;
+      if (!this.requiresReferenceDirection(question)) {
+        return true;
+      }
+      return this.hasReferenceDirection(question);
+    }
+
+    // Multiplayer: every player shown a reference direction needs one. The three
+    // "all players share the same direction" toggles copy player 1's direction
+    // onto the others, but only later in updatePlayersAnswers() during save — so
+    // resolve inheriting players back to player 1 first, otherwise a valid shared
+    // setup would be wrongly rejected.
+    const questions = this.task.question;
+    const shared =
+      !!questions[0]?.allHasSameViewDirec ||
+      !!questions[0]?.allHasSameDirMap ||
+      !!questions[0]?.allHasSamePhotoDirMap;
+    for (let i = 0; i < this.numPlayers; i++) {
+      const question = questions[i];
+      if (!this.requiresReferenceDirection(question)) {
+        continue;
+      }
+      const resolvedQuestion = shared && i > 0 ? questions[0] : question;
+      if (!this.hasReferenceDirection(resolvedQuestion)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Shown when an author tries to save a direction task without a direction set.
+  private async presentDirectionRequiredToast() {
+    const toast = await this.toastController.create({
+      message: this.translate.instant("CreateGame.directionRequired"),
       color: "danger",
       duration: 3000,
     });
@@ -1001,6 +1084,16 @@ export class CreateTaskModalPage implements OnInit {
     // (rather than silently saving) so the author knows what's missing.
     if (!this.hasDestination()) {
       this.presentDestinationRequiredToast();
+      return;
+    }
+
+    // Direction-determination tasks that show an author-placed reference direction
+    // (arrow/marker/photo) can't be rendered or graded without it — the play page
+    // reads question.direction and throws on submit when it's missing. Gate saving
+    // on a placed direction, mirroring the destination guard above; this also
+    // repairs older direction tasks the first time they're edited and re-saved.
+    if (!this.hasDirectionReference()) {
+      this.presentDirectionRequiredToast();
       return;
     }
 

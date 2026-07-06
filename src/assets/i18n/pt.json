@@ -211,6 +211,7 @@
     "instructionOrAudioRequired": "Adicione um Texto informativo ou uma Mensagem de áudio para que os jogadores saibam o que fazer.",
     "instructionAudioOrPhotoRequired": "Adicione um Texto informativo, uma Mensagem de áudio ou uma Foto para que os jogadores saibam o que fazer.",
     "destinationRequired": "Defina um destino no mapa antes de guardar esta tarefa.",
+    "directionRequired": "Marque a direção do olhar no mapa antes de guardar esta tarefa.",
     "infoContentRequired": "Adicione um Texto informativo, uma foto ou uma Mensagem de áudio a esta tarefa de informação.",
     "titleCreateGame": "Desenvolva seu GeoGami",
     "titleCreateGameMenu": "Escolha o ambiente de jogo",
