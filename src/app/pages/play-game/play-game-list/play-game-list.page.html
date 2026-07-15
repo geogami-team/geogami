@@ -176,9 +176,11 @@
             title="{{ (game.isPublished === false ? 'PlayGame.publish' : 'PlayGame.unpublish') | translate }}"
             (click)="togglePublish(game)"
           >
+            <!-- Color reflects STATE: published = green (live), draft = gray.
+                 The tooltip conveys the action (Publish / Unpublish). -->
             <ion-icon
-              [name]="game.isPublished === false ? 'cloud-upload-outline' : 'cloud-offline-outline'"
-              [color]="game.isPublished === false ? 'success' : 'medium'"
+              [name]="game.isPublished === false ? 'cloud-upload-outline' : 'cloud-done-outline'"
+              [color]="game.isPublished === false ? 'medium' : 'success'"
             ></ion-icon>
           </ion-button>
 
