@@ -172,7 +172,7 @@
              publish/edit/share buttons inside stay individually gated. -->
         <ion-buttons *ngIf="user" class="game-actions">
           <ion-button
-            *ngIf="canEdit(game)"
+            *ngIf="canPublish(game)"
             title="{{ (game.isPublished === false ? 'PlayGame.publish' : 'PlayGame.unpublish') | translate }}"
             (click)="togglePublish(game)"
           >

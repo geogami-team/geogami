@@ -203,19 +203,28 @@ export class PlayGameListPage implements OnInit {
     return game.user != this.userId && this.isEditorOf(game);
   }
 
-  // Only the owner or a full admin may manage the co-author list.
+  // The owner, an admin, or a contentAdmin may manage the co-author list.
   canManageSharing(game): boolean {
-    return this.userId == game.user || this.userRole == "admin";
+    return (
+      this.userId == game.user ||
+      this.userRole == "admin" ||
+      this.userRole == "contentAdmin"
+    );
   }
 
-  // Edit + publish/unpublish are limited to the game's owner, a co-author
-  // (editor), or a full admin (contentAdmin is view-only on others' games).
+  // Content editing is limited to the game's owner, a co-author (editor), or a
+  // full admin (contentAdmin can publish/manage co-authors, but not edit content).
   canEdit(game): boolean {
     return (
       this.userId == game.user ||
       this.userRole == "admin" ||
       this.isEditorOf(game)
     );
+  }
+
+  // Publish/unpublish: everyone who can edit, plus contentAdmin (content moderation).
+  canPublish(game): boolean {
+    return this.canEdit(game) || this.userRole == "contentAdmin";
   }
 
   // Recompute the per-tab game counts for the current environment + mode.
