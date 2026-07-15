@@ -206,6 +206,14 @@
           >
             <ion-icon name="copy-outline"></ion-icon>
           </ion-button>
+
+          <ion-button
+            *ngIf="userRole == 'admin'"
+            title="{{ 'PlayGame.creatorInfoBtn' | translate }}"
+            (click)="openCreatorInfo(game)"
+          >
+            <ion-icon name="information-circle-outline"></ion-icon>
+          </ion-button>
         </ion-buttons>
       </div>
     </div>

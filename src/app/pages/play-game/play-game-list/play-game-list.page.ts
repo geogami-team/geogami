@@ -4,6 +4,7 @@ import { AlertController, ModalController, NavController } from "@ionic/angular"
 
 import { GamesService } from "../../../services/games.service";
 import { ShareGameModalComponent } from "./share-game-modal/share-game-modal.component";
+import { GameCreatorModalComponent } from "./game-creator-modal/game-creator-modal.component";
 
 // VR world
 import { ActivatedRoute } from "@angular/router";
@@ -705,6 +706,17 @@ export class PlayGameListPage implements OnInit {
     if (data?.changed && Array.isArray(data.editors)) {
       game.editors = data.editors;
     }
+  }
+
+  // Open the creator-info modal (admin only — the button is role-gated in the
+  // template, the server enforces the role again). The modal fetches its data
+  // itself, so nothing is requested until the admin actually clicks.
+  async openCreatorInfo(game: any) {
+    const modal = await this.modalController.create({
+      component: GameCreatorModalComponent,
+      componentProps: { game },
+    });
+    await modal.present();
   }
 
   // Edit game
