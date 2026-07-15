@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ "PlayGame.creatorTitle" | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <p>
+    <ion-icon name="game-controller"></ion-icon>
+    <b> &nbsp;{{ game?.name }}</b>
+  </p>
+
+  <div *ngIf="loading" style="color: #666;">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ng-container *ngIf="!loading && !failed">
+    <ion-list lines="full">
+      <ion-item *ngIf="creator">
+        <ion-label>
+          <h3>{{ "PlayGame.creatorCreatedBy" | translate }}</h3>
+          <p>
+            {{ creator.username || "—"
+            }}<span *ngIf="creator.name"> ({{ creator.name }})</span>
+          </p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item *ngIf="creator">
+        <ion-label>
+          <h3>{{ "PlayGame.creatorEmail" | translate }}</h3>
+          <p>{{ creator.email }}</p>
+        </ion-label>
+      </ion-item>
+
+      <!-- Creator account was deleted: still show the creation date below -->
+      <ion-item *ngIf="!creator">
+        <ion-label color="medium" class="ion-text-wrap">
+          {{ "PlayGame.creatorDeleted" | translate }}
+        </ion-label>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label>
+          <h3>{{ "PlayGame.creatorCreatedOn" | translate }}</h3>
+          <p>{{ createdAt ? (createdAt | date : "mediumDate") : "—" }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <ion-button
+      *ngIf="creator"
+      expand="block"
+      fill="outline"
+      [disabled]="busy"
+      (click)="openUserDetails()"
+    >
+      <ion-icon name="person-circle-outline" slot="start"></ion-icon>
+      {{ "PlayGame.creatorMoreDetails" | translate }}
+    </ion-button>
+  </ng-container>
+
+  <div *ngIf="!loading && failed" style="color: #666;">
+    {{ "PlayGame.creatorError" | translate }}
+  </div>
+</ion-content>
