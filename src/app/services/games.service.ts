@@ -97,6 +97,16 @@ export class GamesService {
       .toPromise();
   }
 
+  // Who created a game and when (admin only). Fetched lazily when the
+  // creator-info modal is opened — never as part of the list load.
+  getGameCreatorInfo(id: string): Promise<any> {
+    return this.http
+      .get(`${environment.apiURL}/game/${id}/creator`, {
+        headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
   getTracks(): Promise<any> {
     return this.http
       .get(`${environment.apiURL}/tracks`, {

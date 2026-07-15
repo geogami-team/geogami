@@ -172,13 +172,15 @@
              publish/edit/share buttons inside stay individually gated. -->
         <ion-buttons *ngIf="user" class="game-actions">
           <ion-button
-            *ngIf="canEdit(game)"
+            *ngIf="canPublish(game)"
             title="{{ (game.isPublished === false ? 'PlayGame.publish' : 'PlayGame.unpublish') | translate }}"
             (click)="togglePublish(game)"
           >
+            <!-- Color reflects STATE: published = green (live), draft = gray.
+                 The tooltip conveys the action (Publish / Unpublish). -->
             <ion-icon
-              [name]="game.isPublished === false ? 'cloud-upload-outline' : 'cloud-offline-outline'"
-              [color]="game.isPublished === false ? 'success' : 'medium'"
+              [name]="game.isPublished === false ? 'cloud-upload-outline' : 'cloud-done-outline'"
+              [color]="game.isPublished === false ? 'medium' : 'success'"
             ></ion-icon>
           </ion-button>
 
@@ -205,6 +207,14 @@
             (click)="copyGame(game)"
           >
             <ion-icon name="copy-outline"></ion-icon>
+          </ion-button>
+
+          <ion-button
+            *ngIf="userRole == 'admin'"
+            title="{{ 'PlayGame.creatorInfoBtn' | translate }}"
+            (click)="openCreatorInfo(game)"
+          >
+            <ion-icon name="information-circle-outline"></ion-icon>
           </ion-button>
         </ion-buttons>
       </div>

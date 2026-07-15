@@ -6,7 +6,8 @@ import { GamesService } from "../../../../services/games.service";
 import { UtilService } from "../../../../services/util.service";
 
 /**
- * Modal to manage a game's co-authors (editors). The owner (or an admin) can
+ * Modal to manage a game's co-authors (editors). The owner (or an admin /
+ * contentAdmin) can
  * add another registered user by email or remove an existing co-author.
  * Co-authors may edit and publish the game and get track access; they cannot
  * delete it or manage this list. Dismisses with { changed } so the list page

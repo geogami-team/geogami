@@ -289,6 +289,16 @@ export class AuthService {
       .toPromise();
   }
 
+  // admin: get a single user by id (used by the game-list creator modal to
+  // open the shared User-details modal)
+  getUserById(userId: string): Promise<any> {
+    return this.http
+      .get(`${environment.apiURL}/user/user/${userId}`, {
+        headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
   // delete user by id (admin)
   deleteUserById(userId: string): Promise<any> {
     return this.http
