@@ -49,4 +49,20 @@ export class LanguageService {
     this.selected = lng;
     this.storage.set(LNG_KEY, lng)
   }
+
+  // Apply the language stored on a user account (set at registration or on
+  // the profile page), e.g. right after login. Accepts legacy locale-style
+  // values ("de_DE") and ignores unsupported or empty codes.
+  applyUserLanguage(language: string) {
+    if (!language) {
+      return;
+    }
+    const lng = language.toLowerCase().slice(0, 2);
+    if (
+      this.getLangauges().some((l) => l.value === lng) &&
+      lng !== this.selected
+    ) {
+      this.setLanguage(lng);
+    }
+  }
 }
