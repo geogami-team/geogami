@@ -377,7 +377,16 @@
     "deleteAccount": "Excluir conta",
     "cancel": "Cancelar",
     "enterEmail": "Digite seu endereço de e-mail e enviaremos um e-mail para redefinir sua senha.",
-    "enterVirCode": "O código de confirmação foi enviado para {{email}}. Por favor, insira o código abaixo junto com sua nova senha."
+    "enterVirCode": "O código de confirmação foi enviado para {{email}}. Por favor, insira o código abaixo junto com sua nova senha.",
+    "editProfile": "Editar perfil",
+    "pl_name": "Seu nome",
+    "language": "Idioma padrão",
+    "saveChanges": "Salvar alterações",
+    "profileUpdated": "Perfil atualizado.",
+    "profileUpdateFailed": "Não foi possível atualizar o perfil. Tente novamente.",
+    "accountInfo": "Conta",
+    "accountActions": "Ações da conta",
+    "logout": "Sair"
   },
   "Popover": {
     "chooseComponent": "Toque nos campos para saber mais sobre os tipos de tarefas.",
