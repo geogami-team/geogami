@@ -1,0 +1,119 @@
+/* Shared look for the auth pages (login, register, forgot/reset password).
+   Imported from each page's component stylesheet so all four stay in sync
+   with the profile page's design language. */
+
+ion-content {
+  --background: #f4f6fb;
+}
+
+.auth-wrap {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 8px 16px 32px;
+}
+
+/* ---------- Hero ---------- */
+
+.auth-hero {
+  text-align: center;
+  padding: 26px 0 22px;
+
+  .auth-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 12px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+      135deg,
+      var(--ion-color-primary) 0%,
+      #5a67d8 55%,
+      #7c3aed 100%
+    );
+    box-shadow: 0 8px 20px rgba(56, 128, 255, 0.35);
+
+    ion-icon {
+      font-size: 30px;
+      color: #fff;
+    }
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  p {
+    margin: 6px 0 0;
+    font-size: 0.9rem;
+    color: #64748b;
+  }
+}
+
+/* ---------- Card ---------- */
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(30, 41, 59, 0.06);
+}
+
+.card-hint {
+  margin: 0 0 14px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #475569;
+}
+
+.error-card {
+  margin: 0 0 14px;
+  border-radius: 12px;
+}
+
+/* ---------- Form fields ---------- */
+
+.form-item {
+  --background: #f4f6fb;
+  --border-radius: 12px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --inner-padding-end: 0;
+  border-radius: 12px;
+  margin-bottom: 12px;
+
+  ion-label {
+    font-size: 0.8rem !important;
+    font-weight: 600;
+    color: #64748b !important;
+  }
+
+  ion-input {
+    font-size: 0.95rem;
+    --padding-top: 8px;
+    --padding-bottom: 10px;
+  }
+}
+
+/* ---------- Buttons ---------- */
+
+.submit-btn {
+  margin-top: 6px;
+  --box-shadow: 0 6px 16px rgba(var(--ion-color-primary-rgb), 0.35);
+  font-weight: 600;
+
+  ion-spinner {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+  }
+}
+
+.alt-btn {
+  margin-top: 10px;
+  font-weight: 600;
+}

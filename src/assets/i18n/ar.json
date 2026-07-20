@@ -386,7 +386,11 @@
     "profileUpdateFailed": "تعذر تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.",
     "accountInfo": "الحساب",
     "accountActions": "إجراءات الحساب",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "login": "تسجيل الدخول",
+    "nameRequired": "لا يمكن ترك الاسم فارغًا.",
+    "deleteAccountTypeUsername": "للتأكيد، يرجى كتابة اسم المستخدم “{{username}}” أدناه.",
+    "deleteAccountWrongUsername": "اسم المستخدم المُدخل غير متطابق."
   },
   "Popover": {
     "chooseComponent": "اضغط على الأزرار لمعرفة المزيد عن أنواع المهام.",

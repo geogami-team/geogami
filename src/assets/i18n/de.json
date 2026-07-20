@@ -386,7 +386,11 @@
     "profileUpdateFailed": "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
     "accountInfo": "Konto",
     "accountActions": "Kontoaktionen",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "login": "Anmelden",
+    "nameRequired": "Der Name darf nicht leer sein.",
+    "deleteAccountTypeUsername": "Zur Bestätigung geben Sie bitte unten Ihren Benutzernamen „{{username}}“ ein.",
+    "deleteAccountWrongUsername": "Der eingegebene Benutzername stimmt nicht überein."
   },
   "Popover": {
     "chooseComponent": "Tippe die Felder an, um mehr über die Aufgabentypen zu erfahren.",

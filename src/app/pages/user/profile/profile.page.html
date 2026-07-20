@@ -15,7 +15,6 @@
   <div class="profile-wrap" *ngIf="user">
     <!-- Hero -->
     <section class="hero">
-      <div class="avatar">{{ initials }}</div>
       <h1 class="display-name">{{ user.name || user.username }}</h1>
       <p class="username" *ngIf="user.name">&#64;{{ user.username }}</p>
       <div class="role-chips">
@@ -90,6 +89,9 @@
             maxlength="80"
           ></ion-input>
         </ion-item>
+        <p class="field-error" *ngIf="profileForm.get('name').invalid">
+          {{ "User.nameRequired" | translate }}
+        </p>
 
         <ion-item class="form-item" lines="none">
           <ion-label position="stacked"
