@@ -16,10 +16,17 @@ export class ProfilePage implements OnInit {
   error: string;
   register;
   saving = false;
+  hasChanges = false;
 
   user;
   languages: { value: string; img: string; text: string }[] = [];
   userSub = this.authService.getUser();
+
+  // Snapshot of what's currently saved, so the Save button only enables
+  // once the user actually edits the name or picks a different language —
+  // not just because the (pre-filled) form happens to be valid.
+  private savedName: string;
+  private savedLanguage: string;
 
   // Rejects values that are empty or only whitespace (Validators.required
   // alone accepts a string of spaces).
@@ -45,20 +52,24 @@ export class ProfilePage implements OnInit {
       if (event != null) {
         this.user = event;
 
+        // Default to the username so the field is never empty; the
+        // non-blank validator keeps the save button disabled otherwise.
+        this.savedName = this.user.name || this.user.username;
+        // Legacy accounts may store locale-style values ("de_DE"); compare
+        // on the first two letters.
+        this.savedLanguage = (this.user.language || "de")
+          .toLowerCase()
+          .slice(0, 2);
+
         this.profileForm = this.fb.group({
-          // Default to the username so the field is never empty; the
-          // non-blank validator keeps the save button disabled otherwise.
-          name: [
-            this.user.name || this.user.username,
-            [Validators.required, ProfilePage.notBlank],
-          ],
-          // Legacy accounts may store locale-style values ("de_DE");
-          // compare on the first two letters.
-          language: [
-            (this.user.language || "de").toLowerCase().slice(0, 2),
-            [Validators.required],
-          ],
+          name: [this.savedName, [Validators.required, ProfilePage.notBlank]],
+          language: [this.savedLanguage, [Validators.required]],
         });
+
+        this.hasChanges = false;
+        this.profileForm.valueChanges.subscribe((value) =>
+          this.updateHasChanges(value)
+        );
       }
     });
 
@@ -69,6 +80,12 @@ export class ProfilePage implements OnInit {
     this.authService.getRegisterStatus().subscribe((r) => {
       this.register = r;
     });
+  }
+
+  private updateHasChanges(value: { name: string; language: string }) {
+    this.hasChanges =
+      (value.name || "").trim() !== this.savedName ||
+      value.language !== this.savedLanguage;
   }
 
   async updateUser() {
@@ -86,6 +103,11 @@ export class ProfilePage implements OnInit {
       if (res && res.success) {
         // Switch the app language right away so the change is visible.
         this.languageService.setLanguage(language);
+        // Move the "saved" snapshot forward so Save disables again until
+        // the next edit.
+        this.savedName = name.trim();
+        this.savedLanguage = language;
+        this.hasChanges = false;
         this.utilService.showToast(
           this._translate.instant("User.profileUpdated"),
           "dark",

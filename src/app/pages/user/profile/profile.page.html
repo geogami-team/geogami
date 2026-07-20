@@ -111,7 +111,7 @@
           expand="block"
           shape="round"
           type="submit"
-          [disabled]="profileForm.invalid || saving"
+          [disabled]="profileForm.invalid || saving || !hasChanges"
         >
           <ion-icon slot="start" name="save-outline"></ion-icon>
           {{ "User.saveChanges" | translate }}
