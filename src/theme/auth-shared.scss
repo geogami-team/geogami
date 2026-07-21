@@ -96,6 +96,14 @@ ion-content {
     font-size: 0.95rem;
     --padding-top: 8px;
     --padding-bottom: 10px;
+
+    // theme/variables.scss forces `padding-left/right: 1rem !important`
+    // directly on every ion-input's host box app-wide (styling meant for a
+    // pill-shaped input elsewhere). That's real box padding, applied on
+    // top of this item's own --padding-start/--padding-end, and !important
+    // beats normal specificity — only another !important rule cancels it.
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 
