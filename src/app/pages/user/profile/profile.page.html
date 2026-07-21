@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button
@@ -11,77 +11,138 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div *ngIf="user">
-    <h1>{{ "User.profile" | translate }}</h1>
-
-    <p><b>{{ "General.name" | translate }}: </b>{{user.username}}</p>
-    <p><b>{{ "User.mail" | translate }}: </b>{{user.email}}</p>
-    <div>
-      <b>{{ "User.mailconfirmed" | translate }}: </b>
-      <ion-chip *ngIf="user.emailIsConfirmed" color="success">
-        <ion-label>{{ "General.yes" | translate }}</ion-label>
-      </ion-chip>
-      <ion-chip *ngIf="!user.emailIsConfirmed" color="danger">
-        <ion-label>{{ "General.no" | translate }}</ion-label>
-      </ion-chip>
-    </div>
-    <p>
-      <b>{{ "User.registered" | translate }} </b>{{user.createdAt |
-      date:'d.MM.y'}}
-    </p>
-    <div>
-      <b>{{ "User.roles" | translate }}: </b>
-      <div style="display: inline" *ngFor="let role of user.roles">
-        <ion-chip *ngIf="role == 'user'" color="primary">
-          <ion-label>User</ion-label>
-        </ion-chip>
-        <ion-chip *ngIf="role == 'contentAdmin'" color="tertiary">
-          <ion-label>Content Admin</ion-label>
-        </ion-chip>
-        <ion-chip *ngIf="role == 'trackAccess'" color="success">
-          <ion-label>Track Access</ion-label>
-        </ion-chip>
-        <ion-chip *ngIf="role == 'scholar'" color="success">
-          <ion-label>Scholar</ion-label>
-        </ion-chip>
-        <ion-chip *ngIf="role == 'admin'" color="dark">
-          <ion-label>Admin</ion-label>
-        </ion-chip>
+<ion-content>
+  <div class="profile-wrap" *ngIf="user">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="avatar">{{ initials }}</div>
+      <h1 class="display-name">{{ user.name || user.username }}</h1>
+      <p class="username" *ngIf="user.name">&#64;{{ user.username }}</p>
+      <div class="role-chips">
+        <ng-container *ngFor="let role of user.roles">
+          <span class="role-chip" *ngIf="role == 'user'">User</span>
+          <span class="role-chip" *ngIf="role == 'contentAdmin'"
+            >Content Admin</span
+          >
+          <span class="role-chip" *ngIf="role == 'trackAccess'"
+            >Track Access</span
+          >
+          <span class="role-chip" *ngIf="role == 'scholar'">Scholar</span>
+          <span class="role-chip role-chip--admin" *ngIf="role == 'admin'"
+            >Admin</span
+          >
+        </ng-container>
       </div>
-    </div>
-    <!-- <form (ngSubmit)="updateUser()" [formGroup]="loginForm"> -->
-    <!-- <ion-input
-        placeholder="E-Mail"
-        [id]="'email'"
-        formControlName="email"
-      ></ion-input>
-      <br />
-      <ion-input
-        placeholder="{{ 'User.pl_username' | translate }}"
-        [id]="'username'"
-        formControlName="username"
-      ></ion-input>
-      <br />
-      <ion-button expand="block" type="submit" [disabled]="loginForm.invalid"
-        >Speichern</ion-button
+    </section>
+
+    <!-- Account info -->
+    <section class="card">
+      <h2 class="card-title">{{ "User.accountInfo" | translate }}</h2>
+
+      <div class="info-row">
+        <div class="info-icon">
+          <ion-icon name="mail-outline"></ion-icon>
+        </div>
+        <div class="info-text">
+          <span class="info-label">{{ "User.mail" | translate }}</span>
+          <span class="info-value">{{ user.email }}</span>
+        </div>
+        <ion-badge
+          class="status-badge"
+          [color]="user.emailIsConfirmed ? 'success' : 'danger'"
+        >
+          <ion-icon
+            [name]="user.emailIsConfirmed ? 'checkmark-circle' : 'alert-circle'"
+          ></ion-icon>
+          {{ (user.emailIsConfirmed ? "General.yes" : "General.no") | translate
+          }}
+        </ion-badge>
+      </div>
+
+      <div class="info-row">
+        <div class="info-icon">
+          <ion-icon name="calendar-outline"></ion-icon>
+        </div>
+        <div class="info-text">
+          <span class="info-label">{{ "User.registered" | translate }}</span>
+          <span class="info-value">{{ user.createdAt | date:'d.MM.y' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Edit profile -->
+    <form
+      *ngIf="profileForm"
+      (ngSubmit)="updateUser()"
+      [formGroup]="profileForm"
+    >
+      <section class="card">
+        <h2 class="card-title">{{ "User.editProfile" | translate }}</h2>
+
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked"
+            >{{ "General.name" | translate }}</ion-label
+          >
+          <ion-input
+            [id]="'name'"
+            formControlName="name"
+            placeholder="{{ 'User.pl_name' | translate }}"
+            maxlength="80"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked"
+            >{{ "User.language" | translate }}</ion-label
+          >
+          <ion-select formControlName="language" interface="popover">
+            <ion-select-option
+              *ngFor="let lang of languages"
+              [value]="lang.value"
+              >{{ lang.text }}</ion-select-option
+            >
+          </ion-select>
+        </ion-item>
+
+        <ion-button
+          class="save-btn"
+          expand="block"
+          shape="round"
+          type="submit"
+          [disabled]="profileForm.invalid || saving"
+        >
+          <ion-icon slot="start" name="save-outline"></ion-icon>
+          {{ "User.saveChanges" | translate }}
+        </ion-button>
+      </section>
+    </form>
+
+    <!-- Account actions -->
+    <section class="card">
+      <h2 class="card-title">{{ "User.accountActions" | translate }}</h2>
+
+      <ion-button
+        class="action-btn"
+        expand="block"
+        fill="outline"
+        shape="round"
+        (click)="logout()"
       >
-      <br /> -->
-    <br />
-    <ion-button expand="block" fill="outline" (click)="logout()"
-      >Logout</ion-button
-    >
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        {{ "User.logout" | translate }}
+      </ion-button>
 
-    <br />
-    <br />
-    <ion-button
-      expand="block"
-      fill="outline"
-      color="danger"
-      (click)="deleteMyAccount()"
-      >{{ "User.deleteAccount" | translate }}</ion-button
-    >
-
-    <!-- </form> -->
+      <ion-button
+        class="action-btn"
+        expand="block"
+        fill="outline"
+        shape="round"
+        color="danger"
+        (click)="deleteMyAccount()"
+      >
+        <ion-icon slot="start" name="trash-outline"></ion-icon>
+        {{ "User.deleteAccount" | translate }}
+      </ion-button>
+    </section>
   </div>
 </ion-content>

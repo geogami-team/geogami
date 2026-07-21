@@ -377,7 +377,16 @@
     "deleteAccount": "Konto löschen",
     "cancel": "Abbrechen",
     "enterEmail": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen eine E-Mail zum Zurücksetzen Ihres Passworts.",
-    "enterVirCode": "Der Bestätigungscode wurde an {{email}} gesendet. Bitte geben Sie den unten stehenden Code zusammen mit Ihrem neuen Passwort ein."
+    "enterVirCode": "Der Bestätigungscode wurde an {{email}} gesendet. Bitte geben Sie den unten stehenden Code zusammen mit Ihrem neuen Passwort ein.",
+    "editProfile": "Profil bearbeiten",
+    "pl_name": "Ihr Name",
+    "language": "Standardsprache",
+    "saveChanges": "Änderungen speichern",
+    "profileUpdated": "Profil aktualisiert.",
+    "profileUpdateFailed": "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+    "accountInfo": "Konto",
+    "accountActions": "Kontoaktionen",
+    "logout": "Abmelden"
   },
   "Popover": {
     "chooseComponent": "Tippe die Felder an, um mehr über die Aufgabentypen zu erfahren.",
