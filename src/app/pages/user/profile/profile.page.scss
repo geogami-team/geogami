@@ -185,6 +185,24 @@ ion-content {
     font-size: 0.95rem;
     --padding-top: 8px;
     --padding-bottom: 10px;
+    // ion-select ships its own left/right inset (16-20px) baked into its
+    // own shadow root, independent of the ion-item's --padding-start —
+    // it doesn't defer to the item's inset the way ion-input does. Zeroing
+    // both explicitly here keeps them flush with each other, relying only
+    // on the item's own 14px inset above.
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+
+  // theme/variables.scss forces `padding-left/right: 1rem !important`
+  // directly on every ion-input's host box app-wide (styling meant for a
+  // pill-shaped input elsewhere). That's real box padding, not the
+  // --padding-start variable zeroed above, and !important, so only another
+  // !important rule can cancel it. ion-select is never targeted by that
+  // rule, which is why it wasn't equally over-indented.
+  ion-input {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 
