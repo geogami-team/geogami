@@ -228,7 +228,7 @@
     "markdownSupported": "يدعم Markdown",
     "audioMessage": "رسالة صوتية",
     "autoPlayAudio": "تشغيل الصوت تلقائيًا",
-    "audioTooLong": "يجب ألا يتجاوز الصوت {{seconds}} ثانية.",
+    "audioTooLong": "يجب ألا يتجاوز الصوت {{duration}} دقيقة.",
     "photos": "صور ورسومات",
     "addSettings": "إعدادات إضافية",
     "object": "الكائن المطلوب البحث عنه ...",

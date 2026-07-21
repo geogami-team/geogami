@@ -20,7 +20,7 @@
       accept="audio/mpeg"
     />
     <ion-text *ngIf="recording" color="danger" class="record-timer">
-      {{ recordSeconds }}s / {{ maxDurationSeconds }}s
+      {{ elapsedDisplay }} / {{ maxDisplay }}
     </ion-text>
     <app-audio-player [audioSource]="audioSource"></app-audio-player>
   </div>
