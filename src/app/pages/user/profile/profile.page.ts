@@ -21,6 +21,12 @@ export class ProfilePage implements OnInit {
   languages: { value: string; img: string; text: string }[] = [];
   userSub = this.authService.getUser();
 
+  // Rejects values that are empty or only whitespace (Validators.required
+  // alone accepts a string of spaces).
+  static notBlank(control: { value: string }) {
+    return control.value && control.value.trim() ? null : { blank: true };
+  }
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -40,7 +46,12 @@ export class ProfilePage implements OnInit {
         this.user = event;
 
         this.profileForm = this.fb.group({
-          name: [this.user.name || ""],
+          // Default to the username so the field is never empty; the
+          // non-blank validator keeps the save button disabled otherwise.
+          name: [
+            this.user.name || this.user.username,
+            [Validators.required, ProfilePage.notBlank],
+          ],
           // Legacy accounts may store locale-style values ("de_DE");
           // compare on the first two letters.
           language: [
@@ -68,7 +79,10 @@ export class ProfilePage implements OnInit {
     const { name, language } = this.profileForm.getRawValue();
 
     try {
-      const res = await this.authService.updateProfile({ name, language });
+      const res = await this.authService.updateProfile({
+        name: name.trim(),
+        language,
+      });
       if (res && res.success) {
         // Switch the app language right away so the change is visible.
         this.languageService.setLanguage(language);
@@ -97,30 +111,29 @@ export class ProfilePage implements OnInit {
     }
   }
 
-  // Initials for the avatar circle, from the display name (fallback:
-  // username), e.g. "Jane Doe" -> "JD".
-  get initials(): string {
-    const source = ((this.user && (this.user.name || this.user.username)) || "")
-      .trim();
-    if (!source) {
-      return "?";
-    }
-    const parts = source.split(/\s+/);
-    const first = parts[0].charAt(0);
-    const last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : "";
-    return (first + last).toUpperCase();
-  }
-
   logout() {
     this.authService.logout();
   }
 
-  // Delete user account
+  // Delete user account. The user must type their username to confirm —
+  // returning false from the handler keeps the alert open on a mismatch.
   async deleteMyAccount() {
     const alert = await this.alertController.create({
       backdropDismiss: false, // disable alert dismiss when backdrop is clicked
       header: this._translate.instant("User.deleteAccountHeader"),
-      message: this._translate.instant("User.deleteAccountMsg"),
+      message:
+        this._translate.instant("User.deleteAccountMsg") +
+        " " +
+        this._translate.instant("User.deleteAccountTypeUsername", {
+          username: this.user.username,
+        }),
+      inputs: [
+        {
+          name: "username",
+          type: "text",
+          placeholder: this.user.username,
+        },
+      ],
       buttons: [
         {
           text: this._translate.instant("User.cancel"),
@@ -131,8 +144,20 @@ export class ProfilePage implements OnInit {
         {
           text: this._translate.instant("User.deleteAccount"),
           cssClass: "alert-button-confirm",
-          handler: () => {
+          handler: (data) => {
+            if (
+              !data ||
+              (data.username || "").trim() !== this.user.username
+            ) {
+              this.utilService.showToast(
+                this._translate.instant("User.deleteAccountWrongUsername"),
+                "danger",
+                3000
+              );
+              return false;
+            }
             this.authService.DeleteAccountLogout(this.user);
+            return true;
           },
         },
       ],

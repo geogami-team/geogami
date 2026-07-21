@@ -386,7 +386,11 @@
     "profileUpdateFailed": "Não foi possível atualizar o perfil. Tente novamente.",
     "accountInfo": "Conta",
     "accountActions": "Ações da conta",
-    "logout": "Sair"
+    "logout": "Sair",
+    "login": "Entrar",
+    "nameRequired": "O nome não pode ficar vazio.",
+    "deleteAccountTypeUsername": "Para confirmar, digite seu nome de usuário “{{username}}” abaixo.",
+    "deleteAccountWrongUsername": "O nome de usuário digitado não corresponde."
   },
   "Popover": {
     "chooseComponent": "Toque nos campos para saber mais sobre os tipos de tarefas.",

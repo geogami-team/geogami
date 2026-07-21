@@ -386,7 +386,11 @@
     "profileUpdateFailed": "Could not update profile. Please try again.",
     "accountInfo": "Account",
     "accountActions": "Account actions",
-    "logout": "Logout"
+    "logout": "Logout",
+    "login": "Login",
+    "nameRequired": "The name cannot be empty.",
+    "deleteAccountTypeUsername": "To confirm, please type your username “{{username}}” below.",
+    "deleteAccountWrongUsername": "The entered username does not match."
   },
   "Popover": {
     "chooseComponent": "Tap on the buttons to learn more about the task types.",

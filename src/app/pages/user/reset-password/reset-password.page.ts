@@ -51,8 +51,39 @@ export class ResetPasswordPage implements OnInit {
     this.authService.resetPassword(this.loginForm.getRawValue().password, this.userEmail ,this.codeInput.join(''));
   }
 
-  gotoNextField(nextElement) {
-    nextElement.setFocus();
+  // Digits advance to the next box, Backspace jumps back — other keys
+  // (shift, tab, paste shortcut, ...) don't move the focus around.
+  onCodeKeyup(event: KeyboardEvent, nextElement, prevElement?) {
+    if (event.key >= '0' && event.key <= '9') {
+      if (nextElement) {
+        nextElement.setFocus();
+      }
+    } else if (event.key === 'Backspace' && prevElement) {
+      prevElement.setFocus();
+    }
   }
-  
+
+  // Let the user paste the whole verification code into any of the boxes:
+  // distribute the digits over all five fields and jump to the password
+  // input once the code is complete.
+  handleCodePaste(event: ClipboardEvent, passwordField) {
+    event.preventDefault();
+    const text = event.clipboardData ? event.clipboardData.getData('text') : '';
+    const digits = (text || '').replace(/\D/g, '').slice(0, 5).split('');
+    if (digits.length === 0) {
+      return;
+    }
+
+    const patch = {};
+    for (let i = 0; i < 5; i++) {
+      this.codeInput[i] = digits[i] || '';
+      patch['Input' + (i + 1)] = digits[i] || '';
+    }
+    this.loginForm.patchValue(patch);
+
+    if (digits.length === 5 && passwordField) {
+      setTimeout(() => passwordField.setFocus(), 0);
+    }
+  }
+
 }

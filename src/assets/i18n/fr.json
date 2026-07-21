@@ -386,7 +386,11 @@
     "profileUpdateFailed": "Impossible de mettre à jour le profil. Veuillez réessayer.",
     "accountInfo": "Compte",
     "accountActions": "Actions du compte",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "login": "Se connecter",
+    "nameRequired": "Le nom ne peut pas être vide.",
+    "deleteAccountTypeUsername": "Pour confirmer, veuillez saisir votre nom d'utilisateur « {{username}} » ci-dessous.",
+    "deleteAccountWrongUsername": "Le nom d'utilisateur saisi ne correspond pas."
   },
   "Popover": {
     "chooseComponent": "Appuyez sur les boutons pour en savoir plus sur les types de tâches.",
