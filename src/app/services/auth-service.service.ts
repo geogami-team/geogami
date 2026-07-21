@@ -217,10 +217,20 @@ export class AuthService {
           window.localStorage.setItem('bg_refreshtoken', res.refreshToken);
           this.loading$.next(false);
           this.setLoginPageOpen(false);
+          // AuthGuard optimistically lets a route activate while this call
+          // is in flight (it can't know yet whether the session is valid);
+          // if it turns out the account isn't confirmed, kick it back to
+          // verify-email now instead of leaving it on whatever protected
+          // page it landed on.
+          if (res.data.user && !res.data.user.emailIsConfirmed) {
+            this.router.navigate(['/user/verify-email']);
+          }
+          this.refreshTokenInProgress$.next(false);
         },
         (err) => {
           this.errorMessage$.next(err.error.message);
           this.loading$.next(false);
+          this.refreshTokenInProgress$.next(false);
         }
       );
   }

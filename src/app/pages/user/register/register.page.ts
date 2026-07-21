@@ -38,10 +38,15 @@ export class RegisterPage implements OnInit {
   }
 
   login() {
+    // Remove extra spaces before and after email/username (a leading space,
+    // e.g. from autofill, otherwise fails the server's email format check).
+    const { email, username, password } = this.loginForm.getRawValue();
     // Store the app language active at registration as the account's
     // default language.
     this.authService.register({
-      ...this.loginForm.getRawValue(),
+      email: (email || '').trim(),
+      username: (username || '').trim(),
+      password,
       language: this.languageService.selected || 'de',
     });
   }
