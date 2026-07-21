@@ -1,48 +1,77 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button color="dark" defaultHref="/user/login" text="{{ 'General.back_button' | translate }}"></ion-back-button>
+      <ion-back-button
+        color="dark"
+        defaultHref="/user/login"
+        text="{{ 'General.back_button' | translate }}"
+      ></ion-back-button>
     </ion-buttons>
     <ion-title>{{ "User.register" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div>
-    <h1>{{ "User.registerUser" | translate }}</h1>
-    <ion-card color="danger" *ngIf="error">
-      <ion-card-content> {{error}} </ion-card-content>
-    </ion-card>
+<ion-content>
+  <div class="auth-wrap">
+    <div class="auth-hero">
+      <div class="auth-icon">
+        <ion-icon name="person-add-outline"></ion-icon>
+      </div>
+      <h1>GeoGami</h1>
+      <p>{{ "User.registerUser" | translate }}</p>
+    </div>
 
-    <br />
-    
-    <form (ngSubmit)="login()" [formGroup]="loginForm">
-      <ion-input
-        placeholder="E-Mail"
-        [id]="'email'"
-        formControlName="email"
-      ></ion-input>
-      <br />
-      <ion-input
-        placeholder="{{ 'User.pl_username' | translate }}"
-        [id]="'username'"
-        formControlName="username"
-      ></ion-input>
-      <br />
-      <ion-input
-        type="password"
-        placeholder="{{ 'User.pl_password' | translate }}"
-        [id]="'password'"
-        formControlName="password"
-      ></ion-input>
-      <br />
-      <ion-button
-        expand="block"
-        type="submit"
-        [disabled]="loginForm.invalid || loading"
-        ><ion-spinner *ngIf="loading"></ion-spinner> {{ "User.register" | translate }}</ion-button
-      >
-    </form>
-    <br />
+    <section class="card">
+      <ion-card class="error-card" color="danger" *ngIf="error">
+        <ion-card-content> {{error}} </ion-card-content>
+      </ion-card>
+
+      <form (ngSubmit)="login()" [formGroup]="loginForm">
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked"
+            >{{ "User.mail" | translate }}</ion-label
+          >
+          <ion-input
+            placeholder="E-Mail"
+            [id]="'email'"
+            formControlName="email"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked"
+            >{{ "User.pl_username" | translate }}</ion-label
+          >
+          <ion-input
+            placeholder="{{ 'User.pl_username' | translate }}"
+            [id]="'username'"
+            formControlName="username"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked"
+            >{{ "User.pl_password" | translate }}</ion-label
+          >
+          <ion-input
+            type="password"
+            placeholder="{{ 'User.pl_password' | translate }}"
+            [id]="'password'"
+            formControlName="password"
+          ></ion-input>
+        </ion-item>
+
+        <ion-button
+          class="submit-btn"
+          expand="block"
+          shape="round"
+          type="submit"
+          [disabled]="loginForm.invalid || loading"
+        >
+          <ion-spinner *ngIf="loading"></ion-spinner>
+          {{ "User.register" | translate }}
+        </ion-button>
+      </form>
+    </section>
   </div>
 </ion-content>

@@ -377,7 +377,20 @@
     "deleteAccount": "Delete Account",
     "cancel": "Cancel",
     "enterEmail": "Enter your email address and we'll send you an email to reset your password.",
-    "enterVirCode": "Verification code has been sent to {{email}}. Please enter the code below along with your new password."
+    "enterVirCode": "Verification code has been sent to {{email}}. Please enter the code below along with your new password.",
+    "editProfile": "Edit profile",
+    "pl_name": "Your name",
+    "language": "Default language",
+    "saveChanges": "Save changes",
+    "profileUpdated": "Profile updated.",
+    "profileUpdateFailed": "Could not update profile. Please try again.",
+    "accountInfo": "Account",
+    "accountActions": "Account actions",
+    "logout": "Logout",
+    "login": "Login",
+    "nameRequired": "The name cannot be empty.",
+    "deleteAccountTypeUsername": "To confirm, please type your username “{{username}}” below.",
+    "deleteAccountWrongUsername": "The entered username does not match."
   },
   "Popover": {
     "chooseComponent": "Tap on the buttons to learn more about the task types.",

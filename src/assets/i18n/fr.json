@@ -377,7 +377,20 @@
     "deleteAccount": "Supprimer le compte",
     "cancel": "Annuler",
     "enterEmail": "Entrez votre adresse email et nous vous enverrons un email pour réinitialiser votre mot de passe.",
-    "enterVirCode": "Un code de vérification a été envoyé à {{email}}. Veuillez entrer le code ci-dessous ainsi que votre nouveau mot de passe."
+    "enterVirCode": "Un code de vérification a été envoyé à {{email}}. Veuillez entrer le code ci-dessous ainsi que votre nouveau mot de passe.",
+    "editProfile": "Modifier le profil",
+    "pl_name": "Votre nom",
+    "language": "Langue par défaut",
+    "saveChanges": "Enregistrer les modifications",
+    "profileUpdated": "Profil mis à jour.",
+    "profileUpdateFailed": "Impossible de mettre à jour le profil. Veuillez réessayer.",
+    "accountInfo": "Compte",
+    "accountActions": "Actions du compte",
+    "logout": "Se déconnecter",
+    "login": "Se connecter",
+    "nameRequired": "Le nom ne peut pas être vide.",
+    "deleteAccountTypeUsername": "Pour confirmer, veuillez saisir votre nom d'utilisateur « {{username}} » ci-dessous.",
+    "deleteAccountWrongUsername": "Le nom d'utilisateur saisi ne correspond pas."
   },
   "Popover": {
     "chooseComponent": "Appuyez sur les boutons pour en savoir plus sur les types de tâches.",

@@ -1,41 +1,88 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button color="dark" defaultHref="/" text="{{ 'General.back_button' | translate }}"></ion-back-button>
+      <ion-back-button
+        color="dark"
+        defaultHref="/"
+        text="{{ 'General.back_button' | translate }}"
+      ></ion-back-button>
     </ion-buttons>
-    <ion-title>Login</ion-title>
+    <ion-title>{{ "User.login" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div>
-    <h1>GeoGami Login</h1>
+<ion-content>
+  <div class="auth-wrap">
+    <div class="auth-hero">
+      <div class="auth-icon">
+        <ion-icon name="log-in-outline"></ion-icon>
+      </div>
+      <h1>GeoGami</h1>
+      <p>{{ "User.login" | translate }}</p>
+    </div>
 
-    <ion-card color="danger" *ngIf="error">
-      <ion-card-content> {{error}} </ion-card-content>
-    </ion-card>
+    <section class="card">
+      <ion-card class="error-card" color="danger" *ngIf="error">
+        <ion-card-content> {{error}} </ion-card-content>
+      </ion-card>
 
-    <ion-card color="light" *ngIf="register">
-      <ion-card-content>
-        {{ "User.registerSuccess" | translate }}
-      </ion-card-content>
-    </ion-card>
-    
-    <br />
+      <ion-card class="error-card" color="light" *ngIf="register">
+        <ion-card-content>
+          {{ "User.registerSuccess" | translate }}
+        </ion-card-content>
+      </ion-card>
 
-    <form (ngSubmit)="login()" [formGroup]="loginForm">
-      <ion-input placeholder="{{ 'User.pl_usernameOREmail' | translate }}" [id]="'username'" formControlName="username"></ion-input>
-      <br />
-      <ion-input type="password" placeholder="{{ 'User.pl_password' | translate }}" [id]="'password'" formControlName="password"></ion-input>
-      <br />
-      <ion-button expand="block" type="submit" [disabled]="loginForm.invalid">
-        <ion-spinner *ngIf="loading"></ion-spinner> Login
-      </ion-button>
-      <br />
-      <ion-button fill="outline" expand="block" (click)="navigateRegister()">{{ "User.register" | translate }}</ion-button>
-      <br />
-      <ion-button fill="clear" expand="block" (click)="navigateForgotPassword()">{{ "User.forgotpw" | translate }}</ion-button>
-    </form>
-    <br />
+      <form (ngSubmit)="login()" [formGroup]="loginForm">
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked"
+            >{{ "User.pl_usernameOREmail" | translate }}</ion-label
+          >
+          <ion-input
+            placeholder="{{ 'User.pl_usernameOREmail' | translate }}"
+            [id]="'username'"
+            formControlName="username"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item" lines="none">
+          <ion-label position="stacked"
+            >{{ "User.pl_password" | translate }}</ion-label
+          >
+          <ion-input
+            type="password"
+            placeholder="{{ 'User.pl_password' | translate }}"
+            [id]="'password'"
+            formControlName="password"
+          ></ion-input>
+        </ion-item>
+
+        <ion-button
+          class="submit-btn"
+          expand="block"
+          shape="round"
+          type="submit"
+          [disabled]="loginForm.invalid"
+        >
+          <ion-spinner *ngIf="loading"></ion-spinner>
+          {{ "User.login" | translate }}
+        </ion-button>
+      </form>
+
+      <ion-button
+        class="alt-btn"
+        fill="outline"
+        shape="round"
+        expand="block"
+        (click)="navigateRegister()"
+        >{{ "User.register" | translate }}</ion-button
+      >
+      <ion-button
+        class="alt-btn"
+        fill="clear"
+        expand="block"
+        (click)="navigateForgotPassword()"
+        >{{ "User.forgotpw" | translate }}</ion-button
+      >
+    </section>
   </div>
 </ion-content>

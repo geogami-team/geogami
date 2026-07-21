@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { UtilService } from './util.service';
+import { LanguageService } from './language.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,12 @@ export class AuthService {
   private refreshTokenInProgress$: BehaviorSubject<boolean>;
   private registerMessage$: BehaviorSubject<boolean>;
 
-  constructor(private http: HttpClient, private router: Router, private utilService: UtilService) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private utilService: UtilService,
+    private languageService: LanguageService
+  ) {
     this.user$ = new BehaviorSubject(null);
     this.loading$ = new BehaviorSubject(false);
     this.loginPageOpen$ = new BehaviorSubject(false);
@@ -140,6 +146,8 @@ export class AuthService {
     this.http.post(this.AUTH_API_URL + '/user/login', creds).subscribe(
       (res: any) => {
         this.user$.next(res.user);
+        // Switch the app to the account's default language.
+        this.languageService.applyUserLanguage(res.user && res.user.language);
         window.localStorage.setItem('bg_accesstoken', res.token);
         window.localStorage.setItem('bg_refreshtoken', res.refreshToken);
         this.loading$.next(false);
@@ -307,6 +315,23 @@ export class AuthService {
         observe: "response",
       })
       .toPromise();
+  }
+
+  // self-serve: update own profile (display name and/or default language).
+  // On success the updated user is pushed to user$ so all subscribers
+  // (menu, profile page, ...) see the change immediately.
+  updateProfile(data: { name?: string; language?: string }): Promise<any> {
+    return this.http
+      .put(`${environment.apiURL}/user/profile`, data, {
+        headers: this.createHeaders(),
+      })
+      .toPromise()
+      .then((res: any) => {
+        if (res && res.success && res.user) {
+          this.user$.next(res.user);
+        }
+        return res;
+      });
   }
 
   // self-serve: change email (and trigger a new verification email).

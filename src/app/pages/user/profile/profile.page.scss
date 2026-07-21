@@ -1,19 +1,230 @@
 ion-content {
-  > div {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  --background: #f4f6fb;
+}
 
-    > form {
-      width: 100%;
-      max-width: 500px;
-    }
+.profile-wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 16px 16px 32px;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 32px 20px 26px;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    var(--ion-color-primary) 0%,
+    #5a67d8 55%,
+    #7c3aed 100%
+  );
+  box-shadow: 0 10px 30px rgba(56, 128, 255, 0.35);
+
+  /* subtle decorative circles */
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  &::before {
+    width: 190px;
+    height: 190px;
+    top: -70px;
+    right: -50px;
+  }
+  &::after {
+    width: 140px;
+    height: 140px;
+    bottom: -60px;
+    left: -40px;
   }
 }
 
-ion-input {
-  padding-top: 0.5rem !important;
-  padding-bottom: 0.5rem !important;
+.display-name {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.username {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.role-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.role-chip {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+
+  &--admin {
+    background: rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 2px 12px rgba(30, 41, 59, 0.06);
+}
+
+.card-title {
+  margin: 0 0 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+/* ---------- Account info rows ---------- */
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+
+  & + .info-row {
+    border-top: 1px solid #eef1f6;
+  }
+}
+
+.info-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--ion-color-primary-rgb), 0.1);
+
+  ion-icon {
+    font-size: 19px;
+    color: var(--ion-color-primary);
+  }
+}
+
+.info-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.info-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+.info-value {
+  font-size: 0.95rem;
+  color: #1e293b;
+  overflow-wrap: anywhere;
+}
+
+.status-badge {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+
+  ion-icon {
+    font-size: 13px;
+  }
+}
+
+/* ---------- Edit form ---------- */
+
+.form-item {
+  --background: #f4f6fb;
+  --border-radius: 12px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --inner-padding-end: 0;
+  border-radius: 12px;
+  margin-bottom: 12px;
+
+  ion-label {
+    font-size: 0.8rem !important;
+    font-weight: 600;
+    color: #64748b !important;
+  }
+
+  ion-input,
+  ion-select {
+    font-size: 0.95rem;
+    --padding-top: 8px;
+    --padding-bottom: 10px;
+    // ion-select ships its own left/right inset (16-20px) baked into its
+    // own shadow root, independent of the ion-item's --padding-start —
+    // it doesn't defer to the item's inset the way ion-input does. Zeroing
+    // both explicitly here keeps them flush with each other, relying only
+    // on the item's own 14px inset above.
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+
+  // theme/variables.scss forces `padding-left/right: 1rem !important`
+  // directly on every ion-input's host box app-wide (styling meant for a
+  // pill-shaped input elsewhere). That's real box padding, not the
+  // --padding-start variable zeroed above, and !important, so only another
+  // !important rule can cancel it. ion-select is never targeted by that
+  // rule, which is why it wasn't equally over-indented.
+  ion-input {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+.field-error {
+  margin: -6px 0 12px;
+  padding-left: 6px;
+  font-size: 0.78rem;
+  color: var(--ion-color-danger);
+}
+
+.save-btn {
+  margin-top: 6px;
+  --box-shadow: 0 6px 16px rgba(var(--ion-color-primary-rgb), 0.35);
+  font-weight: 600;
+}
+
+/* ---------- Account actions ---------- */
+
+.action-btn {
+  font-weight: 600;
+
+  & + .action-btn {
+    margin-top: 10px;
+  }
 }
