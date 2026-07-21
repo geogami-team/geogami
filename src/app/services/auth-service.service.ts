@@ -223,7 +223,9 @@ export class AuthService {
           // verify-email now instead of leaving it on whatever protected
           // page it landed on.
           if (res.data.user && !res.data.user.emailIsConfirmed) {
-            this.router.navigate(['/user/verify-email']);
+            // replaceUrl — see AuthGuard for why (avoids stacking a new
+            // history entry on top of whatever page this refresh landed on).
+            this.router.navigate(['/user/verify-email'], { replaceUrl: true });
           }
           this.refreshTokenInProgress$.next(false);
         },

@@ -1,12 +1,13 @@
 import { NgModule } from "@angular/core";
 import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
-import { AuthGuard } from "./services/auth-gard.service";
+import { AuthGuard, ConfirmedOrGuestGuard } from "./services/auth-gard.service";
 
 const routes: Routes = [
   {
     path: "",
     loadChildren: () =>
       import("./start/start.module").then((m) => m.StartPageModule),
+    canActivate: [ConfirmedOrGuestGuard],
   },
   {
     path: "play-game/games-overview",
@@ -140,6 +141,7 @@ const routes: Routes = [
     path: "start",
     loadChildren: () =>
       import("./start/start.module").then((m) => m.StartPageModule),
+    canActivate: [ConfirmedOrGuestGuard],
   },
   {
     path: "map-showroom",
