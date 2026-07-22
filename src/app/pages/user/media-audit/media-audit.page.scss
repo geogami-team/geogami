@@ -167,6 +167,7 @@
 
   &.ok { background: #eaf6ec; color: #1e7e34; }
   &.orphan { background: #f0f0f0; color: #777; }
+  &.pending { background: #eef1f4; color: #999; letter-spacing: 1px; }
   &.flag { background: #fdecea; color: #c0392b; font-weight: 700; }
   &.size { background: #eef1f4; color: #556; }
   &.date { background: #eef1f4; color: #556; }
@@ -199,6 +200,12 @@
   .hint { font-size: 13px; opacity: 0.7; margin: 0 0 14px; }
   .hint.small { margin-top: 8px; text-align: center; }
 }
+.select-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.loading-inline { opacity: 0.6; font-style: italic; }
 .select-list {
   margin-bottom: 16px;
   ion-item { --padding-start: 4px; }

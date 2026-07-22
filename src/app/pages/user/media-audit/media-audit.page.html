@@ -21,7 +21,17 @@
 
   <!-- Selection screen: choose what to load before the heavy scan runs -->
   <div *ngIf="selecting" class="select-screen">
-    <h3>What do you want to load?</h3>
+    <div class="select-head">
+      <h3>What do you want to load?</h3>
+      <ion-button
+        *ngIf="hasLoadedOnce"
+        fill="clear"
+        size="small"
+        (click)="cancelSelection()"
+      >
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </div>
     <p class="hint">
       Pick the media categories to audit. Only the selected categories are
       scanned and loaded (20 files at a time).
@@ -69,26 +79,26 @@
 
   <ng-container *ngIf="!selecting && !loading && !error">
 
-    <!-- Overall summary -->
+    <!-- Overall summary (reference figures fill in after the background scan) -->
     <div class="summary-grid">
       <div class="summary-card">
-        <div class="num">{{ totals.files }}</div>
+        <div class="num">{{ totals ? totals.files : '…' }}</div>
         <div class="lbl">Total files</div>
       </div>
       <div class="summary-card">
-        <div class="num">{{ fmtBytes(totals.bytes) }}</div>
+        <div class="num">{{ totals ? fmtBytes(totals.bytes) : '…' }}</div>
         <div class="lbl">Total size</div>
       </div>
       <div class="summary-card">
-        <div class="num">{{ totals.referenced }}</div>
+        <div class="num">{{ totals ? totals.referenced : '…' }}</div>
         <div class="lbl">Referenced</div>
       </div>
       <div class="summary-card warn">
-        <div class="num">{{ totals.orphans }}</div>
+        <div class="num">{{ totals ? totals.orphans : '…' }}</div>
         <div class="lbl">Unreferenced</div>
       </div>
       <div class="summary-card flag">
-        <div class="num">{{ totals.hostFlagged }}</div>
+        <div class="num">{{ totals ? totals.hostFlagged : '…' }}</div>
         <div class="lbl">Different / misspelled URL</div>
       </div>
     </div>
@@ -129,9 +139,14 @@
 
     <ng-container *ngIf="activeCategory as cat">
       <div class="cat-meta">
-        {{ cat.totalFiles }} files · {{ fmtBytes(cat.totalBytes) }} ·
-        {{ cat.referencedFiles }} referenced · {{ cat.orphanFiles }} unreferenced ·
-        {{ cat.hostFlaggedFiles }} with a different/misspelled URL
+        {{ cat.totalFiles }} files<span *ngIf="cat.totalBytes != null"> · {{ fmtBytes(cat.totalBytes) }}</span>
+        <span *ngIf="cat.referencedFiles != null">
+          · {{ cat.referencedFiles }} referenced · {{ cat.orphanFiles }} unreferenced ·
+          {{ cat.hostFlaggedFiles }} with a different/misspelled URL
+        </span>
+        <span *ngIf="cat.referencedFiles == null && summaryLoading" class="loading-inline">
+          · checking references…
+        </span>
       </div>
 
       <div class="filters-row">
@@ -181,7 +196,7 @@
                 <span class="game-names">{{ gameLabel(f) }}</span>
                 <span class="via-track" *ngIf="f.games[0].viaTrack">(player photo)</span>
               </div>
-              <div class="file-games none" *ngIf="!f.games?.length && !f.referenced">
+              <div class="file-games none" *ngIf="!f.pending && !f.games?.length && !f.referenced">
                 not used by any game
               </div>
               <div class="file-hosts" *ngIf="f.hosts.length">
@@ -194,13 +209,16 @@
             </div>
 
             <div class="file-badges">
-              <span class="badge flag" *ngIf="f.hostFlag" title="Referenced via a different/misspelled URL">
+              <span class="badge pending" *ngIf="f.pending" title="Checking references…">
+                …
+              </span>
+              <span class="badge flag" *ngIf="!f.pending && f.hostFlag" title="Referenced via a different/misspelled URL">
                 ⚠ URL
               </span>
-              <span class="badge ok" *ngIf="f.referenced" title="Referenced by a game or track">
+              <span class="badge ok" *ngIf="!f.pending && f.referenced" title="Referenced by a game or track">
                 ✓ used <em *ngIf="f.refCount">×{{ f.refCount }}</em>
               </span>
-              <span class="badge orphan" *ngIf="!f.referenced" title="Not referenced by any game or track">
+              <span class="badge orphan" *ngIf="!f.pending && !f.referenced" title="Not referenced by any game or track">
                 unreferenced
               </span>
               <span class="badge size">{{ fmtBytes(f.size) }}</span>

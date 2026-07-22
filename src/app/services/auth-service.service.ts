@@ -324,6 +324,7 @@ export class AuthService {
     hostFlagged?: boolean;
     orphans?: boolean;
     refresh?: boolean;
+    filesOnly?: boolean;
   } = {}): Promise<any> {
     const p = new URLSearchParams();
     if (opts.kinds) p.set("kinds", opts.kinds);
@@ -334,6 +335,7 @@ export class AuthService {
     if (opts.hostFlagged) p.set("hostFlagged", "1");
     if (opts.orphans) p.set("orphans", "1");
     if (opts.refresh) p.set("refresh", "1");
+    if (opts.filesOnly) p.set("filesOnly", "1");
     return this.http
       .get(`${environment.apiURL}/file/admin/media?${p.toString()}`, {
         headers: this.createHeaders(),
