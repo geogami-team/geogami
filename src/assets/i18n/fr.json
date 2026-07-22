@@ -724,6 +724,10 @@
       "title": "Journal d'audit",
       "description": "Modifications des comptes, des rôles et de la configuration, et alertes de sécurité"
     },
+    "mediaAudit": {
+      "title": "Audit des médias",
+      "description": "Examiner les fichiers importés, les références manquantes et les URL obsolètes"
+    },
     "unread": "{{count}} non lus"
   },
     "LivePlays": {

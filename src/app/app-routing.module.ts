@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 import { AuthGuard, ConfirmedOrGuestGuard, RoleGuard } from "./services/auth-gard.service";
 import { EDITOR_VISIBILITY_MANAGER_ROLES } from "./models/editor-features";
-import { APP_MANAGEMENT_ROLES } from "./models/app-management";
+import { APP_MANAGEMENT_ROLES, MEDIA_AUDIT_ROLES } from "./models/app-management";
 import { APP_VERSION_MANAGER_ROLES } from "./models/app-version";
 import { LIVE_PLAYS_ROLES } from "./models/play-session";
 
@@ -229,6 +229,15 @@ const routes: Routes = [
         (m) => m.AuditLogPageModule
       ),
     canActivate: [AuthGuard],
+  },
+  {
+    path: "user/media-audit",
+    loadChildren: () =>
+      import("./pages/user/media-audit/media-audit.module").then(
+        (m) => m.MediaAuditPageModule
+      ),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: MEDIA_AUDIT_ROLES },
   },
   {
     // Simple/Advanced editor policy — admin only.

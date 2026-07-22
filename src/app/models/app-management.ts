@@ -4,6 +4,7 @@ import { LIVE_PLAYS_ROLES } from "./play-session";
 
 /** Who may open the App management hub (the page and its start-page card). */
 export const APP_MANAGEMENT_ROLES: ReadonlyArray<string> = ["admin"];
+export const MEDIA_AUDIT_ROLES: ReadonlyArray<string> = ["admin"];
 
 export interface AppManagementTile {
   id: string;
@@ -65,5 +66,13 @@ export const APP_MANAGEMENT_TILES: ReadonlyArray<AppManagementTile> = [
     descriptionKey: "AppManagement.auditLog.description",
     route: "user/audit-log",
     roles: ["admin"],
+  },
+  {
+    id: "media-audit",
+    icon: "images-outline",
+    titleKey: "AppManagement.mediaAudit.title",
+    descriptionKey: "AppManagement.mediaAudit.description",
+    route: "user/media-audit",
+    roles: MEDIA_AUDIT_ROLES,
   },
 ];

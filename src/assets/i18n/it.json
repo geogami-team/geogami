@@ -724,6 +724,10 @@
       "title": "Registro di controllo",
       "description": "Modifiche ad account, ruoli e configurazione e avvisi di sicurezza"
     },
+    "mediaAudit": {
+      "title": "Verifica dei file multimediali",
+      "description": "Controlla i file caricati, i riferimenti mancanti e gli URL obsoleti"
+    },
     "unread": "{{count}} non letti"
   },
     "LivePlays": {

@@ -724,6 +724,10 @@
       "title": "Audit log",
       "description": "Account, role and configuration changes and security alerts"
     },
+    "mediaAudit": {
+      "title": "Media audit",
+      "description": "Review uploaded files, missing references, and outdated URLs"
+    },
     "unread": "{{count}} unread"
   },
     "LivePlays": {

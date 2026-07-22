@@ -1,0 +1,236 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color="dark" defaultHref="/" text="{{ 'General.back_button' | translate }}"></ion-back-button>
+    </ion-buttons>
+    <ion-title> Media Audit</ion-title>
+    <ion-buttons slot="end" *ngIf="!selecting">
+      <ion-button (click)="changeSelection()">
+        <ion-icon name="options-outline" slot="start"></ion-icon>
+        Categories
+      </ion-button>
+      <ion-button (click)="reload(true)" [disabled]="loading">
+        <ion-icon name="refresh-outline" slot="start"></ion-icon>
+        Refresh
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Selection screen: choose what to load before the heavy scan runs -->
+  <div *ngIf="selecting" class="select-screen">
+    <h3>What do you want to load?</h3>
+    <p class="hint">
+      Pick the media categories to audit. Only the selected categories are
+      scanned and loaded (20 files at a time).
+    </p>
+
+    <div *ngIf="metaLoading" class="centered">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <div *ngIf="!metaLoading && metaError" class="centered error">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <p>{{ metaError }}</p>
+      <ion-button size="small" (click)="loadCategories()">Try again</ion-button>
+    </div>
+
+    <ng-container *ngIf="!metaLoading && !metaError">
+      <ion-list lines="none" class="select-list">
+        <ion-item *ngFor="let c of selectableCategories">
+          <ion-checkbox slot="start" [(ngModel)]="c.selected"></ion-checkbox>
+          <ion-label>
+            <strong>{{ c.label }}</strong>
+            <span class="count">{{ c.totalFiles }} files</span>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ion-button expand="block" (click)="startLoading()" [disabled]="!anySelected">
+        <ion-icon name="cloud-download-outline" slot="start"></ion-icon>
+        Load selected
+      </ion-button>
+      <p class="hint small" *ngIf="!anySelected">Select at least one category.</p>
+    </ng-container>
+  </div>
+
+  <div *ngIf="!selecting && loading" class="centered">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Scanning media and cross-referencing games &amp; tracks…</p>
+  </div>
+
+  <div *ngIf="!selecting && !loading && error" class="centered error">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button size="small" (click)="reload(false)">Try again</ion-button>
+  </div>
+
+  <ng-container *ngIf="!selecting && !loading && !error">
+
+    <!-- Overall summary -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="num">{{ totals.files }}</div>
+        <div class="lbl">Total files</div>
+      </div>
+      <div class="summary-card">
+        <div class="num">{{ fmtBytes(totals.bytes) }}</div>
+        <div class="lbl">Total size</div>
+      </div>
+      <div class="summary-card">
+        <div class="num">{{ totals.referenced }}</div>
+        <div class="lbl">Referenced</div>
+      </div>
+      <div class="summary-card warn">
+        <div class="num">{{ totals.orphans }}</div>
+        <div class="lbl">Unreferenced</div>
+      </div>
+      <div class="summary-card flag">
+        <div class="num">{{ totals.hostFlagged }}</div>
+        <div class="lbl">Different / misspelled URL</div>
+      </div>
+    </div>
+
+    <!-- Host distribution: which URL hosts are baked into stored references -->
+    <div class="hosts-box" *ngIf="hosts.length">
+      <div class="hosts-title">
+        Hosts found in stored media URLs
+        <span class="canonical-note">canonical = <code>{{ canonicalHost }}</code></span>
+      </div>
+      <div class="host-chips">
+        <span
+          *ngFor="let h of hosts"
+          class="host-chip"
+          [class.bad]="!h.canonical"
+          [title]="h.canonical ? 'Matches the current API host' : 'Different / misspelled host'"
+        >
+          <ion-icon [name]="h.canonical ? 'checkmark-circle-outline' : 'warning-outline'"></ion-icon>
+          {{ h.host }} <em>×{{ h.count }}</em>
+        </span>
+      </div>
+    </div>
+
+    <!-- Category segments (photos / audio / video / other) -->
+    <ion-segment
+      scrollable
+      [value]="activeBucket"
+      (ionChange)="segmentChanged($event)"
+      class="cat-segment"
+    >
+      <ion-segment-button *ngFor="let c of categories" [value]="c.bucket">
+        <ion-label>
+          {{ c.label }} ({{ c.totalFiles }})
+          <span class="seg-flag" *ngIf="c.hostFlaggedFiles">⚠ {{ c.hostFlaggedFiles }}</span>
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ng-container *ngIf="activeCategory as cat">
+      <div class="cat-meta">
+        {{ cat.totalFiles }} files · {{ fmtBytes(cat.totalBytes) }} ·
+        {{ cat.referencedFiles }} referenced · {{ cat.orphanFiles }} unreferenced ·
+        {{ cat.hostFlaggedFiles }} with a different/misspelled URL
+      </div>
+
+      <div class="filters-row">
+        <ion-searchbar
+          [(ngModel)]="search"
+          (ionChange)="onFilterChange()"
+          placeholder="Filter by filename or host"
+          debounce="350"
+        ></ion-searchbar>
+        <ion-item lines="none" class="toggle">
+          <ion-label>Only different/misspelled URL</ion-label>
+          <ion-toggle [(ngModel)]="onlyHostFlagged" (ionChange)="onFilterChange()"></ion-toggle>
+        </ion-item>
+        <ion-item lines="none" class="toggle">
+          <ion-label>Only unreferenced</ion-label>
+          <ion-toggle [(ngModel)]="onlyOrphans" (ionChange)="onFilterChange()"></ion-toggle>
+        </ion-item>
+      </div>
+
+      <div class="showing">Showing {{ files.length }} of {{ filteredTotal }} (loaded in pages of 20)</div>
+
+      <div class="file-list">
+        <div
+          class="file-row"
+          *ngFor="let f of files"
+          [class.flagged]="f.hostFlag"
+        >
+          <div class="file-main" (click)="togglePreview(f)">
+            <ion-icon
+              class="chev"
+              [name]="previewFilename === f.filename ? 'chevron-down-outline' : 'chevron-forward-outline'"
+            ></ion-icon>
+
+            <img
+              *ngIf="isImage(f)"
+              class="thumb"
+              [src]="fullUrl(f)"
+              loading="lazy"
+              alt=""
+            />
+
+            <div class="file-info">
+              <div class="file-name">{{ f.filename }}</div>
+              <div class="file-path"><code>{{ f.path }}</code></div>
+              <div class="file-games" *ngIf="f.games?.length">
+                <ion-icon name="game-controller-outline"></ion-icon>
+                <span class="game-names">{{ gameLabel(f) }}</span>
+                <span class="via-track" *ngIf="f.games[0].viaTrack">(player photo)</span>
+              </div>
+              <div class="file-games none" *ngIf="!f.games?.length && !f.referenced">
+                not used by any game
+              </div>
+              <div class="file-hosts" *ngIf="f.hosts.length">
+                <span
+                  *ngFor="let h of f.hosts"
+                  class="mini-host"
+                  [class.bad]="h !== canonicalHost && h !== '(relative)'"
+                >{{ h }}</span>
+              </div>
+            </div>
+
+            <div class="file-badges">
+              <span class="badge flag" *ngIf="f.hostFlag" title="Referenced via a different/misspelled URL">
+                ⚠ URL
+              </span>
+              <span class="badge ok" *ngIf="f.referenced" title="Referenced by a game or track">
+                ✓ used <em *ngIf="f.refCount">×{{ f.refCount }}</em>
+              </span>
+              <span class="badge orphan" *ngIf="!f.referenced" title="Not referenced by any game or track">
+                unreferenced
+              </span>
+              <span class="badge size">{{ fmtBytes(f.size) }}</span>
+              <span class="badge date" *ngIf="f.uploadDate">{{ f.uploadDate | date:'yyyy-MM-dd' }}</span>
+            </div>
+          </div>
+
+          <!-- On-demand preview -->
+          <div class="preview" *ngIf="previewFilename === f.filename && f.path">
+            <img *ngIf="isImage(f)" [src]="fullUrl(f)" alt="{{ f.filename }}" />
+            <audio *ngIf="isAudio(f)" [src]="fullUrl(f)" controls></audio>
+            <video *ngIf="isVideo(f)" [src]="fullUrl(f)" controls></video>
+            <a class="open-link" [href]="fullUrl(f)" target="_blank" rel="noopener">
+              Open in new tab ↗
+            </a>
+          </div>
+        </div>
+
+        <div class="empty" *ngIf="!files.length">No files match the current filters.</div>
+      </div>
+
+      <ion-infinite-scroll (ionInfinite)="loadMore($event)" [disabled]="!hasMore">
+        <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Loading more…">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </ng-container>
+
+    <div class="generated" *ngIf="generatedAt">
+      Snapshot generated {{ generatedAt | date:'medium' }} (cached up to 60s; use Refresh to rescan).
+    </div>
+  </ng-container>
+
+</ion-content>

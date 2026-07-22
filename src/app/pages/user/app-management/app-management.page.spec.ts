@@ -49,14 +49,15 @@ describe("AppManagementPage", () => {
     expect(APP_MANAGEMENT_ROLES).toEqual(["admin"]);
   });
 
-  it("lists the users, the editor visibility, the app updates and the audit log, in that order", async () => {
+  it("lists the admin tools in menu order", async () => {
     await open();
-    expect(page.tiles.map((t) => t.id)).toEqual(["users", "editor-visibility", "app-version", "live-plays", "audit-log"]);
+    expect(page.tiles.map((t) => t.id)).toEqual(["users", "editor-visibility", "app-version", "live-plays", "audit-log", "media-audit"]);
     expect(text()).toContain("AppManagement.users.title");
     expect(text()).toContain("EditorVisibility.cardTitle");
     expect(text()).toContain("AppVersion.cardTitle");
     expect(text()).toContain("AppManagement.auditLog.title");
     expect(text()).toContain("AppManagement.auditLog.description");
+    expect(text()).toContain("AppManagement.mediaAudit.title");
   });
 
   it("opens the page of the tool that is tapped, which keeps its own route", async () => {
@@ -69,6 +70,8 @@ describe("AppManagementPage", () => {
     expect(nav.navigateForward).toHaveBeenCalledWith("user/app-version");
     tile("audit-log").click();
     expect(nav.navigateForward).toHaveBeenCalledWith("user/audit-log");
+    tile("media-audit").click();
+    expect(nav.navigateForward).toHaveBeenCalledWith("user/media-audit");
   });
 
   it("keeps everything in one centred column", async () => {
@@ -83,6 +86,7 @@ describe("AppManagementPage", () => {
     expect(tile("editor-visibility")).toBeNull();
     expect(tile("app-version")).toBeNull();
     expect(tile("audit-log")).toBeNull();
+    expect(tile("media-audit")).toBeNull();
     expect(auth.getAuditUnreadCount).not.toHaveBeenCalled();
   });
 

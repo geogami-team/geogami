@@ -724,6 +724,10 @@
       "title": "Registo de auditoria",
       "description": "Alterações a contas, funções e configuração, e alertas de segurança"
     },
+    "mediaAudit": {
+      "title": "Auditoria de multimédia",
+      "description": "Consultar ficheiros carregados, referências em falta e URLs desatualizados"
+    },
     "unread": "{{count}} por ler"
   },
     "LivePlays": {

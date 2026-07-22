@@ -724,6 +724,10 @@
       "title": "Audit-Protokoll",
       "description": "Änderungen an Konten, Rollen und Einstellungen sowie Sicherheitswarnungen"
     },
+    "mediaAudit": {
+      "title": "Medienprüfung",
+      "description": "Hochgeladene Dateien, fehlende Verweise und veraltete URLs prüfen"
+    },
     "unread": "{{count}} ungelesen"
   },
     "LivePlays": {

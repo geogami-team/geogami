@@ -311,6 +311,46 @@ export class AuthService {
       .toPromise();
   }
 
+  // Admin-only media audit: categorised GridFS files + stored-URL host check.
+  // Paginated (20/page by default) and filtered server-side so the heavy
+  // games/tracks scan (cached) is fetched in small slices. `refresh` bypasses
+  // the server-side cache for a fresh scan.
+  GetMediaAudit(opts: {
+    kinds?: string;
+    bucket?: string;
+    page?: number;
+    limit?: number;
+    q?: string;
+    hostFlagged?: boolean;
+    orphans?: boolean;
+    refresh?: boolean;
+  } = {}): Promise<any> {
+    const p = new URLSearchParams();
+    if (opts.kinds) p.set("kinds", opts.kinds);
+    if (opts.bucket) p.set("bucket", opts.bucket);
+    p.set("page", String(opts.page ?? 0));
+    p.set("limit", String(opts.limit ?? 20));
+    if (opts.q) p.set("q", opts.q);
+    if (opts.hostFlagged) p.set("hostFlagged", "1");
+    if (opts.orphans) p.set("orphans", "1");
+    if (opts.refresh) p.set("refresh", "1");
+    return this.http
+      .get(`${environment.apiURL}/file/admin/media?${p.toString()}`, {
+        headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
+  // Fast per-category file counts (no games/tracks scan) for the media-audit
+  // "choose what to load" selection screen.
+  GetMediaCategories(): Promise<any> {
+    return this.http
+      .get(`${environment.apiURL}/file/admin/media?meta=1`, {
+        headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
   // update user role
   updateUserRole(user: string ): Promise<any> {
     return this.http
