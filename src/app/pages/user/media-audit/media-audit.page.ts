@@ -36,6 +36,8 @@ interface CategoryMeta {
 }
 
 const PAGE_SIZE = 20;
+// Max pages auto-loaded to surface matches for a sparse reference filter.
+const AUTO_FILL_MAX_PAGES = 40;
 
 @Component({
   selector: "app-media-audit",
@@ -83,6 +85,15 @@ export class MediaAuditPage implements OnInit {
   // Guards the background scan for the current view so pages loaded before it
   // finishes are re-enriched once it does.
   private enrichToken = 0;
+  private loadingMore = false;
+  // When a reference filter is active and matches are sparse, we auto-load more
+  // pages to surface them — bounded so a rare filter can't fetch the whole DB.
+  private autoFillBudget = 0;
+
+  // List vs. grid (bigger thumbnails) view.
+  viewMode: "list" | "grid" = "list";
+  // File shown full-size in the lightbox overlay (grid clicks / preview).
+  lightboxFile: MediaFile | null = null;
 
   // Accumulated files for the current bucket + filters (grows via infinite scroll).
   files: MediaFile[] = [];
@@ -163,9 +174,21 @@ export class MediaAuditPage implements OnInit {
     if (this.hasLoadedOnce) this.selecting = false;
   }
 
-  // Advanced filters need the reference data, so they can't use the fast path.
-  get needsScan(): boolean {
+  get refFilterActive(): boolean {
     return this.onlyHostFlagged || this.onlyOrphans;
+  }
+
+  // Rows to display: the loaded files, filtered client-side by the reference
+  // toggles (instant — no reload). Files still being enriched (pending) can't
+  // be classified yet, so they're hidden while a reference filter is active.
+  get displayFiles(): MediaFile[] {
+    if (!this.refFilterActive) return this.files;
+    return this.files.filter((f) => {
+      if (f.pending) return false;
+      if (this.onlyHostFlagged && !f.hostFlag) return false;
+      if (this.onlyOrphans && f.referenced) return false;
+      return true;
+    });
   }
 
   // Segments come from the selection immediately (counts known); the reference
@@ -191,38 +214,29 @@ export class MediaAuditPage implements OnInit {
     }
   }
 
-  // Full reload: reset to page 0 for the active bucket + current filters.
+  // Full reload: reset to page 0 for the active bucket + current search.
+  // Always uses the fast path (file list first, references enriched after);
+  // reference toggles are applied client-side, never via a reload.
   async reload(refresh = false) {
     this.loading = true;
     this.error = "";
     this.previewFilename = null;
+    this.lightboxFile = null;
     this.page = 0;
     this.summaryReady = false;
+    this.autoFillBudget = AUTO_FILL_MAX_PAGES;
     const token = ++this.enrichToken;
     this.buildSegmentsFromSelection();
 
     try {
-      if (this.needsScan) {
-        // advanced filters → must use the (scanning, cached) endpoint directly
-        const res = await this.fetchFull(0, refresh);
-        if (token !== this.enrichToken) return;
-        this.files = res.page.files;
-        this.filteredTotal = res.page.filteredTotal;
-        this.hasMore = res.page.hasMore;
-        this.applySummary(res);
-        this.summaryReady = true;
-        if (refresh) this.showToast("Media list refreshed.");
-      } else {
-        // fast: show the files immediately, enrich in the background
-        const res = await this.fetchFilesOnly(0);
-        if (token !== this.enrichToken) return;
-        this.files = res.page.files;
-        this.filteredTotal = res.page.filteredTotal;
-        this.hasMore = res.page.hasMore;
-        this.loading = false;
-        this.enrichPage(0, token, refresh);
-      }
+      const res = await this.fetchFilesOnly(0);
+      if (token !== this.enrichToken) return;
+      this.files = res.page.files;
+      this.filteredTotal = res.page.filteredTotal;
+      this.hasMore = res.page.hasMore;
+      this.loading = false;
       this.hasLoadedOnce = true;
+      this.enrichPage(0, token, refresh);
     } catch (e) {
       this.error =
         (e && e.error && e.error.error) ||
@@ -232,40 +246,35 @@ export class MediaAuditPage implements OnInit {
     }
   }
 
-  // Infinite-scroll handler: append the next page.
+  // Infinite-scroll handler.
   async loadMore(ev: any) {
-    if (!this.hasMore) {
-      ev.target.complete();
-      return;
-    }
+    await this.loadNextPage();
+    ev.target.complete();
+  }
+
+  // Append the next page (fast list), then enrich it in the background.
+  private async loadNextPage(): Promise<void> {
+    if (this.loadingMore || !this.hasMore) return;
+    this.loadingMore = true;
     const token = this.enrichToken;
     try {
       const next = this.page + 1;
-      if (this.needsScan) {
-        const res = await this.fetchFull(next);
-        if (token !== this.enrichToken) return;
-        this.files = this.files.concat(res.page.files);
-        this.filteredTotal = res.page.filteredTotal;
-        this.hasMore = res.page.hasMore;
-        this.applySummary(res);
-      } else {
-        const res = await this.fetchFilesOnly(next);
-        if (token !== this.enrichToken) return;
-        this.files = this.files.concat(res.page.files);
-        this.filteredTotal = res.page.filteredTotal;
-        this.hasMore = res.page.hasMore;
-        this.enrichPage(next, token);
-      }
+      const res = await this.fetchFilesOnly(next);
+      if (token !== this.enrichToken) return;
+      this.files = this.files.concat(res.page.files);
+      this.filteredTotal = res.page.filteredTotal;
+      this.hasMore = res.page.hasMore;
       this.page = next;
+      this.enrichPage(next, token);
     } catch (_) {
       this.hasMore = false;
     } finally {
-      ev.target.complete();
+      this.loadingMore = false;
     }
   }
 
   // Background: fetch the reference/host/game info for one page and merge it
-  // into the already-displayed rows.
+  // into the already-displayed rows, then top up sparse filtered views.
   private async enrichPage(page: number, token: number, refresh = false) {
     this.summaryLoading = true;
     try {
@@ -274,11 +283,25 @@ export class MediaAuditPage implements OnInit {
       this.mergeRef(res.page.files);
       this.applySummary(res);
       this.summaryReady = true;
+      this.maybeAutoFill(token);
     } catch (_) {
       // leave rows pending; a later Refresh can retry
     } finally {
       if (token === this.enrichToken) this.summaryLoading = false;
     }
+  }
+
+  // When a reference filter is active but few matches are loaded, pull the next
+  // page so matches keep appearing without the user having to scroll a short
+  // list. Bounded by autoFillBudget so a sparse filter can't fetch everything.
+  private maybeAutoFill(token: number) {
+    if (token !== this.enrichToken) return;
+    if (!this.refFilterActive) return;
+    if (this.loading || this.loadingMore || !this.hasMore) return;
+    if (this.displayFiles.length >= PAGE_SIZE) return;
+    if (this.autoFillBudget <= 0) return;
+    this.autoFillBudget--;
+    this.loadNextPage();
   }
 
   // Copy reference/host/game fields onto matching rows (by filename).
@@ -307,6 +330,9 @@ export class MediaAuditPage implements OnInit {
     });
   }
 
+  // No reference filters here: this must paginate identically to fetchFilesOnly
+  // so page N carries the reference data for the same 20 files. The reference
+  // toggles are applied client-side (see displayFiles).
   private fetchFull(page: number, refresh = false): Promise<any> {
     return this.authService.GetMediaAudit({
       kinds: this.selectedKindsCsv || undefined,
@@ -314,8 +340,6 @@ export class MediaAuditPage implements OnInit {
       page,
       limit: PAGE_SIZE,
       q: this.search.trim() || undefined,
-      hostFlagged: this.onlyHostFlagged,
-      orphans: this.onlyOrphans,
       refresh,
     });
   }
@@ -351,9 +375,26 @@ export class MediaAuditPage implements OnInit {
     this.reload();
   }
 
-  // Any filter change → reset to page 0.
-  onFilterChange() {
+  // Text search changes the server-side file query → reset to page 0.
+  onSearchChange() {
     this.reload();
+  }
+
+  // Reference toggles are client-side only (no reload) — just top up if sparse.
+  onRefFilterChange() {
+    this.autoFillBudget = AUTO_FILL_MAX_PAGES;
+    this.maybeAutoFill(this.enrichToken);
+  }
+
+  setViewMode(ev: any) {
+    this.viewMode = ev.detail.value;
+  }
+
+  openLightbox(f: MediaFile) {
+    if (f.path) this.lightboxFile = f;
+  }
+  closeLightbox() {
+    this.lightboxFile = null;
   }
 
   togglePreview(f: MediaFile) {

@@ -95,6 +95,110 @@
 
 .showing { font-size: 12px; opacity: 0.6; margin: 2px 2px 8px; }
 
+.view-toggle {
+  width: auto;
+  flex: 0 0 auto;
+  --background: var(--ion-color-light, #f4f5f8);
+  ion-segment-button {
+    min-width: 42px;
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+}
+
+/* --- grid view --- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.grid-item {
+  border: 1px solid var(--ion-color-light-shade, #e0e0e0);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--ion-color-light, #f8f9fb);
+
+  &:hover { border-color: var(--ion-color-medium, #92949c); }
+  &.flagged { border-color: #e6a2a2; }
+}
+.grid-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+  ion-icon { font-size: 40px; opacity: 0.4; }
+}
+.grid-corner {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  gap: 3px;
+}
+.grid-name {
+  font-size: 11px;
+  padding: 5px 6px 2px;
+  word-break: break-all;
+  line-height: 1.25;
+  max-height: 3.2em;
+  overflow: hidden;
+}
+.grid-game {
+  font-size: 11px;
+  padding: 0 6px 6px;
+  color: var(--ion-color-success-shade, #2d8a4e);
+  font-weight: 600;
+  word-break: break-word;
+  max-height: 2.4em;
+  overflow: hidden;
+}
+
+/* --- lightbox --- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.lightbox-inner {
+  position: relative;
+  max-width: 92vw;
+  max-height: 92vh;
+  background: var(--ion-background-color, #fff);
+  border-radius: 10px;
+  padding: 12px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  img, video { max-width: 88vw; max-height: 74vh; border-radius: 6px; object-fit: contain; }
+  audio { width: min(88vw, 480px); }
+}
+.lightbox-close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  --color: var(--ion-color-dark, #222);
+  z-index: 1;
+}
+.lightbox-meta {
+  font-size: 12px;
+  .lb-name { font-weight: 600; word-break: break-all; }
+  .lb-path { opacity: 0.75; word-break: break-all; code { background: rgba(0,0,0,0.05); padding: 1px 4px; border-radius: 4px; } }
+  a { font-size: 13px; }
+}
+
 /* --- file rows --- */
 .file-list { display: flex; flex-direction: column; gap: 6px; }
 

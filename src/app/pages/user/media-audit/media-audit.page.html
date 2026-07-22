@@ -152,26 +152,44 @@
       <div class="filters-row">
         <ion-searchbar
           [(ngModel)]="search"
-          (ionChange)="onFilterChange()"
-          placeholder="Filter by filename or host"
+          (ionChange)="onSearchChange()"
+          placeholder="Filter by filename"
           debounce="350"
         ></ion-searchbar>
         <ion-item lines="none" class="toggle">
           <ion-label>Only different/misspelled URL</ion-label>
-          <ion-toggle [(ngModel)]="onlyHostFlagged" (ionChange)="onFilterChange()"></ion-toggle>
+          <ion-toggle [(ngModel)]="onlyHostFlagged" (ionChange)="onRefFilterChange()"></ion-toggle>
         </ion-item>
         <ion-item lines="none" class="toggle">
           <ion-label>Only unreferenced</ion-label>
-          <ion-toggle [(ngModel)]="onlyOrphans" (ionChange)="onFilterChange()"></ion-toggle>
+          <ion-toggle [(ngModel)]="onlyOrphans" (ionChange)="onRefFilterChange()"></ion-toggle>
         </ion-item>
+        <ion-segment class="view-toggle" [value]="viewMode" (ionChange)="setViewMode($event)">
+          <ion-segment-button value="list" title="List view">
+            <ion-icon name="list-outline"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="grid" title="Grid view">
+            <ion-icon name="grid-outline"></ion-icon>
+          </ion-segment-button>
+        </ion-segment>
       </div>
 
-      <div class="showing">Showing {{ files.length }} of {{ filteredTotal }} (loaded in pages of 20)</div>
+      <div class="showing">
+        <ng-container *ngIf="refFilterActive">
+          Showing {{ displayFiles.length }} match<span *ngIf="displayFiles.length !== 1">es</span>
+          among {{ files.length }} loaded
+          <span *ngIf="summaryLoading" class="loading-inline">· checking more…</span>
+        </ng-container>
+        <ng-container *ngIf="!refFilterActive">
+          Showing {{ files.length }} of {{ filteredTotal }} (loaded in pages of 20)
+        </ng-container>
+      </div>
 
-      <div class="file-list">
+      <!-- LIST VIEW -->
+      <div class="file-list" *ngIf="viewMode === 'list'">
         <div
           class="file-row"
-          *ngFor="let f of files"
+          *ngFor="let f of displayFiles"
           [class.flagged]="f.hostFlag"
         >
           <div class="file-main" (click)="togglePreview(f)">
@@ -237,7 +255,44 @@
           </div>
         </div>
 
-        <div class="empty" *ngIf="!files.length">No files match the current filters.</div>
+        <div class="empty" *ngIf="!displayFiles.length && !summaryLoading">
+          No files match the current filters.
+        </div>
+        <div class="empty" *ngIf="!displayFiles.length && summaryLoading">
+          Checking references…
+        </div>
+      </div>
+
+      <!-- GRID VIEW (bigger thumbnails) -->
+      <div class="grid" *ngIf="viewMode === 'grid'">
+        <div
+          class="grid-item"
+          *ngFor="let f of displayFiles"
+          [class.flagged]="f.hostFlag"
+          (click)="openLightbox(f)"
+        >
+          <div class="grid-thumb">
+            <img *ngIf="isImage(f)" [src]="fullUrl(f)" loading="lazy" alt="" />
+            <ion-icon
+              *ngIf="!isImage(f)"
+              [name]="isVideo(f) ? 'videocam-outline' : 'musical-notes-outline'"
+            ></ion-icon>
+            <div class="grid-corner">
+              <span class="badge pending" *ngIf="f.pending">…</span>
+              <span class="badge flag" *ngIf="!f.pending && f.hostFlag" title="Different/misspelled URL">⚠</span>
+              <span class="badge orphan" *ngIf="!f.pending && !f.referenced" title="Unreferenced">•</span>
+            </div>
+          </div>
+          <div class="grid-name">{{ f.filename }}</div>
+          <div class="grid-game" *ngIf="f.games?.length">🎮 {{ gameLabel(f) }}</div>
+        </div>
+
+        <div class="empty" *ngIf="!displayFiles.length && !summaryLoading">
+          No files match the current filters.
+        </div>
+        <div class="empty" *ngIf="!displayFiles.length && summaryLoading">
+          Checking references…
+        </div>
       </div>
 
       <ion-infinite-scroll (ionInfinite)="loadMore($event)" [disabled]="!hasMore">
@@ -247,8 +302,26 @@
     </ng-container>
 
     <div class="generated" *ngIf="generatedAt">
-      Snapshot generated {{ generatedAt | date:'medium' }} (cached up to 60s; use Refresh to rescan).
+      Snapshot generated {{ generatedAt | date:'medium' }} (cached up to 5 min; use Refresh to rescan).
     </div>
   </ng-container>
+
+  <!-- Lightbox overlay (grid clicks) -->
+  <div class="lightbox" *ngIf="lightboxFile" (click)="closeLightbox()">
+    <div class="lightbox-inner" (click)="$event.stopPropagation()">
+      <ion-button class="lightbox-close" fill="clear" (click)="closeLightbox()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <img *ngIf="isImage(lightboxFile)" [src]="fullUrl(lightboxFile)" alt="{{ lightboxFile.filename }}" />
+      <audio *ngIf="isAudio(lightboxFile)" [src]="fullUrl(lightboxFile)" controls></audio>
+      <video *ngIf="isVideo(lightboxFile)" [src]="fullUrl(lightboxFile)" controls></video>
+      <div class="lightbox-meta">
+        <div class="lb-name">{{ lightboxFile.filename }}</div>
+        <div class="lb-path"><code>{{ lightboxFile.path }}</code></div>
+        <div *ngIf="lightboxFile.games?.length">🎮 {{ gameLabel(lightboxFile) }}</div>
+        <a [href]="fullUrl(lightboxFile)" target="_blank" rel="noopener">Open in new tab ↗</a>
+      </div>
+    </div>
+  </div>
 
 </ion-content>
