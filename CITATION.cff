@@ -24,7 +24,7 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.10018830
 repository-code: 'https://github.com/origami-team/geogami'
-url: 'https://geogami.ifgi.de/'
+url: 'https://geogami.uni-muenster.de/'
 license: MIT
 version: 3.2.2
 date-released: '2024-01-26'

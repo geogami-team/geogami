@@ -266,8 +266,8 @@ Both environments support **single-player** and **multiplayer** modes, with the 
 | --- | --- |
 | Address | Heisenbergstraße 2, 48149 Münster |
 | Email | geogami(at)uni-muenster.de |
-| Website | <https://geogami.ifgi.de> |
-| Team | <https://geogami.ifgi.de/kontakt.html#team> |
+| Website | <https://geogami.uni-muenster.de> |
+| Team | <https://geogami.uni-muenster.de/kontakt.html#team> |
 
 ## License
 
