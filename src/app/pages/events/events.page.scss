@@ -1,10 +1,12 @@
 .empty-state {
-  margin-top: 22vh;
+  margin-top: 18vh;
   color: var(--ion-color-medium);
 
   ion-icon {
     font-size: 64px;
     margin-bottom: 12px;
+    color: var(--ion-color-primary);
+    opacity: 0.85;
   }
 
   h2 {
@@ -18,10 +20,173 @@
   }
 }
 
-.event-actions {
+/* ── Events grid ───────────────────────────────────────────────────────────
+   One column on phones, widening on larger screens so a scholar with a dozen
+   studies isn't scrolling a single stretched column. `minmax(0, 1fr)` keeps
+   long event names from forcing a column wider than its share. */
+.events-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  /* Clear the floating add button on the last row. */
+  padding-bottom: 76px;
+}
+
+@media (min-width: 700px) {
+  .events-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .events-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────
+   Built on ion-card so the background follows the light/dark theme; all
+   colours below come from theme variables for the same reason. */
+.event-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07), 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+
+  /* Accent strip — the one decorative flourish, tying cards to the brand. */
+  &::before {
+    content: "";
+    display: block;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      var(--ion-color-primary),
+      var(--ion-color-tertiary)
+    );
+  }
+}
+
+/* Lift only where there's a real cursor — on touch it would stick after tap. */
+@media (hover: hover) {
+  .event-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.09), 0 12px 26px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.event-card__body {
+  padding: 14px 14px 4px;
+  /* Push the action row to the bottom so cards in a row line up. */
+  flex: 1 1 auto;
+}
+
+.event-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.event-card__heading {
+  min-width: 0; /* lets the title ellipsize instead of overflowing the grid */
+  flex: 1 1 auto;
+}
+
+.event-icon {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--ion-color-primary-rgb), 0.13);
+  color: var(--ion-color-primary);
+
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
+.event-title {
+  margin: 2px 0 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ion-text-color);
+  /* Two lines maximum, then ellipsis. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.event-meta {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
-  padding: 0 8px 8px;
-  gap: 2px;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ion-color-medium-shade);
+  background: var(--ion-color-step-100, rgba(0, 0, 0, 0.06));
+
+  ion-icon {
+    font-size: 13px;
+  }
+}
+
+.meta-chip--shared {
+  color: var(--ion-color-tertiary);
+  background: rgba(var(--ion-color-tertiary-rgb), 0.13);
+}
+
+.event-desc {
+  margin: 12px 0 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--ion-color-medium);
+  /* Keep cards a predictable height regardless of description length. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Actions ─────────────────────────────────────────────────────────────── */
+.event-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px 10px;
+  margin-top: 10px;
+  border-top: 1px solid var(--ion-color-step-100, rgba(0, 0, 0, 0.07));
+
+  ion-button {
+    --padding-start: 10px;
+    --padding-end: 10px;
+    margin: 0;
+    font-size: 0.82rem;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+}
+
+.event-actions__spacer {
+  flex: 1 1 auto;
+}
+
+.delete-button {
+  --padding-start: 6px;
+  --padding-end: 6px;
 }
