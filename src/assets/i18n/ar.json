@@ -173,7 +173,12 @@
     "gamesHeading": "ألعاب هذه الفعالية",
     "realWorld": "العالم الحقيقي",
     "virtual": "افتراضي",
-    "singlePlayerOnly": "لاعب واحد فقط"
+    "singlePlayerOnly": "لاعب واحد فقط",
+    "reorderHint": "اسحب اللعبة من المقبض لتغيير الترتيب.",
+    "gameUnpublished": "غير منشورة",
+    "gameDeleted": "محذوفة",
+    "removeGame": "إزالة من الفعالية",
+    "unavailableNote": "الألعاب المميزة لم تعد مدرجة علناً لكنها ما زالت جزءاً من هذه الفعالية، وما زالت رموز QR الخاصة بها تعمل. أزلها إذا لم يكن ينبغي تضمينها."
   },
   "Start": {
     "myEvents": "فعالياتي",
@@ -228,7 +233,7 @@
     "markdownSupported": "يدعم Markdown",
     "audioMessage": "رسالة صوتية",
     "autoPlayAudio": "تشغيل الصوت تلقائيًا",
-    "audioTooLong": "يجب ألا يتجاوز الصوت {{seconds}} ثانية.",
+    "audioTooLong": "يجب ألا يتجاوز الصوت {{duration}} دقيقة.",
     "photos": "صور ورسومات",
     "addSettings": "إعدادات إضافية",
     "object": "الكائن المطلوب البحث عنه ...",

@@ -173,7 +173,12 @@
     "gamesHeading": "Jeux de cet événement",
     "realWorld": "Monde réel",
     "virtual": "Virtuel",
-    "singlePlayerOnly": "Un seul joueur uniquement"
+    "singlePlayerOnly": "Un seul joueur uniquement",
+    "reorderHint": "Faites glisser un jeu par sa poignée pour modifier l'ordre.",
+    "gameUnpublished": "Non publié",
+    "gameDeleted": "Supprimé",
+    "removeGame": "Retirer de l'événement",
+    "unavailableNote": "Les jeux signalés ne sont plus listés publiquement mais font toujours partie de cet événement, et leurs QR codes fonctionnent toujours. Retirez-les s'ils ne doivent pas être inclus."
   },
   "Start": {
     "myEvents": "Mes événements",
@@ -228,7 +233,7 @@
     "markdownSupported": "Markdown pris en charge",
     "audioMessage": "Message audio",
     "autoPlayAudio": "Lire l'audio automatiquement",
-    "audioTooLong": "L'audio ne doit pas dépasser {{seconds}} secondes.",
+    "audioTooLong": "L'audio ne doit pas dépasser {{duration}} minutes.",
     "photos": "Photos et graphiques",
     "addSettings": "Paramètres supplémentaires",
     "object": "L'objet à rechercher ...",

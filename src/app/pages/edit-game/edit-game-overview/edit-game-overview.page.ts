@@ -44,7 +44,6 @@ export class EditGameOverviewPage implements AfterViewInit {
   public lottieConfig: AnimationOptions;
   showSuccess = false;
   showUpload = false;
-  showNameError = false;
   map: mapboxgl.Map;
   draw: MapboxDraw;
 
@@ -64,7 +63,6 @@ export class EditGameOverviewPage implements AfterViewInit {
   userRole: String = "";
   user = this.authService.getUser();
 
-  errorMsg: String;
 
   constructor(
     public popoverController: PopoverController,
@@ -468,8 +466,9 @@ export class EditGameOverviewPage implements AfterViewInit {
     this.game.name = this.game.name.trim();
 
     if (this.game.name == "") {
-      this.errorMsg = this.translate.instant("SaveGame.enterValidGameName");
-      this.showNameError = true;
+      this.utilService.showValidationError(
+        this.translate.instant("SaveGame.enterValidGameName")
+      );
       return;
     }
 
@@ -498,8 +497,9 @@ export class EditGameOverviewPage implements AfterViewInit {
       .catch((e) => {
         console.error(e);
         this.showUpload = false;
-        this.errorMsg = this.translate.instant("SaveGame.gameNameExist");
-        this.showNameError = true;
+        this.utilService.showValidationError(
+          this.translate.instant("SaveGame.gameNameExist")
+        );
       });
 
     // this.gamesService

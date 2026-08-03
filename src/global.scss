@@ -25,3 +25,13 @@ ion-modal.tracks-visualization-modal {
 .toast-black-text {
     color: #000000;
 }
+
+/* Centered, clearly-visible validation errors (see UtilService.showValidationError) */
+.validation-toast {
+    --min-width: 300px;
+    --max-width: 90%;
+    --border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+}

@@ -104,8 +104,18 @@
           [checked]="isSelected(game)"
           (click)="$event.preventDefault()"
         ></ion-checkbox>
-        <ion-label>
-          <h2>{{ game.name }}</h2>
+        <ion-label class="ion-text-wrap">
+          <h2>
+            {{ game.name }}
+            <ion-badge
+              *ngIf="isUnavailable(game)"
+              color="warning"
+              class="state-badge"
+            >
+              {{ (game.isVisible === false ? "Events.gameDeleted" :
+              "Events.gameUnpublished") | translate }}
+            </ion-badge>
+          </h2>
           <p *ngIf="game.place">{{ game.place }}</p>
         </ion-label>
       </ion-item>
@@ -125,11 +135,47 @@
     <ion-list-header>
       {{ "Events.selectedCount" | translate: { count: selectedCount } }}
     </ion-list-header>
+    <p *ngIf="selectedGames.length > 1" class="reorder-hint">
+      {{ "Events.reorderHint" | translate }}
+    </p>
+    <p *ngIf="hasUnavailableGames" class="unavailable-note">
+      {{ "Events.unavailableNote" | translate }}
+    </p>
     <ion-list>
-      <ion-item *ngFor="let game of selectedGames">
-        <ion-icon slot="start" name="game-controller"></ion-icon>
-        <ion-label>{{ game.name }}</ion-label>
-      </ion-item>
+      <!-- Order matters: it drives the event's game order and the sequence of
+           QR pages in the exported PDF. -->
+      <ion-reorder-group [disabled]="false" (ionItemReorder)="doReorder($event)">
+        <ion-item *ngFor="let game of selectedGames; index as i">
+          <ion-label class="ion-text-wrap">
+            <!-- Inside the label (not slot="start") so the number sits on the
+                 game name's baseline — Ionic pads slotted notes down by 18px. -->
+            <span class="order-index">{{ i + 1 }}.</span>
+            {{ game.name }}
+            <!-- Still in the event and still playable by QR link, but no longer
+                 listed publicly — surfaced so it is never silently carried. -->
+            <ion-badge
+              *ngIf="isUnavailable(game)"
+              color="warning"
+              class="state-badge"
+            >
+              {{ (game.isVisible === false ? "Events.gameDeleted" :
+              "Events.gameUnpublished") | translate }}
+            </ion-badge>
+          </ion-label>
+          <!-- Reordering is drag-only (handle below), on every input type. -->
+          <ion-button
+            class="remove-button"
+            slot="end"
+            fill="clear"
+            color="medium"
+            (click)="removeGame(game)"
+            [attr.aria-label]="'Events.removeGame' | translate"
+          >
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+          <ion-reorder slot="end"></ion-reorder>
+        </ion-item>
+      </ion-reorder-group>
       <ion-item *ngIf="selectedCount === 0" lines="none">
         <ion-label color="medium">{{ "Events.noGamesYet" | translate }}</ion-label>
       </ion-item>

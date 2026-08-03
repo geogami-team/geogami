@@ -88,3 +88,91 @@
   color: var(--ion-color-medium);
   margin-top: 0;
 }
+
+/* Review step: the game list is order-sensitive (PDF QR page order). */
+.reorder-hint {
+  font-size: 13px;
+  color: var(--ion-color-medium);
+  margin: 0 4px 8px;
+}
+
+/* Position number, rendered inline with the game name. Inherits the label's
+   font-size so the two share a baseline; the fixed min-width keeps the names
+   lined up in a column. */
+.order-index {
+  display: inline-block;
+  min-width: 20px;
+  margin-inline-end: 8px;
+  font-weight: 600;
+  text-align: end;
+  color: var(--ion-color-medium);
+}
+
+/* Trash + drag handle sit together at the end of the row. `ion-item` is a
+   shadow-DOM component that gives every slotted end element `margin-inline:
+   10px`, so the two would be pushed 20px apart; these outer-tree declarations
+   win over its `::slotted()` rules and pull them together. */
+.remove-button {
+  --padding-start: 6px;
+  --padding-end: 6px;
+  height: 32px;
+  margin-inline-start: 0;
+  margin-inline-end: 6px;
+}
+
+ion-reorder[slot="end"] {
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+}
+
+/* Phones: tighten the row further so the game name gets the width. */
+@media (max-width: 576px), (pointer: coarse) {
+  .remove-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    height: 28px;
+    margin-inline-end: 2;
+  }
+
+  .order-index {
+    min-width: 16px;
+    margin-inline-end: 6px;
+  }
+
+  /* Reclaim the item's default gutters for the name. */
+  ion-reorder-group ion-item {
+    --padding-start: 8px;
+    --inner-padding-end: 4px;
+  }
+}
+
+/* The step labels are fixed-width and don't shrink, so on the narrowest phones
+   the three of them plus the connecting lines overflow the toolbar. */
+@media (max-width: 360px) {
+  .stepper {
+    padding-inline: 4px;
+  }
+
+  .stepper-step .label {
+    max-width: 56px;
+    font-size: 10px;
+  }
+
+  .stepper-line {
+    max-width: 20px;
+  }
+}
+
+/* Games still in the event but no longer in the public games list. */
+.unavailable-note {
+  font-size: 13px;
+  color: var(--ion-color-warning-shade, #b88c00);
+  margin: 0 4px 8px;
+}
+
+.state-badge {
+  margin-inline-start: 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}

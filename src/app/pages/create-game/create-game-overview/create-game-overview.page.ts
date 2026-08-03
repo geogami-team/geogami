@@ -45,7 +45,6 @@ export class CreateGameOverviewPage implements AfterViewInit {
   public lottieConfig: AnimationOptions;
   showSuccess = false;
   showUpload = false;
-  showNameError = false;
   map: mapboxgl.Map;
   draw: MapboxDraw;
 
@@ -69,7 +68,6 @@ export class CreateGameOverviewPage implements AfterViewInit {
   isSingleMode: boolean = false; // used to show number of players card in multiplayer mode
   numPlayers: Number = 1;
 
-  errorMsg: String;
 
   constructor(
     public popoverController: PopoverController,
@@ -474,8 +472,9 @@ export class CreateGameOverviewPage implements AfterViewInit {
     this.game.name = this.game.name.trim();
 
     if (this.game.name == "") {
-      this.errorMsg = this.translate.instant("SaveGame.enterValidGameName");
-      this.showNameError = true;
+      this.utilService.showValidationError(
+        this.translate.instant("SaveGame.enterValidGameName")
+      );
       return;
     }
 
@@ -514,8 +513,9 @@ export class CreateGameOverviewPage implements AfterViewInit {
       .catch((e) => {
         console.error(e);
         this.showUpload = false;
-        this.errorMsg = this.translate.instant("SaveGame.gameNameExist");
-        this.showNameError = true;
+        this.utilService.showValidationError(
+          this.translate.instant("SaveGame.gameNameExist")
+        );
       });
   }
 

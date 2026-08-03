@@ -173,7 +173,12 @@
     "gamesHeading": "Games in this event",
     "realWorld": "Real world",
     "virtual": "Virtual",
-    "singlePlayerOnly": "Single-player only"
+    "singlePlayerOnly": "Single-player only",
+    "reorderHint": "Drag a game by its handle to change the order.",
+    "gameUnpublished": "Unpublished",
+    "gameDeleted": "Deleted",
+    "removeGame": "Remove from event",
+    "unavailableNote": "Flagged games are no longer listed publicly but are still part of this event, and their QR codes still work. Remove them if they should not be included."
   },
   "Start": {
     "myEvents": "My Events",
@@ -228,7 +233,7 @@
     "markdownSupported": "Markdown supported",
     "audioMessage": "Audio message",
     "autoPlayAudio": "Play audio automatically",
-    "audioTooLong": "The audio must be {{seconds}} seconds or shorter.",
+    "audioTooLong": "The audio must be {{duration}} minutes or shorter.",
     "photos": "Photos and graphics",
     "addSettings": "Additional settings",
     "object": "The object to be searched for ...",

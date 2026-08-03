@@ -31,7 +31,9 @@ export class EventFormModalComponent implements OnInit {
 
   name = "";
   description = "";
-  // Set of selected game ids for O(1) toggle/lookup.
+  // Selected game ids. A Set for O(1) toggle/lookup, but its *insertion order*
+  // is also the event's game order — it is what `save()` persists and what the
+  // QR PDF pages follow, so every mutation must keep it meaningful.
   selectedIds = new Set<string>();
 
   allGames: any[] = [];
@@ -66,9 +68,22 @@ export class EventFormModalComponent implements OnInit {
       // minimal + registeredUser → every visible game (name/place/owner),
       // including games the user doesn't own (point 3b).
       const res = await this.gamesService.getGames(true, true);
+      const published = res?.content || [];
+
+      // That endpoint returns published games only. A game that was added to
+      // this event and unpublished (or soft-deleted) afterwards is therefore
+      // missing from it — yet it is still in the event, still saved on every
+      // edit, and still exported to the PDF. Merge those back in from the
+      // event's own populated games so the picker and the review list show
+      // what the event actually contains; `isUnavailable()` flags them.
+      const known = new Set(published.map((g) => g._id));
+      const missing = (this.event?.games || []).filter(
+        (g) => g && typeof g !== "string" && !known.has(g._id)
+      );
+
       // Newest first. The minimal endpoint omits createdAt, so derive the
       // creation time from the Mongo _id (its first 4 bytes are a timestamp).
-      this.allGames = (res?.content || []).sort(
+      this.allGames = [...published, ...missing].sort(
         (a, b) => this.createdTime(b) - this.createdTime(a)
       );
     } catch (err) {
@@ -121,13 +136,60 @@ export class EventFormModalComponent implements OnInit {
     return this.selectedIds.size;
   }
 
-  // Games selected, in the order they appear in the full list (for the review step).
+  // Selected games in event order (the review step's list, and the order the
+  // PDF's QR pages follow). Driven by `selectedIds` insertion order — NOT by
+  // the games-list order — so what step 3 shows is exactly what gets saved.
   get selectedGames(): any[] {
-    return this.allGames.filter((g) => this.selectedIds.has(g._id));
+    const byId = new Map<string, any>(this.allGames.map((g) => [g._id, g]));
+    return Array.from(this.selectedIds)
+      .map((id) => byId.get(id))
+      .filter((g) => !!g);
+  }
+
+  /**
+   * Commit a new order for the games shown in the review list. Ids that are
+   * selected but not rendered — game deleted, or no longer visible to this
+   * user — cannot be positioned by the UI, so they are parked at the end rather
+   * than dropped from the event.
+   */
+  private applyOrder(orderedIds: string[]) {
+    const unresolved = Array.from(this.selectedIds).filter(
+      (id) => !orderedIds.includes(id)
+    );
+    this.selectedIds = new Set([...orderedIds, ...unresolved]);
+  }
+
+  // Drag-reorder handler for the review step.
+  doReorder(ev: any) {
+    // `complete(arr)` returns `arr` rearranged to match the gesture.
+    const reordered: any[] = ev.detail.complete(this.selectedGames);
+    this.applyOrder(reordered.map((g) => g._id));
   }
 
   isSelected(game: any): boolean {
     return this.selectedIds.has(game._id);
+  }
+
+  // True when the event carries games the public games list no longer returns.
+  get hasUnavailableGames(): boolean {
+    return this.selectedGames.some((g) => this.isUnavailable(g));
+  }
+
+  /**
+   * A game the event still references but that the public games list no longer
+   * returns: unpublished (back to draft) or soft-deleted. Unpublished games are
+   * still playable by direct link, so their QR codes keep working — these are
+   * flagged for the owner's attention, never dropped automatically.
+   * Legacy games have no `isPublished` field and count as published.
+   */
+  isUnavailable(game: any): boolean {
+    return game?.isPublished === false || game?.isVisible === false;
+  }
+
+  // Remove a game from the event (review step) — the only way to get rid of a
+  // game that step 2's filters exclude.
+  removeGame(game: any) {
+    this.selectedIds.delete(game._id);
   }
 
   toggleGame(game: any) {

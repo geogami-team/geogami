@@ -25,12 +25,29 @@ export class AudioRecorderComponent implements OnInit, OnDestroy {
   @Output() audioSourceChange: EventEmitter<any> = new EventEmitter<any>();
   recording = false;
 
-  // Maximum recording length in seconds. Recording auto-stops once reached.
-  readonly maxDurationSeconds = 30;
+  // Maximum recording length in seconds (4 minutes). Recording auto-stops once
+  // reached, and longer uploaded files are rejected.
+  readonly maxDurationSeconds = 240;
   // Seconds elapsed in the current recording, shown live so the user can see
   // the limit approaching.
   recordSeconds = 0;
   private recordInterval: any;
+
+  // "m:ss" renderings used by the timer display and the too-long alert, so the
+  // limit stays readable whatever maxDurationSeconds is set to.
+  get elapsedDisplay(): string {
+    return this.formatTime(this.recordSeconds);
+  }
+
+  get maxDisplay(): string {
+    return this.formatTime(this.maxDurationSeconds);
+  }
+
+  private formatTime(totalSeconds: number): string {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  }
 
   constructor(
     public popoverController: PopoverController,
@@ -129,7 +146,7 @@ export class AudioRecorderComponent implements OnInit, OnDestroy {
   private async presentTooLongAlert() {
     const alert = await this.alertController.create({
       message: this.translate.instant("CreateGame.audioTooLong", {
-        seconds: this.maxDurationSeconds,
+        duration: this.maxDisplay,
       }),
       buttons: ["OK"],
     });
