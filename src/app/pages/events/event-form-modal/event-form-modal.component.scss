@@ -108,11 +108,58 @@
   color: var(--ion-color-medium);
 }
 
-.order-buttons {
-  ion-button {
+/* Trash + drag handle sit together at the end of the row. `ion-item` is a
+   shadow-DOM component that gives every slotted end element `margin-inline:
+   10px`, so the two would be pushed 20px apart; these outer-tree declarations
+   win over its `::slotted()` rules and pull them together. */
+.remove-button {
+  --padding-start: 6px;
+  --padding-end: 6px;
+  height: 32px;
+  margin-inline-start: 0;
+  margin-inline-end: 6px;
+}
+
+ion-reorder[slot="end"] {
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+}
+
+/* Phones: tighten the row further so the game name gets the width. */
+@media (max-width: 576px), (pointer: coarse) {
+  .remove-button {
     --padding-start: 4px;
     --padding-end: 4px;
-    height: 32px;
+    height: 28px;
+    margin-inline-end: 2;
+  }
+
+  .order-index {
+    min-width: 16px;
+    margin-inline-end: 6px;
+  }
+
+  /* Reclaim the item's default gutters for the name. */
+  ion-reorder-group ion-item {
+    --padding-start: 8px;
+    --inner-padding-end: 4px;
+  }
+}
+
+/* The step labels are fixed-width and don't shrink, so on the narrowest phones
+   the three of them plus the connecting lines overflow the toolbar. */
+@media (max-width: 360px) {
+  .stepper {
+    padding-inline: 4px;
+  }
+
+  .stepper-step .label {
+    max-width: 56px;
+    font-size: 10px;
+  }
+
+  .stepper-line {
+    max-width: 20px;
   }
 }
 

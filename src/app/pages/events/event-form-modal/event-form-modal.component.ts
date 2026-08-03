@@ -166,20 +166,6 @@ export class EventFormModalComponent implements OnInit {
     this.applyOrder(reordered.map((g) => g._id));
   }
 
-  // Move a game one position up/down — a keyboard/desktop-friendly alternative
-  // to dragging. `index` is an index into `selectedGames` (the rendered list).
-  moveGame(index: number, delta: number) {
-    const orderedIds = this.selectedGames.map((g) => g._id);
-    const target = index + delta;
-    if (index < 0 || index >= orderedIds.length) return;
-    if (target < 0 || target >= orderedIds.length) return;
-    [orderedIds[index], orderedIds[target]] = [
-      orderedIds[target],
-      orderedIds[index],
-    ];
-    this.applyOrder(orderedIds);
-  }
-
   isSelected(game: any): boolean {
     return this.selectedIds.has(game._id);
   }

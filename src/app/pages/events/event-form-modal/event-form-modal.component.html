@@ -162,32 +162,17 @@
               "Events.gameUnpublished") | translate }}
             </ion-badge>
           </ion-label>
-          <ion-buttons slot="end" class="order-buttons">
-            <ion-button
-              fill="clear"
-              color="medium"
-              (click)="removeGame(game)"
-              [attr.aria-label]="'Events.removeGame' | translate"
-            >
-              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-            </ion-button>
-            <ion-button
-              fill="clear"
-              [disabled]="i === 0"
-              (click)="moveGame(i, -1)"
-              [attr.aria-label]="'Events.moveUp' | translate"
-            >
-              <ion-icon slot="icon-only" name="chevron-up"></ion-icon>
-            </ion-button>
-            <ion-button
-              fill="clear"
-              [disabled]="i === selectedGames.length - 1"
-              (click)="moveGame(i, 1)"
-              [attr.aria-label]="'Events.moveDown' | translate"
-            >
-              <ion-icon slot="icon-only" name="chevron-down"></ion-icon>
-            </ion-button>
-          </ion-buttons>
+          <!-- Reordering is drag-only (handle below), on every input type. -->
+          <ion-button
+            class="remove-button"
+            slot="end"
+            fill="clear"
+            color="medium"
+            (click)="removeGame(game)"
+            [attr.aria-label]="'Events.removeGame' | translate"
+          >
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
           <ion-reorder slot="end"></ion-reorder>
         </ion-item>
       </ion-reorder-group>
