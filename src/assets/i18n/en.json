@@ -176,7 +176,11 @@
     "singlePlayerOnly": "Single-player only",
     "reorderHint": "Drag the handle, or use the arrows, to set the order of the games.",
     "moveUp": "Move up",
-    "moveDown": "Move down"
+    "moveDown": "Move down",
+    "gameUnpublished": "Unpublished",
+    "gameDeleted": "Deleted",
+    "removeGame": "Remove from event",
+    "unavailableNote": "Flagged games are no longer listed publicly but are still part of this event, and their QR codes still work. Remove them if they should not be included."
   },
   "Start": {
     "myEvents": "My Events",

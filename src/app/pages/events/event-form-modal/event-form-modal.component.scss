@@ -96,10 +96,13 @@
   margin: 0 4px 8px;
 }
 
+/* Position number, rendered inline with the game name. Inherits the label's
+   font-size so the two share a baseline; the fixed min-width keeps the names
+   lined up in a column. */
 .order-index {
-  min-width: 22px;
-  margin-inline-end: 6px;
-  font-size: 13px;
+  display: inline-block;
+  min-width: 20px;
+  margin-inline-end: 8px;
   font-weight: 600;
   text-align: end;
   color: var(--ion-color-medium);
@@ -111,4 +114,18 @@
     --padding-end: 4px;
     height: 32px;
   }
+}
+
+/* Games still in the event but no longer in the public games list. */
+.unavailable-note {
+  font-size: 13px;
+  color: var(--ion-color-warning-shade, #b88c00);
+  margin: 0 4px 8px;
+}
+
+.state-badge {
+  margin-inline-start: 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  vertical-align: middle;
 }

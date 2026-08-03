@@ -68,9 +68,22 @@ export class EventFormModalComponent implements OnInit {
       // minimal + registeredUser → every visible game (name/place/owner),
       // including games the user doesn't own (point 3b).
       const res = await this.gamesService.getGames(true, true);
+      const published = res?.content || [];
+
+      // That endpoint returns published games only. A game that was added to
+      // this event and unpublished (or soft-deleted) afterwards is therefore
+      // missing from it — yet it is still in the event, still saved on every
+      // edit, and still exported to the PDF. Merge those back in from the
+      // event's own populated games so the picker and the review list show
+      // what the event actually contains; `isUnavailable()` flags them.
+      const known = new Set(published.map((g) => g._id));
+      const missing = (this.event?.games || []).filter(
+        (g) => g && typeof g !== "string" && !known.has(g._id)
+      );
+
       // Newest first. The minimal endpoint omits createdAt, so derive the
       // creation time from the Mongo _id (its first 4 bytes are a timestamp).
-      this.allGames = (res?.content || []).sort(
+      this.allGames = [...published, ...missing].sort(
         (a, b) => this.createdTime(b) - this.createdTime(a)
       );
     } catch (err) {
@@ -169,6 +182,28 @@ export class EventFormModalComponent implements OnInit {
 
   isSelected(game: any): boolean {
     return this.selectedIds.has(game._id);
+  }
+
+  // True when the event carries games the public games list no longer returns.
+  get hasUnavailableGames(): boolean {
+    return this.selectedGames.some((g) => this.isUnavailable(g));
+  }
+
+  /**
+   * A game the event still references but that the public games list no longer
+   * returns: unpublished (back to draft) or soft-deleted. Unpublished games are
+   * still playable by direct link, so their QR codes keep working — these are
+   * flagged for the owner's attention, never dropped automatically.
+   * Legacy games have no `isPublished` field and count as published.
+   */
+  isUnavailable(game: any): boolean {
+    return game?.isPublished === false || game?.isVisible === false;
+  }
+
+  // Remove a game from the event (review step) — the only way to get rid of a
+  // game that step 2's filters exclude.
+  removeGame(game: any) {
+    this.selectedIds.delete(game._id);
   }
 
   toggleGame(game: any) {

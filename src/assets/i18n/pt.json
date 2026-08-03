@@ -176,7 +176,11 @@
     "singlePlayerOnly": "Apenas um jogador",
     "reorderHint": "Arraste a alça, ou use as setas, para definir a ordem dos jogos.",
     "moveUp": "Mover para cima",
-    "moveDown": "Mover para baixo"
+    "moveDown": "Mover para baixo",
+    "gameUnpublished": "Não publicado",
+    "gameDeleted": "Eliminado",
+    "removeGame": "Remover do evento",
+    "unavailableNote": "Os jogos assinalados já não estão listados publicamente, mas continuam a fazer parte deste evento, e os seus códigos QR continuam a funcionar. Remova-os se não devem ser incluídos."
   },
   "Start": {
     "myEvents": "Os meus eventos",
