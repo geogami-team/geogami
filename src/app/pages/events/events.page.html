@@ -32,23 +32,38 @@
     </ion-button>
   </div>
 
-  <!-- Events list -->
-  <ion-list *ngIf="!loading && events.length > 0">
-    <ion-card *ngFor="let event of events">
-      <ion-card-header>
-        <ion-card-title>{{ event.name }}</ion-card-title>
-        <ion-card-subtitle>
-          {{ "Events.gameCount" | translate: { count: gameCount(event) } }}
-          <span *ngIf="!event.isOwner"> · {{ "Events.sharedWithYou" | translate }}</span>
-        </ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content *ngIf="event.description">
-        {{ event.description }}
-      </ion-card-content>
+  <!-- Events list. A grid rather than a single column so wide screens show
+       several events per row instead of one stretched card. -->
+  <div *ngIf="!loading && events.length > 0" class="events-grid">
+    <ion-card class="event-card" *ngFor="let event of events">
+      <div class="event-card__body">
+        <div class="event-card__head">
+          <div class="event-icon" aria-hidden="true">
+            <ion-icon name="flag"></ion-icon>
+          </div>
+          <div class="event-card__heading">
+            <h2 class="event-title">{{ event.name }}</h2>
+            <div class="event-meta">
+              <span class="meta-chip">
+                <ion-icon name="game-controller-outline"></ion-icon>
+                {{ "Events.gameCount" | translate: { count: gameCount(event) } }}
+              </span>
+              <span class="meta-chip meta-chip--shared" *ngIf="!event.isOwner">
+                <ion-icon name="people-outline"></ion-icon>
+                {{ "Events.sharedWithYou" | translate }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <p class="event-desc" *ngIf="event.description">
+          {{ event.description }}
+        </p>
+      </div>
 
       <div class="event-actions">
         <ion-button
-          fill="clear"
+          fill="solid"
           size="small"
           (click)="downloadPdf(event)"
           [disabled]="generatingPdfFor === event._id"
@@ -69,19 +84,23 @@
           <ion-icon slot="start" name="create-outline"></ion-icon>
           {{ "Events.edit" | translate }}
         </ion-button>
+
+        <!-- Destructive action kept apart from the routine ones. -->
+        <span class="event-actions__spacer"></span>
         <ion-button
           *ngIf="event.isOwner"
+          class="delete-button"
           fill="clear"
           size="small"
           color="danger"
           (click)="confirmDelete(event)"
+          [attr.aria-label]="'Events.delete' | translate"
         >
-          <ion-icon slot="start" name="trash-outline"></ion-icon>
-          {{ "Events.delete" | translate }}
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
         </ion-button>
       </div>
     </ion-card>
-  </ion-list>
+  </div>
 
   <!-- Floating add button -->
   <ion-fab
