@@ -395,7 +395,9 @@
     "login": "Se connecter",
     "nameRequired": "Le nom ne peut pas être vide.",
     "deleteAccountTypeUsername": "Pour confirmer, veuillez saisir votre nom d'utilisateur « {{username}} » ci-dessous.",
-    "deleteAccountWrongUsername": "Le nom d'utilisateur saisi ne correspond pas."
+    "deleteAccountWrongUsername": "Le nom d'utilisateur saisi ne correspond pas.",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
   },
   "Popover": {
     "chooseComponent": "Appuyez sur les boutons pour en savoir plus sur les types de tâches.",

@@ -395,7 +395,9 @@
     "login": "تسجيل الدخول",
     "nameRequired": "لا يمكن ترك الاسم فارغًا.",
     "deleteAccountTypeUsername": "للتأكيد، يرجى كتابة اسم المستخدم “{{username}}” أدناه.",
-    "deleteAccountWrongUsername": "اسم المستخدم المُدخل غير متطابق."
+    "deleteAccountWrongUsername": "اسم المستخدم المُدخل غير متطابق.",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور"
   },
   "Popover": {
     "chooseComponent": "اضغط على الأزرار لمعرفة المزيد عن أنواع المهام.",

@@ -49,11 +49,28 @@
             >{{ "User.pl_password" | translate }}</ion-label
           >
           <ion-input
-            type="password"
+            [type]="showPassword ? 'text' : 'password'"
             placeholder="{{ 'User.pl_password' | translate }}"
             [id]="'password'"
             formControlName="password"
           ></ion-input>
+          <!-- type="button" so the eye never submits the surrounding form. -->
+          <ion-button
+            class="pw-toggle"
+            slot="end"
+            fill="clear"
+            type="button"
+            (click)="togglePassword()"
+            [attr.aria-label]="
+              (showPassword ? 'User.hidePassword' : 'User.showPassword')
+                | translate
+            "
+          >
+            <ion-icon
+              slot="icon-only"
+              [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+            ></ion-icon>
+          </ion-button>
         </ion-item>
 
         <ion-button

@@ -107,6 +107,21 @@ ion-content {
   }
 }
 
+/* Password visibility toggle, slotted at the end of a .form-item. The item
+   sets --inner-padding-end: 0, so the button supplies its own end padding.
+
+   A stacked label makes ion-item set `align-items: start` on itself, which
+   pins slotted children to the top of the (68px-tall) row; `align-self`
+   re-centres just this one against the field. */
+.pw-toggle {
+  --padding-start: 8px;
+  --padding-end: 10px;
+  --color: #64748b;
+  margin: 0;
+  height: 36px;
+  align-self: center;
+}
+
 /* ---------- Buttons ---------- */
 
 .submit-btn {

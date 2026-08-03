@@ -17,6 +17,8 @@ export class LoginPage implements OnInit {
   loading;
   emailStatus='';
   msgType=''
+  // Password visibility toggle (eye icon in the password field).
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -70,6 +72,10 @@ export class LoginPage implements OnInit {
     // Remove extra spaces before and after username string
     this.loginForm.setValue({username: (this.loginForm.getRawValue().username).trim(), password:this.loginForm.getRawValue().password})
     this.authService.login(this.loginForm.getRawValue());
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
   navigateRegister() {

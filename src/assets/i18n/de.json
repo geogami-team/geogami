@@ -395,7 +395,9 @@
     "login": "Anmelden",
     "nameRequired": "Der Name darf nicht leer sein.",
     "deleteAccountTypeUsername": "Zur Bestätigung geben Sie bitte unten Ihren Benutzernamen „{{username}}“ ein.",
-    "deleteAccountWrongUsername": "Der eingegebene Benutzername stimmt nicht überein."
+    "deleteAccountWrongUsername": "Der eingegebene Benutzername stimmt nicht überein.",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen"
   },
   "Popover": {
     "chooseComponent": "Tippe die Felder an, um mehr über die Aufgabentypen zu erfahren.",
