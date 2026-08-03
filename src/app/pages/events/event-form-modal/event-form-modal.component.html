@@ -125,11 +125,37 @@
     <ion-list-header>
       {{ "Events.selectedCount" | translate: { count: selectedCount } }}
     </ion-list-header>
+    <p *ngIf="selectedGames.length > 1" class="reorder-hint">
+      {{ "Events.reorderHint" | translate }}
+    </p>
     <ion-list>
-      <ion-item *ngFor="let game of selectedGames">
-        <ion-icon slot="start" name="game-controller"></ion-icon>
-        <ion-label>{{ game.name }}</ion-label>
-      </ion-item>
+      <!-- Order matters: it drives the event's game order and the sequence of
+           QR pages in the exported PDF. -->
+      <ion-reorder-group [disabled]="false" (ionItemReorder)="doReorder($event)">
+        <ion-item *ngFor="let game of selectedGames; index as i">
+          <ion-note slot="start" class="order-index">{{ i + 1 }}</ion-note>
+          <ion-label>{{ game.name }}</ion-label>
+          <ion-buttons slot="end" class="order-buttons">
+            <ion-button
+              fill="clear"
+              [disabled]="i === 0"
+              (click)="moveGame(i, -1)"
+              [attr.aria-label]="'Events.moveUp' | translate"
+            >
+              <ion-icon slot="icon-only" name="chevron-up"></ion-icon>
+            </ion-button>
+            <ion-button
+              fill="clear"
+              [disabled]="i === selectedGames.length - 1"
+              (click)="moveGame(i, 1)"
+              [attr.aria-label]="'Events.moveDown' | translate"
+            >
+              <ion-icon slot="icon-only" name="chevron-down"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-reorder slot="end"></ion-reorder>
+        </ion-item>
+      </ion-reorder-group>
       <ion-item *ngIf="selectedCount === 0" lines="none">
         <ion-label color="medium">{{ "Events.noGamesYet" | translate }}</ion-label>
       </ion-item>

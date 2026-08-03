@@ -173,7 +173,10 @@
     "gamesHeading": "Spiele in diesem Event",
     "realWorld": "Reale Welt",
     "virtual": "Virtuell",
-    "singlePlayerOnly": "Nur Einzelspieler"
+    "singlePlayerOnly": "Nur Einzelspieler",
+    "reorderHint": "Ziehen Sie den Griff oder nutzen Sie die Pfeile, um die Reihenfolge der Spiele festzulegen.",
+    "moveUp": "Nach oben",
+    "moveDown": "Nach unten"
   },
   "Start": {
     "myEvents": "Meine Events",

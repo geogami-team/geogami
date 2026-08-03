@@ -173,7 +173,10 @@
     "gamesHeading": "Jogos deste evento",
     "realWorld": "Mundo real",
     "virtual": "Virtual",
-    "singlePlayerOnly": "Apenas um jogador"
+    "singlePlayerOnly": "Apenas um jogador",
+    "reorderHint": "Arraste a alça, ou use as setas, para definir a ordem dos jogos.",
+    "moveUp": "Mover para cima",
+    "moveDown": "Mover para baixo"
   },
   "Start": {
     "myEvents": "Os meus eventos",

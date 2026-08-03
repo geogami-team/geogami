@@ -88,3 +88,27 @@
   color: var(--ion-color-medium);
   margin-top: 0;
 }
+
+/* Review step: the game list is order-sensitive (PDF QR page order). */
+.reorder-hint {
+  font-size: 13px;
+  color: var(--ion-color-medium);
+  margin: 0 4px 8px;
+}
+
+.order-index {
+  min-width: 22px;
+  margin-inline-end: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: end;
+  color: var(--ion-color-medium);
+}
+
+.order-buttons {
+  ion-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    height: 32px;
+  }
+}

@@ -31,7 +31,9 @@ export class EventFormModalComponent implements OnInit {
 
   name = "";
   description = "";
-  // Set of selected game ids for O(1) toggle/lookup.
+  // Selected game ids. A Set for O(1) toggle/lookup, but its *insertion order*
+  // is also the event's game order — it is what `save()` persists and what the
+  // QR PDF pages follow, so every mutation must keep it meaningful.
   selectedIds = new Set<string>();
 
   allGames: any[] = [];
@@ -121,9 +123,48 @@ export class EventFormModalComponent implements OnInit {
     return this.selectedIds.size;
   }
 
-  // Games selected, in the order they appear in the full list (for the review step).
+  // Selected games in event order (the review step's list, and the order the
+  // PDF's QR pages follow). Driven by `selectedIds` insertion order — NOT by
+  // the games-list order — so what step 3 shows is exactly what gets saved.
   get selectedGames(): any[] {
-    return this.allGames.filter((g) => this.selectedIds.has(g._id));
+    const byId = new Map<string, any>(this.allGames.map((g) => [g._id, g]));
+    return Array.from(this.selectedIds)
+      .map((id) => byId.get(id))
+      .filter((g) => !!g);
+  }
+
+  /**
+   * Commit a new order for the games shown in the review list. Ids that are
+   * selected but not rendered — game deleted, or no longer visible to this
+   * user — cannot be positioned by the UI, so they are parked at the end rather
+   * than dropped from the event.
+   */
+  private applyOrder(orderedIds: string[]) {
+    const unresolved = Array.from(this.selectedIds).filter(
+      (id) => !orderedIds.includes(id)
+    );
+    this.selectedIds = new Set([...orderedIds, ...unresolved]);
+  }
+
+  // Drag-reorder handler for the review step.
+  doReorder(ev: any) {
+    // `complete(arr)` returns `arr` rearranged to match the gesture.
+    const reordered: any[] = ev.detail.complete(this.selectedGames);
+    this.applyOrder(reordered.map((g) => g._id));
+  }
+
+  // Move a game one position up/down — a keyboard/desktop-friendly alternative
+  // to dragging. `index` is an index into `selectedGames` (the rendered list).
+  moveGame(index: number, delta: number) {
+    const orderedIds = this.selectedGames.map((g) => g._id);
+    const target = index + delta;
+    if (index < 0 || index >= orderedIds.length) return;
+    if (target < 0 || target >= orderedIds.length) return;
+    [orderedIds[index], orderedIds[target]] = [
+      orderedIds[target],
+      orderedIds[index],
+    ];
+    this.applyOrder(orderedIds);
   }
 
   isSelected(game: any): boolean {

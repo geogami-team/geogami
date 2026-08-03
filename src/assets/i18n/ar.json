@@ -173,7 +173,10 @@
     "gamesHeading": "ألعاب هذه الفعالية",
     "realWorld": "العالم الحقيقي",
     "virtual": "افتراضي",
-    "singlePlayerOnly": "لاعب واحد فقط"
+    "singlePlayerOnly": "لاعب واحد فقط",
+    "reorderHint": "اسحب المقبض أو استخدم الأسهم لتحديد ترتيب الألعاب.",
+    "moveUp": "تحريك لأعلى",
+    "moveDown": "تحريك لأسفل"
   },
   "Start": {
     "myEvents": "فعالياتي",

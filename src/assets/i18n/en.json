@@ -173,7 +173,10 @@
     "gamesHeading": "Games in this event",
     "realWorld": "Real world",
     "virtual": "Virtual",
-    "singlePlayerOnly": "Single-player only"
+    "singlePlayerOnly": "Single-player only",
+    "reorderHint": "Drag the handle, or use the arrows, to set the order of the games.",
+    "moveUp": "Move up",
+    "moveDown": "Move down"
   },
   "Start": {
     "myEvents": "My Events",
