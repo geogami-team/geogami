@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { ModalController, ToastController } from "@ionic/angular";
+import { ModalController } from "@ionic/angular";
 import { cloneDeep } from "lodash";
 
 import { navtasks } from "../../../models/navigation-tasks";
@@ -21,6 +21,7 @@ import { themetasksMultiplayers2 } from "src/app/models/theme-tasks-multi-2-play
 import { VirEnvHeaders } from "src/app/models/virEnvsHeader";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
 import { VEBuildingUtilService } from "src/app/services/ve-building-util.service";
+import { UtilService } from "src/app/services/util.service";
 
 @Component({
   selector: "app-create-task-modal",
@@ -150,7 +151,7 @@ export class CreateTaskModalPage implements OnInit {
     public popoverController: PopoverController,
     private translate: TranslateService,
     private veBuildingUtilService: VEBuildingUtilService,
-    private toastController: ToastController
+    private utilService: UtilService
   ) {}
 
   // Answer types that render a fill-in input the player must complete before confirming.
@@ -220,17 +221,12 @@ export class CreateTaskModalPage implements OnInit {
   // options differ by task type, so nav-photo gets a message that also lists the
   // photo — otherwise the author would only be told to add text or audio even though
   // a photo would satisfy the task too.
-  private async presentTaskInstructionRequiredToast() {
+  private presentTaskInstructionRequiredToast() {
     const question = this.asArray(this.task?.question)[0];
     const messageKey = this.isPhotoNavQuestion(question)
       ? "CreateGame.instructionAudioOrPhotoRequired"
       : "CreateGame.instructionOrAudioRequired";
-    const toast = await this.toastController.create({
-      message: this.translate.instant(messageKey),
-      color: "danger",
-      duration: 3000,
-    });
-    toast.present();
+    this.utilService.showValidationError(this.translate.instant(messageKey));
   }
 
   // ---------------------------------------------------------------------------
@@ -321,13 +317,10 @@ export class CreateTaskModalPage implements OnInit {
   }
 
   // Shown when an author tries to save a navigation task without a destination.
-  private async presentDestinationRequiredToast() {
-    const toast = await this.toastController.create({
-      message: this.translate.instant("CreateGame.destinationRequired"),
-      color: "danger",
-      duration: 3000,
-    });
-    toast.present();
+  private presentDestinationRequiredToast() {
+    this.utilService.showValidationError(
+      this.translate.instant("CreateGame.destinationRequired")
+    );
   }
 
   // ---------------------------------------------------------------------------
@@ -402,13 +395,10 @@ export class CreateTaskModalPage implements OnInit {
   }
 
   // Shown when an author tries to save a direction task without a direction set.
-  private async presentDirectionRequiredToast() {
-    const toast = await this.toastController.create({
-      message: this.translate.instant("CreateGame.directionRequired"),
-      color: "danger",
-      duration: 3000,
-    });
-    toast.present();
+  private presentDirectionRequiredToast() {
+    this.utilService.showValidationError(
+      this.translate.instant("CreateGame.directionRequired")
+    );
   }
 
   ngOnInit() {

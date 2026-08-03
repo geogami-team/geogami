@@ -59,6 +59,32 @@ export class UtilService {
     return toast;
   }
 
+  // Author-facing validation errors (empty game name, "name already exists",
+  // missing task instruction / destination / direction, …) used to appear either as
+  // a toast at the bottom of the screen or as a small card at the top of a long,
+  // scrollable page — both easy to miss (reported feedback: "users couldn't notice
+  // the error"). Show them centered on screen in danger colour, with an alert icon
+  // and a manual close button, so they clearly stand out. Single source of truth so
+  // every validation error across the app looks and behaves the same.
+  async showValidationError(msg: string) {
+    const toast = await this.toastCtr.create({
+      message: msg,
+      color: "danger",
+      icon: "alert-circle-outline",
+      position: "middle",
+      animated: true,
+      duration: 4000,
+      cssClass: "validation-toast",
+      buttons: [
+        {
+          icon: "close",
+          role: "cancel",
+        },
+      ],
+    });
+    toast.present();
+  }
+
   async showAlertNoConnection() {
     const alert = await this.alertCtr.create({
       backdropDismiss: false, // disable alert dismiss when backdrop is clicked
