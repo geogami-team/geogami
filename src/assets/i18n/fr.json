@@ -355,7 +355,9 @@
     "unrecognisedQr": "QR code non reconnu.",
     "playNow": "Jouer maintenant",
     "downloadPdf": "Télécharger le PDF",
-    "scanToPlay": "Scannez ce code pour jouer"
+    "scanToPlay": "Scannez ce code pour jouer",
+    "compassPermissionHeader": "Utiliser la boussole ?",
+    "compassPermissionMessage": "GeoGami a besoin de la boussole de votre appareil pour que la flèche indique la bonne direction."
   },
   "Showroom": {
     "titleShowroom": "Découvrez GeoGami",

@@ -355,7 +355,9 @@
     "unrecognisedQr": "Código QR não reconhecido.",
     "playNow": "Jogar agora",
     "downloadPdf": "Descarregar PDF",
-    "scanToPlay": "Digitalize este código para jogar"
+    "scanToPlay": "Digitalize este código para jogar",
+    "compassPermissionHeader": "Usar a bússola?",
+    "compassPermissionMessage": "O GeoGami precisa da bússola do seu dispositivo para que a seta aponte na direção certa."
   },
   "Showroom": {
     "titleShowroom": "Conheça o GeoGami",

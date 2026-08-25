@@ -136,6 +136,17 @@
     </ion-card-content>
   </ion-card>
 
+  <ion-card (click)="login()" *ngIf="!(user | async)?.username">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="person-outline"></ion-icon> ???
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      {{ "Start.loginModeDescription" | translate }}
+    </ion-card-content>
+  </ion-card>
+
   <ion-card *ngIf="(user | async)?.username" (click)="navigateProfile()">
     <ion-card-header>
       <ion-card-title>

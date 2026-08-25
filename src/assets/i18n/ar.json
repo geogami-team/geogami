@@ -355,7 +355,9 @@
     "unrecognisedQr": "رمز QR غير معروف.",
     "playNow": "العب الآن",
     "downloadPdf": "تنزيل PDF",
-    "scanToPlay": "امسح هذا الرمز للعب"
+    "scanToPlay": "امسح هذا الرمز للعب",
+    "compassPermissionHeader": "استخدام البوصلة؟",
+    "compassPermissionMessage": "يحتاج GeoGami إلى بوصلة جهازك لكي يشير السهم إلى الاتجاه الصحيح."
   },
   "Showroom": {
     "titleShowroom": "اكتشف GeoGami",

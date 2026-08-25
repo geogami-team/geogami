@@ -355,7 +355,9 @@
     "unrecognisedQr": "Unrecognised QR code.",
     "playNow": "Play now",
     "downloadPdf": "Download PDF",
-    "scanToPlay": "Scan this code to play"
+    "scanToPlay": "Scan this code to play",
+    "compassPermissionHeader": "Use the compass?",
+    "compassPermissionMessage": "GeoGami needs your device's compass so that the arrow points in the right direction."
   },
   "Showroom": {
     "titleShowroom": "Get to know GeoGami",
