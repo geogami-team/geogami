@@ -35,3 +35,94 @@ ion-modal.tracks-visualization-modal {
     font-weight: 600;
     text-align: center;
 }
+/* ── Form rows inside the create/edit modals ────────────────────────────────
+   ion-item lays a label and its control out in a row, and Ionic's item
+   internals use `flex-direction: inherit`, so setting the direction on the
+   host is what restructures the row.
+
+   These live here rather than in a component stylesheet because the task,
+   info and map-feature modals all use the same markup: Angular scopes
+   component styles, so create-task-modal's rules never reached the others —
+   create-info-modal carries `class="item-range"` with nothing behind it. */
+
+/* The label and the range are wrapped in a plain .range-stack div rather than
+   sitting directly in the item. That is not cosmetic: .item-native has
+   `display: flex` but no `flex-direction: inherit` (only .item-inner and
+   .input-wrapper do), so `flex-direction: column` on ion-item never reaches
+   the slotted children — the chain breaks at the first link. Laying out a
+   normal div is the only way to control how these two sit.
+
+   Above 550px this reproduces the original single-row layout; the stacked
+   variant lives in the phone block below. */
+ion-item.item-range .range-stack {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+ion-range::part(pin) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  transform: scale(1.01);
+
+  top: -20px;
+
+  min-width: 28px;
+  height: 28px;
+  transition: transform 120ms ease, 120ms ease;
+}
+
+/* Phones only — desktop and tablet layouts are left exactly as they were. */
+@media only screen and (max-width: 550px) {
+  /* Ionic's ion-label is `scoped`, not shadow DOM: its .sc-ion-label-*-h class
+     sets `white-space: nowrap; text-overflow: ellipsis` at specificity (0,1,0),
+     which outranks any plain element selector. Without !important the long
+     translated instructions get ellipsised instead of wrapping. */
+  ion-modal ion-item ion-label {
+    min-width: 0;
+    white-space: normal !important;
+  }
+
+  /* Instruction on its own line, slider centred underneath it. */
+  ion-modal ion-item.item-range .range-stack {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* A definite width matters here: ion-range's internal .range-slider is
+     `contain: size`, so it contributes nothing to intrinsic width and a
+     shrink-to-fit host would collapse the track and its ticks to zero.
+     Above 550px the range gets its width from Ionic's own `flex: 3` instead. */
+  ion-modal ion-item.item-range .range-stack ion-range {
+    width: 100%;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* The decorative start/end icons cost ~40px of track without adding
+     information the numeric bounds don't already give. */
+  ion-modal ion-range ion-icon[slot="start"],
+  ion-modal ion-range ion-icon[slot="end"] {
+    display: none;
+  }
+
+  ion-modal ion-range ion-label[slot="start"],
+  ion-modal ion-range ion-label[slot="end"] {
+    min-width: 0;
+    font-size: 0.75rem;
+  }
+
+  /* A native <select> sizes itself to its widest <option>, which is how the
+     long translated task types push these rows off-screen. */
+  ion-modal select {
+    max-width: 45vw;
+    text-overflow: ellipsis;
+  }
+}

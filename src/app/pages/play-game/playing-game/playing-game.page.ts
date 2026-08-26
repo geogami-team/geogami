@@ -871,7 +871,6 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     });
 
     this.geolocationService.init(this.isVirtualWorld);
-    // Fix this issue
     this.orientationService.init(this.isVirtualWorld);
 
     // Note: Geolocation subscription (except with realworld game using web browser)
@@ -1209,7 +1208,6 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.deviceOrientationSubscription =
         this.orientationService.orientationSubscription.subscribe(
           (heading: number) => {
-            // // console.log("......deviceOrientationSubscription (heading): ",  heading);
             this.compassHeading = heading;
             this.targetHeading = 360 - (this.compassHeading - this.heading);
             this.indicatedDirection =
@@ -2637,13 +2635,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
     this.feedbackControl.remove();
 
-    // To allow press done without error
-    if (
-      this.isVirtualWorld ||
-      (!this.isVirtualWorld && Capacitor.platform !== "web")
-    ) {
-      this.orientationService.clear();
-    }
+    // clear() is platform-safe, so the web sensor listeners get removed too
+    this.orientationService.clear();
 
     this.map.remove();
     this.navCtrl.navigateRoot("/");
