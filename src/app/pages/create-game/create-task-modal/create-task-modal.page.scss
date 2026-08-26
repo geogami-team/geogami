@@ -38,35 +38,23 @@
   }
 }
 
-/* ion-range custom*/
-ion-range::part(pin) {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* ion-range pin and .item-range now live in global.scss so the info and
+   map-feature modals get them too — see the note there. */
 
-  border-radius: 50%;
-  transform: scale(1.01);
-
-  top: -20px;
-
-  min-width: 28px;
-  height: 28px;
-  transition: transform 120ms ease, 120ms ease;
-}
-
-ion-range::part(.range-has-pin){
-  padding-top: 0;
-}
-
-.item-range{
-  display: flex;
-  flex-direction: column;
-  align-items: baseline;
-}
-
-// To overcome the issue of missing text of long ones
-ion-label{
-  min-width: fit-content;
+// To overcome the issue of missing text of long ones.
+//
+// Phones need the opposite: at 550px and below the label has to wrap instead
+// of holding its intrinsic width, or the row overflows the screen. Hence the
+// 551px floor — it pairs with the `max-width: 550px` modal block in
+// global.scss, and the two must be kept in step (no gap, no overlap).
+//
+// It also has to be disabled rather than overridden from there: component
+// styles carry Angular's [_ngcontent] attribute, so this rule outranks any
+// plain selector global.scss could write.
+@media only screen and (min-width: 551px) {
+  ion-label {
+    min-width: fit-content;
+  }
 }
 
 ion-select {

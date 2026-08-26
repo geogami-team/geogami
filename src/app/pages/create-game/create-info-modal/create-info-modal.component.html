@@ -152,38 +152,46 @@
     
     <!-- Avatar speed -->
     <ion-item lines="none" class="item-range">
-      <ion-label>
-        {{ "CreateGame.avatarSpeed" | translate }}
-        <ion-icon
-          name="information-circle"
-          (click)="showPopover($event, 'Popover.avatarSpeedZero')"
-        >
-        </ion-icon>
-      </ion-label>
-      <ion-range
-        [(ngModel)]="task.settings.avatarSpeed"
-        min="0"
-        max="7"
-        snaps
-        [color]="task.category == 'nav' ? 'primary' : 'secondary'"
-        ticks
-        pin
-      >
-        <ion-label slot="start">1m/s</ion-label>
-        <ion-icon
-          slot="start"
-          size="small"
+      <!-- .range-stack is load-bearing, not decorative: ion-item's shadow
+           .item-native is `display: flex` with no `flex-direction: inherit`,
+           so `flex-direction: column` set on ion-item never reaches slotted
+           children. Stacking the label above the slider on phones is only
+           possible inside a plain element we control. Styled in global.scss. -->
+      <div class="range-stack">
+        <ion-label>
+          {{ "CreateGame.avatarSpeed" | translate }}
+          <ion-icon
+            name="information-circle"
+            (click)="showPopover($event, 'Popover.avatarSpeedZero')"
+          >
+          </ion-icon>
+        </ion-label>
+        <ion-range
+          [(ngModel)]="task.settings.avatarSpeed"
+          min="0"
+          max="7"
+          snaps
           [color]="task.category == 'nav' ? 'primary' : 'secondary'"
-          name="speedometer-outline"
+          ticks
+          pin
         >
-        </ion-icon>
-        <ion-icon
-          slot="end"
-          [color]="task.category == 'nav' ? 'primary' : 'secondary'"
-          name="speedometer-outline"
-        ></ion-icon>
-        <ion-label slot="end">7m/s</ion-label>
-      </ion-range>
+          <ion-label slot="start">1m/s</ion-label>
+          <ion-icon
+            slot="start"
+            size="small"
+            [color]="task.category == 'nav' ? 'primary' : 'secondary'"
+            name="speedometer-outline"
+          >
+          </ion-icon>
+          <ion-icon
+            slot="end"
+            [color]="task.category == 'nav' ? 'primary' : 'secondary'"
+            name="speedometer-outline"
+          ></ion-icon>
+          <ion-label slot="end">7m/s</ion-label>
+        </ion-range>
+    
+      </div>
     </ion-item>
 
     <!-- Disable avatar rotation -->
