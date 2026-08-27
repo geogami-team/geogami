@@ -94,7 +94,7 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
     if (this.isVirtualWorld) {
       if (!this.task.settings.avatarSpeed) {
         this.task.settings.avatarSpeed =
-          virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 2;
+          virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 5;
       }
 
       // Set default map size if not set
@@ -227,7 +227,7 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
   // Set default avatar-speed when vir. env. is changed
   onEnvChanged(){
       this.task.settings.avatarSpeed =
-        virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 2;
+        virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 5;
       this.isVEBuilding = this.veBuildingUtilService.checkVEBuilding(
         this.virEnvType
       );
