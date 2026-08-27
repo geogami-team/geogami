@@ -60,7 +60,7 @@ export class CreateTaskModalPage implements OnInit {
 
   showFeedback = true;
   showMultipleTries = false;
-  defaultTaskAccuracy = 3; // default accuracy for tasks
+  defaultTaskAccuracy = 5; // default accuracy for tasks
 
   // step = 5;
 
