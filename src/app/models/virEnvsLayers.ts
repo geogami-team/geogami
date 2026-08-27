@@ -369,7 +369,7 @@ export const virEnvLayers: Readonly<any> = {
     center: [0, 0],
     bounds: VirEnv_40.bounds,
     zoom: 17,
-    defaultAvatarSpeed: 2,
+    defaultAvatarSpeed: 5,
     defaultFloor: 1,
     floors: [
       { tag: "f-1", name: "Library", height: 96.249 }, // library

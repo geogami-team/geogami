@@ -763,7 +763,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
           virEnvType: this.task.virEnvType
             ? this.task.virEnvType
             : this.virEnvType,
-          avatarSpeed: this.task.settings.avatarSpeed ?? 2,
+          avatarSpeed: this.task.settings.avatarSpeed ?? 5,
           disableAvatarRotation: this.task.settings.disableAvatarRotation ?? false, 
           showEnvSettings: this.task.settings.showEnvSettings ?? false,      // if `showEnvSettings` is undefined use default value `true`
           arrowDestination:
@@ -799,7 +799,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
           virEnvType: this.task.virEnvType
             ? this.task.virEnvType
             : this.virEnvType,
-          avatarSpeed: this.task.settings.avatarSpeed ?? 2,
+          avatarSpeed: this.task.settings.avatarSpeed ?? 5,
           disableAvatarRotation: this.task.settings.disableAvatarRotation ?? false, 
           showEnvSettings: this.task.settings.showEnvSettings ?? false,
           arrowDestination:
@@ -1929,7 +1929,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
             initialPosition: this.setAvatarInitialPosition(),
             initialRotation: this.setAvatarInitialRotation(),        
             virEnvType: this.task.virEnvType ?? this.game.virEnvType,         // in old games, vir. env. type is not included within each task.
-            avatarSpeed: this.task.settings.avatarSpeed ?? 2,
+            avatarSpeed: this.task.settings.avatarSpeed ?? 5,
             disableAvatarRotation: this.task.settings.disableAvatarRotation ?? false, 
             showEnvSettings: this.task.settings.showEnvSettings ?? false,      // if `showEnvSettings` is undefined use default value `true`
             showPathVisualization: this.task.settings.showPathVisualization ?? undefined,      // if `ShowPathVisualization` is undefined never send it
