@@ -7,20 +7,66 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <h5>{{ "Info.titleInfotext" | translate }}</h5>
-  <p>{{ "Info.infotext1" | translate }}</p>
-  <p>{{ "Info.infotext2" | translate }}</p>
-  <p>{{ "Info.infotext3" | translate }} <a href="https://geogami.uni-muenster.de">{{ "Info.website" | translate }}</a>!</p>
+<ion-content class="ion-padding info-content">
+  <section class="info-hero">
+    <div class="hero-orbit hero-orbit--one"></div>
+    <div class="hero-orbit hero-orbit--two"></div>
+    <div class="hero-icon" aria-hidden="true">
+      <ion-icon name="earth-outline"></ion-icon>
+    </div>
+    <p class="eyebrow">GEO · PLAY · LEARN</p>
+    <h1>{{ "Info.titleInfotext" | translate }}</h1>
+    <p class="hero-text">{{ "Info.infotext1" | translate }}</p>
+    <ion-button fill="outline" size="small" href="https://geogami.uni-muenster.de" target="_blank">
+      <ion-icon slot="start" name="open-outline"></ion-icon>
+      {{ "Info.website" | translate }}
+    </ion-button>
+  </section>
 
-  <!-- <h2 class="ion-text-center">
-    Made with
-    <span (click)="onDarkThemeChange()"
-      ><span *ngIf="dark">❤️</span><span *ngIf="!dark">🖤</span></span
-    >
-    by <a href="https://reedu.de">re:edu</a>
-  </h2> -->
+  <div class="info-highlights">
+    <ion-card class="highlight-card">
+      <ion-icon name="map-outline" color="primary"></ion-icon>
+      <h2>Orientieren</h2>
+      <p>Entdecke Orte und lerne, Karten sicher zu nutzen.</p>
+    </ion-card>
+    <ion-card class="highlight-card">
+      <ion-icon name="game-controller-outline" color="secondary"></ion-icon>
+      <h2>Spielen</h2>
+      <p>Erlebe digitale Rallyes und spannende GeoGami-Games.</p>
+    </ion-card>
+    <ion-card class="highlight-card">
+      <ion-icon name="school-outline" color="tertiary"></ion-icon>
+      <h2>Lernen</h2>
+      <p>Gestalte eigene Lernabenteuer für Schule und Studium.</p>
+    </ion-card>
+  </div>
 
+  <ion-card class="about-card">
+    <ion-card-header>
+      <ion-card-title><ion-icon name="sparkles-outline"></ion-icon> Was ist GeoGami?</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ "Info.infotext2" | translate }}</p>
+      <p>{{ "Info.infotext3" | translate }} <a class="website-link" href="https://geogami.uni-muenster.de" target="_blank" rel="noopener" style="color: #ffffff !important">{{ "Info.website" | translate }}</a>!</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="theme-card" button (click)="onDarkThemeChange()">
+    <ion-icon [name]="dark ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+    <span>{{ dark ? 'Helles Design aktivieren' : 'Dunkles Design ausprobieren' }}</span>
+    <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+  </ion-card>
+
+  <ion-accordion-group class="legal-section">
+    <ion-accordion value="legal">
+      <ion-item slot="header" lines="none">
+        <ion-icon slot="start" name="document-text-outline"></ion-icon>
+        <ion-label>
+          <strong>Rechtliche Informationen</strong>
+          <p>Impressum, Datenschutz und Quellen</p>
+        </ion-label>
+      </ion-item>
+      <div slot="content" class="legal-content">
   <h5>Animations</h5>
   <p>
     ⭐️ Star Success by Taras Chernenko / LottieFiles
@@ -1801,4 +1847,7 @@
       >https://www.mapbox.com/legal/privacy</a
     >.
   </p>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
 </ion-content>
