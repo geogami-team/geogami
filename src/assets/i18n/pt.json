@@ -23,6 +23,8 @@
     "floor": "Andar"
   },
   "Tasktypes": {
+    "explorationTask": "Tarefa de exploração",
+    "explorationDescription": "O jogador explora o ambiente durante um período definido sem uma bandeira de destino. A próxima tarefa começa automaticamente quando o tempo acaba.",
     "navigationTasks": "Tarefas de navegação",
     "thematicTasks": "Tarefas temáticas",
     "information": "Informações",
@@ -212,6 +214,10 @@
     "download": "baixar"
   },
   "CreateGame": {
+    "explorationSettings": "Configurações de exploração",
+    "explorationDuration": "Duração (segundos)",
+    "showTimer": "Mostrar temporizador",
+    "explorationDurationRequired": "Insira uma duração em segundos inteiros maior que zero.",
     "taskInstructionRequired": "Adicione um Texto informativo para que os jogadores saibam o que fazer.",
     "instructionOrAudioRequired": "Adicione um Texto informativo ou uma Mensagem de áudio para que os jogadores saibam o que fazer.",
     "instructionAudioOrPhotoRequired": "Adicione um Texto informativo, uma Mensagem de áudio ou uma Foto para que os jogadores saibam o que fazer.",
@@ -285,6 +291,10 @@
     "website": "site"
   },
   "PlayGame": {
+    "explorationTimeOver": "O tempo acabou",
+    "loadingNextTask": "A próxima tarefa será carregada em breve.",
+    "finishingGame": "O jogo será concluído em breve.",
+    "timeRemaining": "Tempo restante",
     "titlePlayGameList": "Jogue GeoGami",
     "realWorldDescription": "Jogue GeoGami ao ar livre.",
     "virtualWorldDescription": "Jogue GeoGami em um mundo virtual.",
@@ -460,6 +470,7 @@
     "correctAnswerIs2": "A resposta correta é {{answer}}"
   },
   "QuestionText": {
+    "exploreEnvironment": "Explore o ambiente.",
     "goToFlag": "Vá até a bandeira.",
     "followTheArrow": "Siga a seta até o destino.",
     "goToPlace": "Vá ao lugar que você vê na foto.",

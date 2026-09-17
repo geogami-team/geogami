@@ -63,6 +63,7 @@ import { AnimationOptions } from "ngx-lottie";
 import bbox from "@turf/bbox";
 import buffer from "@turf/buffer";
 import { Task } from "src/app/models/task";
+import { ExplorationTimer } from "src/app/models/exploration-timer";
 import { point } from "@turf/helpers";
 import booleanWithin from "@turf/boolean-within";
 import { OrigamiOrientationService } from "src/app/services/origami-orientation.service";
@@ -75,7 +76,7 @@ import { Coords } from "src/app/models/coords";
 import { TranslateService } from "@ngx-translate/core";
 import { UtilService } from "src/app/services/util.service";
 
-import { Storage } from "@ionic/storage";
+import { GameSessionService } from "src/app/services/game-session.service";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
 import { VEBuildingUtilService } from "src/app/services/ve-building-util.service";
 import { AuthService } from "src/app/services/auth-service.service";
@@ -124,6 +125,10 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   // tasks
   task: Task;
   taskIndex = 0;
+  readonly explorationTimer = new ExplorationTimer();
+  showExplorationTimeOver = false;
+  private explorationTransition: ReturnType<typeof setTimeout>;
+  private taskInitialization = 0;
 
   positionSubscription: Subscription;
   lastKnownPosition: GeolocationPosition;
@@ -488,7 +493,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     private translate: TranslateService,
     private utilService: UtilService,
     private veBuildingUtilService: VEBuildingUtilService,
-    private storage: Storage,
+    private storage: GameSessionService,
     private router: Router,
     private authService: AuthService
   ) {
@@ -694,12 +699,13 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
   /******************/
   ionViewWillLeave() {
+    this.stopExplorationTimer();
     // Disconnect server when leaving playing-page
     if (!this.isSingleMode) {
       this.disconnectSocketIO();
     }
 
-    /* if player left game without solving all tasks, save game events, waypoints and taskno (to be restored when resume game) */
+    /* Keep unfinished progress only in this running app, for same-session rejoin. */
     if (!PlayingGamePage.showSuccess) {
       let c_waypoints = this.trackerService.getWaypoints();
       let c_events = this.trackerService.getEvents();
@@ -723,6 +729,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.stopExplorationTimer();
     // console.log(" ngOnDestroy")
     // To disconnect socket connection
     // this.socketService.disconnectSocket();
@@ -767,13 +774,14 @@ export class PlayingGamePage implements OnInit, OnDestroy {
           disableAvatarRotation: this.task.settings.disableAvatarRotation ?? false, 
           showEnvSettings: this.task.settings.showEnvSettings ?? false,      // if `showEnvSettings` is undefined use default value `true`
           arrowDestination:
-                this.task.type == "nav-arrow" && this.task?.isVEBuilding
+                this.task.type == "nav-arrow" && this.task?.isVEBuilding &&
+                this.hasBuildingFloors(this.task.virEnvType ?? this.virEnvType)
                   ? [
                       this.task.answer.position.geometry.coordinates[0] *
                         111000,
                       this.task.answer.position.geometry.coordinates[1] *
                         112000,
-                      virEnvLayers[this.virEnvType].floors[parseInt(this.task.floor.substring(1))+1]["height"],
+                      this.getBuildingFloor(this.task.virEnvType ?? this.virEnvType, this.task.floor).height,
                     ]
                   : undefined,
           excludedObjectsNames: this.task?.excludedObjectsNames.length>0 ? this.task?.excludedObjectsNames : undefined,
@@ -803,13 +811,14 @@ export class PlayingGamePage implements OnInit, OnDestroy {
           disableAvatarRotation: this.task.settings.disableAvatarRotation ?? false, 
           showEnvSettings: this.task.settings.showEnvSettings ?? false,
           arrowDestination:
-                this.task.type == "nav-arrow" && this.task?.isVEBuilding
+                this.task.type == "nav-arrow" && this.task?.isVEBuilding &&
+                this.hasBuildingFloors(this.task.virEnvType ?? this.virEnvType)
                   ? [
                       this.task.answer.position.geometry.coordinates[0] *
                         111000,
                       this.task.answer.position.geometry.coordinates[1] *
                         112000,
-                      virEnvLayers[this.virEnvType].floors[parseInt(this.task.floor.substring(1))+1]["height"],
+                      this.getBuildingFloor(this.task.virEnvType ?? this.virEnvType, this.task.floor).height,
                     ]
                   : undefined,
           excludedObjectsNames: this.task?.excludedObjectsNames.length>0 ? this.task?.excludedObjectsNames : undefined,
@@ -916,7 +925,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
             const currentAvatarPosition = new AvatarPosition(
               0,
               new Coords(
-                parseFloat(avatarPosition["z"]) / 111200,
+                parseFloat(avatarPosition["z"]) / 112000,
                 parseFloat(avatarPosition["x"]) / 111000
               )
             );
@@ -956,7 +965,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
             // building envs only: Update floor/env. map based on height
             // Note: make sure to update the impl. when other buildings than ifgi is added
-            if (this.task?.isVEBuilding) {
+            if (this.task?.isVEBuilding && this.hasBuildingFloors(this.virEnvType)) {
               let cFloor_old = this.veBuildingUtilService.getCurrentFloor();
               this.veBuildingUtilService.updateMapViewBasedOnFloorHeight(this.virEnvType, avatarPosition["y"], this.map);
               // Check if floor changed, to hide/show flag based on avatar position
@@ -1830,7 +1839,29 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   async initTask() {
+    this.stopExplorationTimer();
+    const initialization = this.taskInitialization;
     this.panelMinimized = false;
+    const taskAtStart = this.task;
+    const taskEnvType = this.task.virEnvType ?? this.game.virEnvType ?? this.virEnvType;
+    const environmentHasFloors = this.hasBuildingFloors(taskEnvType);
+    const isBuildingTask = !!this.task.isVEBuilding && environmentHasFloors;
+    const requestedFloor = this.task.initialFloor && this.task.initialFloor !== "Select floor"
+      ? this.task.initialFloor : this.task.floor;
+    const buildingFloor = environmentHasFloors
+      ? this.getBuildingFloor(taskEnvType, requestedFloor) : undefined;
+
+    if (this.isVirtualWorld && taskEnvType !== this.virEnvType) {
+      this.virEnvType = taskEnvType;
+      this.updateMapStyleOverlayLayer(
+        "assets/vir_envs_layers/" + taskEnvType +
+          (buildingFloor ? "_" + buildingFloor.tag : "") + ".png",
+        true
+      );
+    }
+    if (this.task.isVEBuilding && !isBuildingTask) {
+      console.warn(`Task ${this.task.id} is marked as a building task, but ${taskEnvType} has no floors.`);
+    }
 
     // // console.log("Current task: ", this.task);
 
@@ -1843,7 +1874,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
     // Get flag next point and disance from VE app (only for nav-arrow tasks in VE games)
     // TODO: check if it will work on all envs as well
-    if(this.task.type == "nav-arrow" && this.task?.isVEBuilding){
+    if(this.task.type == "nav-arrow" && isBuildingTask){
       this.socketService.socket.on("set next arrow point and distance", (data) => {
         this.targetDistance = parseFloat(data["distance"])
         this.arrowNextPoint = [parseFloat(data["x"])/ 111000, parseFloat(data["z"])/ 112000];
@@ -1861,13 +1892,12 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     // ToAnswer: can floor task be set without initialposition???
     if (this.isVirtualWorld) {
       // Note: (avatarLastKnownHeight) is to make solve the issue when user press next button bfore making any movement in the VE app
-      if(this.task?.isVEBuilding){
+      if(isBuildingTask){
         if((this.taskIndex==0 || this.task?.initialFloor || !this.avatarLastKnownHeight) ){
-          let initFloor = this.task.initialFloor ? this.task?.initialFloor : this.task?.floor;
           // update floor height
-          this.floorHeight = virEnvLayers[this.virEnvType].floors[parseInt(initFloor.substring(1))+1]["height"];
+          this.floorHeight = buildingFloor.height;
           // update map layer for buidong envs
-          this.veBuildingUtilService.updateMapLayer(this.map, this.task.virEnvType, initFloor);
+          this.veBuildingUtilService.updateMapLayer(this.map, taskEnvType, buildingFloor.tag);
         }
       } else {
         // for non-building virtual environments
@@ -1876,22 +1906,6 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       
       // console.log("🚀 ~ initTask ~ socketService:");
       // if (this.task.question.initialAvatarPosition != undefined || this.task.virEnvType != undefined) {
-
-      //* update vir env map overlay layer
-      if (
-        this.task.virEnvType != undefined &&
-        this.task.virEnvType != this.virEnvType
-      ) {
-        /* console.log(
-          "🚀 ~-- initTask ~ this.task.virEnvType != this.virEnvType:"
-        ); */
-        this.virEnvType = this.task.virEnvType;
-        //* update VR (layer, zoom, center, ..)
-        this.updateMapStyleOverlayLayer(
-          "assets/vir_envs_layers/" + this.task.virEnvType + ".png",
-          true
-        );
-      }
 
       //* To overcome the issue where app waits for initial avatar point from VE app. https://github.com/origami-team/geogami-virtual-environment-dev/issues/59
       //* 1. whether task has initial pos. (no need for it)
@@ -1925,6 +1939,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       // send needed attributes to the VE app without condition
       // Still need some test to check if it works for all tasks
         setTimeout(() => {
+          if (this.task !== taskAtStart) return;
           this.socketService.socket.emit("deliverInitialAvatarPositionByGeoApp", {
             initialPosition: this.setAvatarInitialPosition(),
             initialRotation: this.setAvatarInitialRotation(),        
@@ -1937,13 +1952,13 @@ export class PlayingGamePage implements OnInit, OnDestroy {
             initialAvatarHeight: this.setAvatarInitialHeight(),
 
             arrowDestination:
-                this.task.type == "nav-arrow" && this.task?.isVEBuilding
+                this.task.type == "nav-arrow" && isBuildingTask
                   ? [
                       this.task.answer.position.geometry.coordinates[0] *
                         111000,
                       this.task.answer.position.geometry.coordinates[1] *
                         112000,
-                        virEnvLayers[this.virEnvType].floors[parseInt(this.task.floor.substring(1))+1]["height"],
+                        this.getBuildingFloor(taskEnvType, this.task.floor).height,
                     ]
                   : undefined,
             excludedObjectsNames: this.task?.excludedObjectsNames.length>0 ? this.task?.excludedObjectsNames : undefined,
@@ -2162,7 +2177,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       // TODO: only for nav-arrow tasks in VE use nearest point to target and check if nearset point is final destination 
       const waypoint = this.task.answer.position.geometry.coordinates;
       // This should prevent updating disance twice as in VE we are getting distance from VE app see `updateAvatarPosition` event
-      if(!this.task?.isVEBuilding){
+      if(!this.task?.isVEBuilding || !this.hasBuildingFloors(this.task.virEnvType ?? this.virEnvType)){
         this.targetDistance = this.calculateDistanceToTarget(waypoint);
       }
 
@@ -2172,7 +2187,42 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       }
     }
 
+    if (this.task === taskAtStart && this.taskInitialization === initialization) {
+      this.startExplorationTimer();
+    }
     this.changeDetectorRef.detectChanges();
+  }
+
+  private startExplorationTimer(): void {
+    if (this.task.type !== "nav-exploration") return;
+    const taskAtStart = this.task;
+    const initialization = this.taskInitialization;
+    this.explorationTimer.start(
+      Number(this.task.settings.durationSeconds),
+      () => this.changeDetectorRef.detectChanges(),
+      () => {
+        if (this.task !== taskAtStart || PlayingGamePage.showSuccess) return;
+        this.cancelPinDialog();
+        this.trackerService.addEvent({ type: "EXPLORATION_COMPLETED" });
+        this.showExplorationTimeOver = true;
+        this.changeDetectorRef.detectChanges();
+        this.explorationTransition = setTimeout(() => {
+          this.explorationTransition = undefined;
+          if (this.task !== taskAtStart || this.taskInitialization !== initialization ||
+              PlayingGamePage.showSuccess) return;
+          this.nextTask();
+          this.changeDetectorRef.detectChanges();
+        }, 3000);
+      }
+    );
+  }
+
+  private stopExplorationTimer(): void {
+    this.taskInitialization++;
+    this.explorationTimer.stop();
+    clearTimeout(this.explorationTransition);
+    this.explorationTransition = undefined;
+    this.showExplorationTimeOver = false;
   }
 
   confirmNavWithPin(action: 'next' | 'previous') {
@@ -2215,6 +2265,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   executeNavigation(action: 'next' | 'previous', count: number) {
+    this.stopExplorationTimer();
     if (count === 1) {
       action === 'next' ? this.nextTask() : this.previousTask();
       return;
@@ -2240,6 +2291,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   nextTask() {
+    this.stopExplorationTimer();
     // Keep track on map impl.
     // Check if the previous task has track feature and check
     // if it has keep feature `next`, to delete the track before viweing next game
@@ -2247,14 +2299,14 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.taskIndex - 1 >= 0 ? this.game.tasks[this.taskIndex - 1] : undefined;
     if (prevNavTask) {
       if (
-        prevNavTask.answer.type == AnswerType.POSITION &&
+        [AnswerType.POSITION, AnswerType.EXPLORATION].includes(prevNavTask.answer.type) &&
         prevNavTask.mapFeatures.keepTrack === "next"
       ) {
         this.trackControl.removeTemporaryTrack(this.taskIndex - 1);
       }
     }
     // check if current task has `track feature` and whether its keep feature `next` or `all` to keep the route
-    if (this.task.answer.type === AnswerType.POSITION) {
+    if ([AnswerType.POSITION, AnswerType.EXPLORATION].includes(this.task.answer.type)) {
       if (this.task.mapFeatures.keepTrack === "all") {
         this.trackControl.addPermanentTrack(this.taskIndex);
       } else if (this.task.mapFeatures.keepTrack === "next") {
@@ -2385,6 +2437,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
   previousTask() {
     if (this.taskIndex > 0) {
+      this.stopExplorationTimer();
       this.taskIndex--;
       /**
     if (this.taskIndex > 1) {
@@ -2598,6 +2651,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   navigateHome() {
+    this.stopExplorationTimer();
     if (!this.isVirtualWorld) {
       this.positionSubscription.unsubscribe();
       this.deviceOrientationSubscription.unsubscribe();
@@ -3092,7 +3146,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     } else if (
       this.taskIndex != 0 &&
       this.task.virEnvType === this.game.tasks[this.taskIndex - 1].virEnvType &&
-      !this.task?.isVEBuilding
+      (!this.task?.isVEBuilding || !this.hasBuildingFloors(this.task.virEnvType ?? this.virEnvType))
     ) {
       return this.previousTaskAvatarHeading;
     } else {
@@ -3112,5 +3166,20 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     else {       // for old games and non-building envs
       return this.avatarLastKnownHeight;
     }
+  }
+
+  private hasBuildingFloors(virEnvType: string): boolean {
+    const floors = virEnvLayers[virEnvType]?.floors;
+    return Array.isArray(floors) && floors.length > 0;
+  }
+
+  private getBuildingFloor(virEnvType: string, floorTag: string) {
+    const environmentLayer = virEnvLayers[virEnvType];
+    const selectedFloor = environmentLayer.floors.find((floor) => floor.tag === floorTag);
+    if (selectedFloor) return selectedFloor;
+
+    const fallbackFloor = environmentLayer.floors[environmentLayer.defaultFloor] ?? environmentLayer.floors[0];
+    console.warn(`Floor ${floorTag} is not defined for ${virEnvType}; using ${fallbackFloor.tag}.`);
+    return fallbackFloor;
   }
 }

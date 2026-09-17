@@ -140,7 +140,7 @@ export class TrackerService {
               this.avatarPosition = new AvatarPosition(
                 0,
                 new Coords(
-                  parseFloat(avatarPosition["z"]) / 111200,
+                  parseFloat(avatarPosition["z"]) / 112000,
                   parseFloat(avatarPosition["x"]) / 111000
                 )
               );

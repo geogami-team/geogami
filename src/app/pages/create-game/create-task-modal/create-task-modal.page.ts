@@ -940,6 +940,21 @@ export class CreateTaskModalPage implements OnInit {
     this.showFeedback = true;
     this.showMultipleTries = true;
 
+    if (this.task.type === "nav-exploration") {
+      this.task.settings.durationSeconds = this.task.settings.durationSeconds ?? 60;
+      this.task.settings.showTimer = this.task.settings.showTimer ?? true;
+      Object.assign(this.task.settings, {
+        confirmation: false,
+        feedback: false,
+        multipleTries: false,
+        showMarker: false,
+        keepMarker: false,
+      });
+      this.showFeedback = false;
+      this.showMultipleTries = false;
+      return;
+    }
+
     if (this.task.category == "nav" && !this.task.settings.confirmation) {
       this.showMultipleTries = false;
       this.task.settings.multipleTries = false;
@@ -1065,6 +1080,17 @@ export class CreateTaskModalPage implements OnInit {
     if (!this.hasTaskInstruction()) {
       this.presentTaskInstructionRequiredToast();
       return;
+    }
+
+    if (this.task.type === "nav-exploration") {
+      const duration = Number(this.task.settings.durationSeconds);
+      if (!Number.isSafeInteger(duration) || duration <= 0) {
+        this.utilService.showValidationError(
+          this.translate.instant("CreateGame.explorationDurationRequired")
+        );
+        return;
+      }
+      this.task.settings.durationSeconds = duration;
     }
 
     // Navigation tasks (flag, arrow, text, photo) send the player to a point on the map,

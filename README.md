@@ -112,6 +112,24 @@ export const environment = {
 | `ionic capacitor sync ios` | Copy `www/` into the iOS Xcode project |
 | `ionic capacitor sync android` | Copy `www/` into the Android Studio project |
 
+### Browser storage lifetime
+
+Unfinished tracks (`savedTracksData`) and draft games (`game`) now live only in
+`GameSessionService` memory. They survive navigation/rejoin within the running app,
+but disappear when the app is closed or reloaded. At startup, the two old Ionic
+storage keys are discarded; authentication tokens and language preferences are
+not cleared. Games/tracks already uploaded to the server are unchanged.
+
+The companion Unity project's **GeoGami WebGL template** manages its own asset
+cache: entries expire 24 hours after download, and least-recently-used entries
+are evicted above 512 MiB. The UI cannot clear the WebGL origin's storage (a
+different port/domain). Rebuild and serve the Unity WebGL build to enable this
+policy. For an existing full `localhost` cache that prevents login, perform a
+one-time Firefox site-data cleanup first; old build ports are not automatically
+accessible to the new build's cleanup code.
+Keep the WebGL serving port fixed across development rebuilds so the cache policy
+can reach and expire the previous build's files.
+
 ## Project structure
 
 ```

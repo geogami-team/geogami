@@ -23,6 +23,8 @@
     "floor": "Étage"
   },
   "Tasktypes": {
+    "explorationTask": "Tâche d’exploration",
+    "explorationDescription": "Le joueur explore l’environnement pendant une durée définie sans drapeau de destination. La tâche suivante commence automatiquement lorsque le temps est écoulé.",
     "navigationTasks": "Tâches de navigation",
     "thematicTasks": "Tâches thématiques",
     "information": "Information",
@@ -212,6 +214,10 @@
     "download": "télécharger"
   },
   "CreateGame": {
+    "explorationSettings": "Paramètres d’exploration",
+    "explorationDuration": "Durée (secondes)",
+    "showTimer": "Afficher le chronomètre",
+    "explorationDurationRequired": "Saisissez une durée en secondes entières supérieure à zéro.",
     "taskInstructionRequired": "Veuillez ajouter un Texte d'information afin que les joueurs sachent quoi faire.",
     "instructionOrAudioRequired": "Veuillez ajouter un Texte d'information ou un Message audio afin que les joueurs sachent quoi faire.",
     "instructionAudioOrPhotoRequired": "Veuillez ajouter un Texte d'information, un Message audio ou une Photo afin que les joueurs sachent quoi faire.",
@@ -285,6 +291,10 @@
     "website": "notre site web"
   },
   "PlayGame": {
+    "explorationTimeOver": "Le temps est écoulé",
+    "loadingNextTask": "La prochaine tâche va bientôt se charger.",
+    "finishingGame": "Votre jeu va bientôt se terminer.",
+    "timeRemaining": "Temps restant",
     "titlePlayGameList": "Jouer à GeoGami",
     "realWorldDescription": "Jouez à GeoGami dehors.",
     "virtualWorldDescription": "Jouez à GeoGami dans un monde virtuel.",
@@ -460,6 +470,7 @@
     "correctAnswerIs2": "La bonne réponse est {{answer}}"
   },
   "QuestionText": {
+    "exploreEnvironment": "Explorez l’environnement.",
     "goToFlag": "Allez au drapeau.",
     "followTheArrow": "Suivez la flèche jusqu'à la destination.",
     "goToPlace": "Allez à l'endroit montré sur la photo.",

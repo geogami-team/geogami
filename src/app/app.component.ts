@@ -8,6 +8,7 @@ import { Network } from '@ionic-native/network/ngx';
 import { UtilService } from './services/util.service';
 import { environment } from 'src/environments/environment';
 import { ConsoleToggleServiceService } from './services/console-toggle.service';
+import { GameSessionService } from './services/game-session.service';
 
 @Component({
   selector: 'app-root',
@@ -22,8 +23,10 @@ export class AppComponent {
     private languageService: LanguageService,
     private network: Network,
     private utilService: UtilService,
-    private consoleToggleService: ConsoleToggleServiceService) {
+    private consoleToggleService: ConsoleToggleServiceService,
+    private gameSessionService: GameSessionService) {
 
+    void this.gameSessionService.discardLegacyProgress();
     this.initializeApp();
 
     if (window.localStorage.getItem('bg_refreshtoken'))
