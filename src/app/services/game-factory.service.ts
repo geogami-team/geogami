@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Storage } from "@ionic/storage";
+import { GameSessionService } from "./game-session.service";
 
 import { Game } from "./../models/game";
 import { Task } from "./../models/task";
@@ -10,7 +10,7 @@ import { Task } from "./../models/task";
 export class GameFactoryService {
   public game: Game;
 
-  constructor(private storage: Storage) { }
+  constructor(private storage: GameSessionService) { }
 
   // DoDo
   addGameInformation(data: any) {

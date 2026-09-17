@@ -75,7 +75,7 @@ import { Coords } from "src/app/models/coords";
 import { TranslateService } from "@ngx-translate/core";
 import { UtilService } from "src/app/services/util.service";
 
-import { Storage } from "@ionic/storage";
+import { GameSessionService } from "src/app/services/game-session.service";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
 import { VEBuildingUtilService } from "src/app/services/ve-building-util.service";
 import { AuthService } from "src/app/services/auth-service.service";
@@ -488,7 +488,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     private translate: TranslateService,
     private utilService: UtilService,
     private veBuildingUtilService: VEBuildingUtilService,
-    private storage: Storage,
+    private storage: GameSessionService,
     private router: Router,
     private authService: AuthService
   ) {
@@ -699,7 +699,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.disconnectSocketIO();
     }
 
-    /* if player left game without solving all tasks, save game events, waypoints and taskno (to be restored when resume game) */
+    /* Keep unfinished progress only in this running app, for same-session rejoin. */
     if (!PlayingGamePage.showSuccess) {
       let c_waypoints = this.trackerService.getWaypoints();
       let c_events = this.trackerService.getEvents();
