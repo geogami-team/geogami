@@ -271,13 +271,15 @@ export const VirEnv_51: Readonly<any> = {
   ],
 };
 
-// Unity terrain origin: (0.1359863, 0.09790039), size: 440.4167 x 531.4167 meters.
+// The PNG covers a cropped area, rather than the whole terrain.
+// Approximate image extent in Unity meters: X 34.38..404.61, Z 59.07..487.70.
+// Calibrated against the river and pond in 2D_Map_Vir_52 104.prefab.
 export const VirEnv_52: Readonly<any> = {
   overlayCoords: [
-    [0.0000012251018018018, 0.00474566607491071],
-    [0.00396894311981982, 0.00474566607491071],
-    [0.00396894311981982, 0.000000874110625],
-    [0.0000012251018018018, 0.000000874110625],
+    [0.000309695397222505, 0.00435446428571428],
+    [0.00364517862414724, 0.00435446428571428],
+    [0.00364517862414724, 0.00052742053571428],
+    [0.000309695397222505, 0.00052742053571428],
   ],
   bounds: [
     [0.0000012251018018018 - 0.002, 0.000000874110625 - 0.0035], // Southwest coordinates (lng,lat)

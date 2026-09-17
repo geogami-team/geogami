@@ -918,7 +918,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
             const currentAvatarPosition = new AvatarPosition(
               0,
               new Coords(
-                parseFloat(avatarPosition["z"]) / 111200,
+                parseFloat(avatarPosition["z"]) / 112000,
                 parseFloat(avatarPosition["x"]) / 111000
               )
             );
