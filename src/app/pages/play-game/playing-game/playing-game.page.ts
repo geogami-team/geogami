@@ -767,13 +767,14 @@ export class PlayingGamePage implements OnInit, OnDestroy {
           disableAvatarRotation: this.task.settings.disableAvatarRotation ?? false, 
           showEnvSettings: this.task.settings.showEnvSettings ?? false,      // if `showEnvSettings` is undefined use default value `true`
           arrowDestination:
-                this.task.type == "nav-arrow" && this.task?.isVEBuilding
+                this.task.type == "nav-arrow" && this.task?.isVEBuilding &&
+                this.hasBuildingFloors(this.task.virEnvType ?? this.virEnvType)
                   ? [
                       this.task.answer.position.geometry.coordinates[0] *
                         111000,
                       this.task.answer.position.geometry.coordinates[1] *
                         112000,
-                      virEnvLayers[this.virEnvType].floors[parseInt(this.task.floor.substring(1))+1]["height"],
+                      this.getBuildingFloor(this.task.virEnvType ?? this.virEnvType, this.task.floor).height,
                     ]
                   : undefined,
           excludedObjectsNames: this.task?.excludedObjectsNames.length>0 ? this.task?.excludedObjectsNames : undefined,
@@ -803,13 +804,14 @@ export class PlayingGamePage implements OnInit, OnDestroy {
           disableAvatarRotation: this.task.settings.disableAvatarRotation ?? false, 
           showEnvSettings: this.task.settings.showEnvSettings ?? false,
           arrowDestination:
-                this.task.type == "nav-arrow" && this.task?.isVEBuilding
+                this.task.type == "nav-arrow" && this.task?.isVEBuilding &&
+                this.hasBuildingFloors(this.task.virEnvType ?? this.virEnvType)
                   ? [
                       this.task.answer.position.geometry.coordinates[0] *
                         111000,
                       this.task.answer.position.geometry.coordinates[1] *
                         112000,
-                      virEnvLayers[this.virEnvType].floors[parseInt(this.task.floor.substring(1))+1]["height"],
+                      this.getBuildingFloor(this.task.virEnvType ?? this.virEnvType, this.task.floor).height,
                     ]
                   : undefined,
           excludedObjectsNames: this.task?.excludedObjectsNames.length>0 ? this.task?.excludedObjectsNames : undefined,
@@ -956,7 +958,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
             // building envs only: Update floor/env. map based on height
             // Note: make sure to update the impl. when other buildings than ifgi is added
-            if (this.task?.isVEBuilding) {
+            if (this.task?.isVEBuilding && this.hasBuildingFloors(this.virEnvType)) {
               let cFloor_old = this.veBuildingUtilService.getCurrentFloor();
               this.veBuildingUtilService.updateMapViewBasedOnFloorHeight(this.virEnvType, avatarPosition["y"], this.map);
               // Check if floor changed, to hide/show flag based on avatar position
@@ -1831,6 +1833,26 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
   async initTask() {
     this.panelMinimized = false;
+    const taskAtStart = this.task;
+    const taskEnvType = this.task.virEnvType ?? this.game.virEnvType ?? this.virEnvType;
+    const environmentHasFloors = this.hasBuildingFloors(taskEnvType);
+    const isBuildingTask = !!this.task.isVEBuilding && environmentHasFloors;
+    const requestedFloor = this.task.initialFloor && this.task.initialFloor !== "Select floor"
+      ? this.task.initialFloor : this.task.floor;
+    const buildingFloor = environmentHasFloors
+      ? this.getBuildingFloor(taskEnvType, requestedFloor) : undefined;
+
+    if (this.isVirtualWorld && taskEnvType !== this.virEnvType) {
+      this.virEnvType = taskEnvType;
+      this.updateMapStyleOverlayLayer(
+        "assets/vir_envs_layers/" + taskEnvType +
+          (buildingFloor ? "_" + buildingFloor.tag : "") + ".png",
+        true
+      );
+    }
+    if (this.task.isVEBuilding && !isBuildingTask) {
+      console.warn(`Task ${this.task.id} is marked as a building task, but ${taskEnvType} has no floors.`);
+    }
 
     // // console.log("Current task: ", this.task);
 
@@ -1843,7 +1865,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
     // Get flag next point and disance from VE app (only for nav-arrow tasks in VE games)
     // TODO: check if it will work on all envs as well
-    if(this.task.type == "nav-arrow" && this.task?.isVEBuilding){
+    if(this.task.type == "nav-arrow" && isBuildingTask){
       this.socketService.socket.on("set next arrow point and distance", (data) => {
         this.targetDistance = parseFloat(data["distance"])
         this.arrowNextPoint = [parseFloat(data["x"])/ 111000, parseFloat(data["z"])/ 112000];
@@ -1861,13 +1883,12 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     // ToAnswer: can floor task be set without initialposition???
     if (this.isVirtualWorld) {
       // Note: (avatarLastKnownHeight) is to make solve the issue when user press next button bfore making any movement in the VE app
-      if(this.task?.isVEBuilding){
+      if(isBuildingTask){
         if((this.taskIndex==0 || this.task?.initialFloor || !this.avatarLastKnownHeight) ){
-          let initFloor = this.task.initialFloor ? this.task?.initialFloor : this.task?.floor;
           // update floor height
-          this.floorHeight = virEnvLayers[this.virEnvType].floors[parseInt(initFloor.substring(1))+1]["height"];
+          this.floorHeight = buildingFloor.height;
           // update map layer for buidong envs
-          this.veBuildingUtilService.updateMapLayer(this.map, this.task.virEnvType, initFloor);
+          this.veBuildingUtilService.updateMapLayer(this.map, taskEnvType, buildingFloor.tag);
         }
       } else {
         // for non-building virtual environments
@@ -1876,22 +1897,6 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       
       // console.log("🚀 ~ initTask ~ socketService:");
       // if (this.task.question.initialAvatarPosition != undefined || this.task.virEnvType != undefined) {
-
-      //* update vir env map overlay layer
-      if (
-        this.task.virEnvType != undefined &&
-        this.task.virEnvType != this.virEnvType
-      ) {
-        /* console.log(
-          "🚀 ~-- initTask ~ this.task.virEnvType != this.virEnvType:"
-        ); */
-        this.virEnvType = this.task.virEnvType;
-        //* update VR (layer, zoom, center, ..)
-        this.updateMapStyleOverlayLayer(
-          "assets/vir_envs_layers/" + this.task.virEnvType + ".png",
-          true
-        );
-      }
 
       //* To overcome the issue where app waits for initial avatar point from VE app. https://github.com/origami-team/geogami-virtual-environment-dev/issues/59
       //* 1. whether task has initial pos. (no need for it)
@@ -1925,6 +1930,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       // send needed attributes to the VE app without condition
       // Still need some test to check if it works for all tasks
         setTimeout(() => {
+          if (this.task !== taskAtStart) return;
           this.socketService.socket.emit("deliverInitialAvatarPositionByGeoApp", {
             initialPosition: this.setAvatarInitialPosition(),
             initialRotation: this.setAvatarInitialRotation(),        
@@ -1937,13 +1943,13 @@ export class PlayingGamePage implements OnInit, OnDestroy {
             initialAvatarHeight: this.setAvatarInitialHeight(),
 
             arrowDestination:
-                this.task.type == "nav-arrow" && this.task?.isVEBuilding
+                this.task.type == "nav-arrow" && isBuildingTask
                   ? [
                       this.task.answer.position.geometry.coordinates[0] *
                         111000,
                       this.task.answer.position.geometry.coordinates[1] *
                         112000,
-                        virEnvLayers[this.virEnvType].floors[parseInt(this.task.floor.substring(1))+1]["height"],
+                        this.getBuildingFloor(taskEnvType, this.task.floor).height,
                     ]
                   : undefined,
             excludedObjectsNames: this.task?.excludedObjectsNames.length>0 ? this.task?.excludedObjectsNames : undefined,
@@ -2162,7 +2168,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       // TODO: only for nav-arrow tasks in VE use nearest point to target and check if nearset point is final destination 
       const waypoint = this.task.answer.position.geometry.coordinates;
       // This should prevent updating disance twice as in VE we are getting distance from VE app see `updateAvatarPosition` event
-      if(!this.task?.isVEBuilding){
+      if(!this.task?.isVEBuilding || !this.hasBuildingFloors(this.task.virEnvType ?? this.virEnvType)){
         this.targetDistance = this.calculateDistanceToTarget(waypoint);
       }
 
@@ -3092,7 +3098,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     } else if (
       this.taskIndex != 0 &&
       this.task.virEnvType === this.game.tasks[this.taskIndex - 1].virEnvType &&
-      !this.task?.isVEBuilding
+      (!this.task?.isVEBuilding || !this.hasBuildingFloors(this.task.virEnvType ?? this.virEnvType))
     ) {
       return this.previousTaskAvatarHeading;
     } else {
@@ -3112,5 +3118,20 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     else {       // for old games and non-building envs
       return this.avatarLastKnownHeight;
     }
+  }
+
+  private hasBuildingFloors(virEnvType: string): boolean {
+    const floors = virEnvLayers[virEnvType]?.floors;
+    return Array.isArray(floors) && floors.length > 0;
+  }
+
+  private getBuildingFloor(virEnvType: string, floorTag: string) {
+    const environmentLayer = virEnvLayers[virEnvType];
+    const selectedFloor = environmentLayer.floors.find((floor) => floor.tag === floorTag);
+    if (selectedFloor) return selectedFloor;
+
+    const fallbackFloor = environmentLayer.floors[environmentLayer.defaultFloor] ?? environmentLayer.floors[0];
+    console.warn(`Floor ${floorTag} is not defined for ${virEnvType}; using ${fallbackFloor.tag}.`);
+    return fallbackFloor;
   }
 }
