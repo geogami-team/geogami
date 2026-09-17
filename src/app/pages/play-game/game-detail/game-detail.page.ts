@@ -8,7 +8,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { SocketService } from "src/app/services/socket.service";
 import { UtilService } from "src/app/services/util.service";
 import { AuthService } from "src/app/services/auth-service.service";
-import { Storage } from "@ionic/storage";
+import { GameSessionService } from "src/app/services/game-session.service";
 import { environment } from "src/environments/environment";
 import mapboxgl from "mapbox-gl";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
@@ -98,7 +98,7 @@ export class GameDetailPage implements OnInit {
     private socketService: SocketService,
     private utilService: UtilService,
     private authService: AuthService,
-    private storage: Storage,
+    private storage: GameSessionService,
     private alertController: AlertController,
     private clipboard: Clipboard
   ) {}

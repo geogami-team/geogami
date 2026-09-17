@@ -1,4 +1,5 @@
 import { QuestionType, AnswerType, TaskMode } from './types';
+import { multiplayerExplorationTask } from './navigation-tasks';
 
 
 export const navtasksMultiplayers2: ReadonlyArray<any> = [
@@ -118,5 +119,5 @@ export const navtasksMultiplayers2: ReadonlyArray<any> = [
         ],
         evaluate: 'distanceToPoint',
         settings: {}
-    }
+    }, multiplayerExplorationTask(2)
 ];

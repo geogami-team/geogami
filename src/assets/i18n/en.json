@@ -23,6 +23,8 @@
     "floor": "Floor"
   },
   "Tasktypes": {
+    "explorationTask": "Exploration task",
+    "explorationDescription": "The player explores the environment for a set duration without a destination flag. The next task starts automatically when time runs out.",
     "navigationTasks": "Navigation tasks",
     "thematicTasks": "Thematic tasks",
     "information": "Information",
@@ -212,6 +214,10 @@
     "download": "download"
   },
   "CreateGame": {
+    "explorationSettings": "Exploration settings",
+    "explorationDuration": "Duration (seconds)",
+    "showTimer": "Show timer",
+    "explorationDurationRequired": "Enter a duration in whole seconds greater than zero.",
     "taskInstructionRequired": "Please add an Information text so players know what to do.",
     "instructionOrAudioRequired": "Please add an Information text or an Audio message so players know what to do.",
     "instructionAudioOrPhotoRequired": "Please add an Information text, an Audio message, or a Photo so players know what to do.",
@@ -285,6 +291,10 @@
     "website": "our website"
   },
   "PlayGame": {
+    "explorationTimeOver": "Time is over",
+    "loadingNextTask": "The next task will load shortly.",
+    "finishingGame": "Your game will finish shortly.",
+    "timeRemaining": "Time remaining",
     "titlePlayGameList": "Play GeoGami",
     "realWorldDescription": "Play GeoGami outside.",
     "virtualWorldDescription": "Play GeoGami in a virtual world.",
@@ -460,6 +470,7 @@
     "correctAnswerIs2": "The correct answer is {{answer}}"
   },
   "QuestionText": {
+    "exploreEnvironment": "Explore the environment.",
     "goToFlag": "Go to the flag.",
     "followTheArrow": "Follow the arrow to the destination.",
     "goToPlace": "Go to the place shown in the photo.",

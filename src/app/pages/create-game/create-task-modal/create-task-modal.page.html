@@ -113,6 +113,9 @@
       <ion-text *ngIf="task.type == 'nav-photo'">
         {{ "Tasktypes.navviaphotoDescription" | translate }}
       </ion-text>
+      <ion-text *ngIf="task.type == 'nav-exploration'">
+        {{ "Tasktypes.explorationDescription" | translate }}
+      </ion-text>
       <ion-text *ngIf="task.type == 'theme-loc'">
         {{ "Tasktypes.selflocDescription" | translate }}
       </ion-text>
@@ -387,6 +390,7 @@
 
     <!-- Destination -->
     <answer-type
+      *ngIf="task.type != 'nav-exploration'"
       [(answer)]="task.answer"
       [taskType]="task.category"
       [settings]="task.settings"
@@ -400,6 +404,21 @@
       [collaborationType]=" isSingleMode? undefined :selectedCollType.type"
     >
     </answer-type>
+  </div>
+
+  <div *ngIf="task.type == 'nav-exploration'">
+    <ion-text>
+      <h5>{{ "CreateGame.explorationSettings" | translate }}</h5>
+    </ion-text>
+    <ion-item lines="none">
+      <ion-label position="stacked">{{ "CreateGame.explorationDuration" | translate }}</ion-label>
+      <ion-input type="number" min="1" step="1" required
+        [(ngModel)]="task.settings.durationSeconds"></ion-input>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>{{ "CreateGame.showTimer" | translate }}</ion-label>
+      <ion-toggle color="primary" [(ngModel)]="task.settings.showTimer"></ion-toggle>
+    </ion-item>
   </div>
 
   <!-- Vir. Env. settings -->
@@ -654,7 +673,7 @@
     <!-- Accuracy to target -->
     <ion-item
       lines="none"
-      *ngIf="task.type != 'theme-object' && task.type != 'theme-direction' && task.type != 'free'"
+      *ngIf="task.type != 'theme-object' && task.type != 'theme-direction' && task.type != 'free' && task.type != 'nav-exploration'"
       class="item-range"
     >
       <!-- see the .range-stack note on the avatar-speed row above -->

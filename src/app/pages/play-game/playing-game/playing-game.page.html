@@ -8,10 +8,10 @@
     <!-- to show player name on top view -->
     <ion-title *ngIf="game">{{ game.name }} ({{playersNames[0]}})</ion-title>
     <ion-buttons slot="end">
-      <ion-button *ngIf="taskIndex>0" color="dark" (click)="confirmNavWithPin('previous')">
+      <ion-button *ngIf="taskIndex>0" color="dark" [disabled]="showExplorationTimeOver" (click)="confirmNavWithPin('previous')">
         <ion-icon name="arrow-back-outline"></ion-icon>
       </ion-button>
-      <ion-button color="dark" (click)="confirmNavWithPin('next')">
+      <ion-button color="dark" [disabled]="showExplorationTimeOver" (click)="confirmNavWithPin('next')">
         <ion-icon name="arrow-forward"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -24,6 +24,13 @@
       <div #map class="map" [class.blur]="task != null && task.type == 'nav-arrow'"></div>
       <div *ngIf="swipe" #swipeMap class="map"></div>
     </div>
+
+    <ion-chip class="exploration-countdown" color="primary"
+      *ngIf="task?.type == 'nav-exploration' && task.settings?.showTimer && !staticShowSuccess && !waitPlayersPanel"
+      [attr.aria-label]="('PlayGame.timeRemaining' | translate) + ': ' + explorationTimer.display">
+      <ion-icon name="timer-outline" aria-hidden="true"></ion-icon>
+      <ion-label>{{ explorationTimer.display }}</ion-label>
+    </ion-chip>
 
     <ion-card class="overlay feature-button reset-viewport" (click)="zoomBbox()"
       *ngIf="game?.bbox?.features?.length > 0 && task?.type != 'nav-arrow'">
@@ -294,6 +301,15 @@
   </ion-card>
 
   <app-feedback #feedback></app-feedback>
+
+  <div class="exploration-time-over-backdrop" *ngIf="showExplorationTimeOver">
+    <ion-card class="exploration-time-over" role="status" aria-live="polite">
+      <ion-icon name="timer-outline" color="primary" aria-hidden="true"></ion-icon>
+      <h3>{{ "PlayGame.explorationTimeOver" | translate }}</h3>
+      <p>{{ (taskIndex < game.tasks.length - 1 ? "PlayGame.loadingNextTask" : "PlayGame.finishingGame") | translate }}</p>
+      <ion-progress-bar type="indeterminate" color="primary"></ion-progress-bar>
+    </ion-card>
+  </div>
 
   <ion-card class="overlay success" *ngIf="staticShowSuccess">
     <h3>{{ "PlayGame.congratulations" | translate }}</h3>
