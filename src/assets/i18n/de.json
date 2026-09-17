@@ -23,6 +23,8 @@
     "floor": "Etage"
   },
   "Tasktypes": {
+    "explorationTask": "Erkundungsaufgabe",
+    "explorationDescription": "Die Spieler erkunden die Umgebung für eine festgelegte Dauer ohne Zielfahne. Nach Ablauf der Zeit startet automatisch die nächste Aufgabe.",
     "navigationTasks": "Navigationsaufgaben",
     "thematicTasks": "Themenaufgaben",
     "information": "Informationen",
@@ -212,6 +214,10 @@
     "download": "herunterladen"
   },
   "CreateGame": {
+    "explorationSettings": "Erkundungseinstellungen",
+    "explorationDuration": "Dauer (Sekunden)",
+    "showTimer": "Timer anzeigen",
+    "explorationDurationRequired": "Gib eine Dauer in ganzen Sekunden größer als null ein.",
     "taskInstructionRequired": "Bitte füge einen Informationstext hinzu, damit die Spieler:innen wissen, was zu tun ist.",
     "instructionOrAudioRequired": "Bitte füge einen Informationstext oder eine Audiobotschaft hinzu, damit die Spieler:innen wissen, was zu tun ist.",
     "instructionAudioOrPhotoRequired": "Bitte füge einen Informationstext, eine Audiobotschaft oder ein Foto hinzu, damit die Spieler:innen wissen, was zu tun ist.",
@@ -285,6 +291,7 @@
     "website": "unserer Webseite"
   },
   "PlayGame": {
+    "timeRemaining": "Verbleibende Zeit",
     "titlePlayGameList": "Spiele GeoGami",
     "realWorldDescription": "Spiele GeoGami draußen.",
     "virtualWorldDescription": "Spiele GeoGami in einer virtuellen Welt.",
@@ -460,6 +467,7 @@
     "correctAnswerIs2": "Die korrekte Lösung ist {{answer}}"
   },
   "QuestionText": {
+    "exploreEnvironment": "Erkunde die Umgebung.",
     "goToFlag": "Gehe zur Fahne.",
     "followTheArrow": "Folge dem Pfeil bis zum Ziel.",
     "goToPlace": "Gehe zu dem Ort, den man auf dem Foto sieht.",

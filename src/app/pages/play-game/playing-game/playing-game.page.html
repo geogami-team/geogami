@@ -97,6 +97,12 @@
               &nbsp;{{ "General.info" | translate }}
             </ion-chip>
           </div>
+          <ion-chip color="primary"
+            *ngIf="task.type == 'nav-exploration' && task.settings?.showTimer"
+            [attr.aria-label]="('PlayGame.timeRemaining' | translate) + ': ' + explorationTimer.display">
+            <ion-icon name="timer-outline"></ion-icon>
+            <ion-label>{{ explorationTimer.display }}</ion-label>
+          </ion-chip>
           <ion-button color="dark" fill="clear" (click)="togglePanel()"
             *ngIf="task.category?.includes('theme') || task.answer.mode != 'NAV_ARROW'" [ngStyle]="{ 'height' : ( !panelMinimized ? '35px' : '' ) }">
             <ion-icon class="chev-down" slot="end" name="chevron-down" size="large" *ngIf="!panelMinimized" ></ion-icon>

@@ -63,6 +63,7 @@ import { AnimationOptions } from "ngx-lottie";
 import bbox from "@turf/bbox";
 import buffer from "@turf/buffer";
 import { Task } from "src/app/models/task";
+import { ExplorationTimer } from "src/app/models/exploration-timer";
 import { point } from "@turf/helpers";
 import booleanWithin from "@turf/boolean-within";
 import { OrigamiOrientationService } from "src/app/services/origami-orientation.service";
@@ -124,6 +125,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   // tasks
   task: Task;
   taskIndex = 0;
+  readonly explorationTimer = new ExplorationTimer();
+  private taskInitialization = 0;
 
   positionSubscription: Subscription;
   lastKnownPosition: GeolocationPosition;
@@ -694,6 +697,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
   /******************/
   ionViewWillLeave() {
+    this.stopExplorationTimer();
     // Disconnect server when leaving playing-page
     if (!this.isSingleMode) {
       this.disconnectSocketIO();
@@ -723,6 +727,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.stopExplorationTimer();
     // console.log(" ngOnDestroy")
     // To disconnect socket connection
     // this.socketService.disconnectSocket();
@@ -1832,6 +1837,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   async initTask() {
+    this.stopExplorationTimer();
+    const initialization = this.taskInitialization;
     this.panelMinimized = false;
     const taskAtStart = this.task;
     const taskEnvType = this.task.virEnvType ?? this.game.virEnvType ?? this.virEnvType;
@@ -2178,7 +2185,31 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       }
     }
 
+    if (this.task === taskAtStart && this.taskInitialization === initialization) {
+      this.startExplorationTimer();
+    }
     this.changeDetectorRef.detectChanges();
+  }
+
+  private startExplorationTimer(): void {
+    if (this.task.type !== "nav-exploration") return;
+    const taskAtStart = this.task;
+    this.explorationTimer.start(
+      Number(this.task.settings.durationSeconds),
+      () => this.changeDetectorRef.detectChanges(),
+      () => {
+        if (this.task !== taskAtStart || PlayingGamePage.showSuccess) return;
+        this.cancelPinDialog();
+        this.trackerService.addEvent({ type: "EXPLORATION_COMPLETED" });
+        this.nextTask();
+        this.changeDetectorRef.detectChanges();
+      }
+    );
+  }
+
+  private stopExplorationTimer(): void {
+    this.taskInitialization++;
+    this.explorationTimer.stop();
   }
 
   confirmNavWithPin(action: 'next' | 'previous') {
@@ -2221,6 +2252,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   executeNavigation(action: 'next' | 'previous', count: number) {
+    this.stopExplorationTimer();
     if (count === 1) {
       action === 'next' ? this.nextTask() : this.previousTask();
       return;
@@ -2246,6 +2278,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   nextTask() {
+    this.stopExplorationTimer();
     // Keep track on map impl.
     // Check if the previous task has track feature and check
     // if it has keep feature `next`, to delete the track before viweing next game
@@ -2253,14 +2286,14 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.taskIndex - 1 >= 0 ? this.game.tasks[this.taskIndex - 1] : undefined;
     if (prevNavTask) {
       if (
-        prevNavTask.answer.type == AnswerType.POSITION &&
+        [AnswerType.POSITION, AnswerType.EXPLORATION].includes(prevNavTask.answer.type) &&
         prevNavTask.mapFeatures.keepTrack === "next"
       ) {
         this.trackControl.removeTemporaryTrack(this.taskIndex - 1);
       }
     }
     // check if current task has `track feature` and whether its keep feature `next` or `all` to keep the route
-    if (this.task.answer.type === AnswerType.POSITION) {
+    if ([AnswerType.POSITION, AnswerType.EXPLORATION].includes(this.task.answer.type)) {
       if (this.task.mapFeatures.keepTrack === "all") {
         this.trackControl.addPermanentTrack(this.taskIndex);
       } else if (this.task.mapFeatures.keepTrack === "next") {
@@ -2391,6 +2424,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
   previousTask() {
     if (this.taskIndex > 0) {
+      this.stopExplorationTimer();
       this.taskIndex--;
       /**
     if (this.taskIndex > 1) {
@@ -2604,6 +2638,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   navigateHome() {
+    this.stopExplorationTimer();
     if (!this.isVirtualWorld) {
       this.positionSubscription.unsubscribe();
       this.deviceOrientationSubscription.unsubscribe();

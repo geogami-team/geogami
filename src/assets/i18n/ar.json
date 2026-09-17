@@ -23,6 +23,8 @@
     "floor": "طابق"
   },
   "Tasktypes": {
+    "explorationTask": "مهمة استكشاف",
+    "explorationDescription": "يستكشف اللاعب البيئة لمدة محددة دون علم وجهة. تبدأ المهمة التالية تلقائيًا عند انتهاء الوقت.",
     "navigationTasks": "مهام التنقل",
     "thematicTasks": "مهام موضوعية",
     "information": "معلومات",
@@ -212,6 +214,10 @@
     "download": "تحميل"
   },
   "CreateGame": {
+    "explorationSettings": "إعدادات الاستكشاف",
+    "explorationDuration": "المدة (بالثواني)",
+    "showTimer": "إظهار المؤقت",
+    "explorationDurationRequired": "أدخل مدة بالثواني الصحيحة أكبر من صفر.",
     "taskInstructionRequired": "يرجى إضافة نص معلومات حتى يعرف اللاعبون ما يجب فعله.",
     "instructionOrAudioRequired": "يرجى إضافة نص معلومات أو رسالة صوتية حتى يعرف اللاعبون ما يجب فعله.",
     "instructionAudioOrPhotoRequired": "يرجى إضافة نص معلومات أو رسالة صوتية أو صورة حتى يعرف اللاعبون ما يجب فعله.",
@@ -285,6 +291,7 @@
     "website": "موقعنا الإلكتروني"
   },
   "PlayGame": {
+    "timeRemaining": "الوقت المتبقي",
     "titlePlayGameList": "العب GeoGami",
     "realWorldDescription": "العب GeoGami في الخارج.",
     "virtualWorldDescription": "العب GeoGami في عالم افتراضي.",
@@ -460,6 +467,7 @@
     "correctAnswerIs2": "الإجابة الصحيحة هي {{answer}}"
   },
   "QuestionText": {
+    "exploreEnvironment": "استكشف البيئة.",
     "goToFlag": "اذهب إلى العلم.",
     "followTheArrow": "اتبع السهم إلى الوجهة.",
     "goToPlace": "اذهب إلى المكان المعروض في الصورة.",
