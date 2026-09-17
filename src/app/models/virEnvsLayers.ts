@@ -15,7 +15,8 @@ import {
   VirEnv_46,
   VirEnv_47,
   VirEnv_50,
-  VirEnv_51
+  VirEnv_51,
+  VirEnv_52
 } from "./virEnvsProperties";
 
 export const virEnvLayers: Readonly<any> = {
@@ -495,5 +496,16 @@ export const virEnvLayers: Readonly<any> = {
     center: [0.002004504505, 0.002459821429],
     zoom: 15,
     objectsList: ["bear", "bull", "deer", "gorilla", "horse", "wolf", "tiger"],
-  }
+  },
+  VirEnv_52: {
+    name: "curly map",
+    initialPosition: {
+      lng: 260 / 111000,
+      lat: 270 / 112000,
+    },
+    overlayCoords: VirEnv_52.overlayCoords,
+    bounds: VirEnv_52.bounds,
+    center: [0.00198508411081081, 0.00237327009276786],
+    zoom: 17,
+  },
 };
