@@ -126,6 +126,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   task: Task;
   taskIndex = 0;
   readonly explorationTimer = new ExplorationTimer();
+  showExplorationTimeOver = false;
+  private explorationTransition: ReturnType<typeof setTimeout>;
   private taskInitialization = 0;
 
   positionSubscription: Subscription;
@@ -2194,6 +2196,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   private startExplorationTimer(): void {
     if (this.task.type !== "nav-exploration") return;
     const taskAtStart = this.task;
+    const initialization = this.taskInitialization;
     this.explorationTimer.start(
       Number(this.task.settings.durationSeconds),
       () => this.changeDetectorRef.detectChanges(),
@@ -2201,8 +2204,15 @@ export class PlayingGamePage implements OnInit, OnDestroy {
         if (this.task !== taskAtStart || PlayingGamePage.showSuccess) return;
         this.cancelPinDialog();
         this.trackerService.addEvent({ type: "EXPLORATION_COMPLETED" });
-        this.nextTask();
+        this.showExplorationTimeOver = true;
         this.changeDetectorRef.detectChanges();
+        this.explorationTransition = setTimeout(() => {
+          this.explorationTransition = undefined;
+          if (this.task !== taskAtStart || this.taskInitialization !== initialization ||
+              PlayingGamePage.showSuccess) return;
+          this.nextTask();
+          this.changeDetectorRef.detectChanges();
+        }, 3000);
       }
     );
   }
@@ -2210,6 +2220,9 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   private stopExplorationTimer(): void {
     this.taskInitialization++;
     this.explorationTimer.stop();
+    clearTimeout(this.explorationTransition);
+    this.explorationTransition = undefined;
+    this.showExplorationTimeOver = false;
   }
 
   confirmNavWithPin(action: 'next' | 'previous') {

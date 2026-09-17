@@ -291,6 +291,9 @@
     "website": "our website"
   },
   "PlayGame": {
+    "explorationTimeOver": "Time is over",
+    "loadingNextTask": "The next task will load shortly.",
+    "finishingGame": "Your game will finish shortly.",
     "timeRemaining": "Time remaining",
     "titlePlayGameList": "Play GeoGami",
     "realWorldDescription": "Play GeoGami outside.",

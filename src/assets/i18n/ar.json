@@ -291,6 +291,9 @@
     "website": "موقعنا الإلكتروني"
   },
   "PlayGame": {
+    "explorationTimeOver": "انتهى الوقت",
+    "loadingNextTask": "سيتم تحميل المهمة التالية بعد قليل.",
+    "finishingGame": "ستنتهي اللعبة بعد قليل.",
     "timeRemaining": "الوقت المتبقي",
     "titlePlayGameList": "العب GeoGami",
     "realWorldDescription": "العب GeoGami في الخارج.",

@@ -31,6 +31,7 @@ describe('Exploration tasks', () => {
     page.taskInitialization = 0;
     page.isSingleMode = true;
     page.explorationTimer = new ExplorationTimer();
+    page.showExplorationTimeOver = false;
     page.changeDetectorRef = { detectChanges: () => {} };
     page.trackerService = { addEvent: jasmine.createSpy('event'), setTask: () => {} };
     return page;
@@ -130,7 +131,7 @@ describe('Exploration tasks', () => {
   }));
 
   [true, false].forEach(showTimer => {
-    it(`automatically advances with showTimer=${showTimer}`, fakeAsync(() => {
+    it(`shows an expiry panel before advancing with showTimer=${showTimer}`, fakeAsync(() => {
       const page = player();
       page.task.settings.durationSeconds = 2;
       page.task.settings.showTimer = showTimer;
@@ -139,8 +140,15 @@ describe('Exploration tasks', () => {
       tick(1000);
       expect(page.nextTask).not.toHaveBeenCalled();
       tick(1000);
-      expect(page.nextTask).toHaveBeenCalledTimes(1);
+      expect(page.showExplorationTimeOver).toBe(true);
+      expect(page.nextTask).not.toHaveBeenCalled();
       expect(page.trackerService.addEvent).toHaveBeenCalledWith({ type: 'EXPLORATION_COMPLETED' });
+      tick(2999);
+      expect(page.nextTask).not.toHaveBeenCalled();
+      tick(1);
+      expect(page.nextTask).toHaveBeenCalledTimes(1);
+      tick(5000);
+      expect(page.nextTask).toHaveBeenCalledTimes(1);
     }));
   });
 
@@ -181,9 +189,46 @@ describe('Exploration tasks', () => {
     page.enableDisableMapInteraction = jasmine.createSpy('interactions');
     page.startExplorationTimer();
     tick(1000);
+    expect(page.showExplorationTimeOver).toBe(true);
+    expect(PlayingGamePage.showSuccess).toBe(false);
+    tick(3000);
+    expect(page.showExplorationTimeOver).toBe(false);
     expect(PlayingGamePage.showSuccess).toBe(true);
     expect(page.trackerService.addEvent).toHaveBeenCalledWith({ type: 'FINISHED_GAME' });
     expect(page.enableDisableMapInteraction).toHaveBeenCalledWith(false);
+  }));
+
+  it('dismisses the expiry panel and cancels progression when the page is destroyed', fakeAsync(() => {
+    const page = player();
+    page.task.settings.durationSeconds = 1;
+    spyOn(page, 'nextTask');
+    page.startExplorationTimer();
+    tick(1000);
+    expect(page.showExplorationTimeOver).toBe(true);
+    page.ngOnDestroy();
+    expect(page.showExplorationTimeOver).toBe(false);
+    tick(3000);
+    expect(page.nextTask).not.toHaveBeenCalled();
+  }));
+
+  it('cancels delayed progression if another task is selected during the expiry panel', fakeAsync(() => {
+    const page = player();
+    const next = { type: 'info', category: 'info', settings: {}, answer: { type: 'INFO' } };
+    page.game.tasks.push(next);
+    page.task.settings.durationSeconds = 1;
+    page.feedbackControl = { setTask: () => {} };
+    page.trackerService.updateTaskNo = () => {};
+    spyOn(page, 'initTask');
+    page.startExplorationTimer();
+    tick(1000);
+    expect(page.showExplorationTimeOver).toBe(true);
+    page.nextTask();
+    expect(page.showExplorationTimeOver).toBe(false);
+    tick(3000);
+    expect(page.task).toBe(next);
+    expect(page.taskIndex).toBe(1);
+    expect(page.initTask).toHaveBeenCalledTimes(1);
+    expect(PlayingGamePage.showSuccess).toBe(false);
   }));
 
   it('does not start a countdown if the page leaves during task initialization', fakeAsync(() => {

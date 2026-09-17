@@ -291,6 +291,9 @@
     "website": "unserer Webseite"
   },
   "PlayGame": {
+    "explorationTimeOver": "Die Zeit ist abgelaufen",
+    "loadingNextTask": "Die nächste Aufgabe wird in Kürze geladen.",
+    "finishingGame": "Dein Spiel wird in Kürze abgeschlossen.",
     "timeRemaining": "Verbleibende Zeit",
     "titlePlayGameList": "Spiele GeoGami",
     "realWorldDescription": "Spiele GeoGami draußen.",
