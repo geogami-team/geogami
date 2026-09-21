@@ -64,6 +64,7 @@ import bbox from "@turf/bbox";
 import buffer from "@turf/buffer";
 import { Task } from "src/app/models/task";
 import { ExplorationTimer } from "src/app/models/exploration-timer";
+import { parseCameraFarClipPlane } from "src/app/models/virtual-world-settings";
 import { point } from "@turf/helpers";
 import booleanWithin from "@turf/boolean-within";
 import { OrigamiOrientationService } from "src/app/services/origami-orientation.service";
@@ -771,6 +772,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
             ? this.task.virEnvType
             : this.virEnvType,
           avatarSpeed: this.task.settings.avatarSpeed ?? 5,
+          cameraFarClipPlane: parseCameraFarClipPlane(this.task.settings.cameraFarClipPlane) ?? 0,
           disableAvatarRotation: this.task.settings.disableAvatarRotation ?? false, 
           showEnvSettings: this.task.settings.showEnvSettings ?? false,      // if `showEnvSettings` is undefined use default value `true`
           arrowDestination:
@@ -808,6 +810,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
             ? this.task.virEnvType
             : this.virEnvType,
           avatarSpeed: this.task.settings.avatarSpeed ?? 5,
+          cameraFarClipPlane: parseCameraFarClipPlane(this.task.settings.cameraFarClipPlane) ?? 0,
           disableAvatarRotation: this.task.settings.disableAvatarRotation ?? false, 
           showEnvSettings: this.task.settings.showEnvSettings ?? false,
           arrowDestination:
@@ -1945,6 +1948,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
             initialRotation: this.setAvatarInitialRotation(),        
             virEnvType: this.task.virEnvType ?? this.game.virEnvType,         // in old games, vir. env. type is not included within each task.
             avatarSpeed: this.task.settings.avatarSpeed ?? 5,
+            cameraFarClipPlane: parseCameraFarClipPlane(this.task.settings.cameraFarClipPlane) ?? 0,
             disableAvatarRotation: this.task.settings.disableAvatarRotation ?? false, 
             showEnvSettings: this.task.settings.showEnvSettings ?? false,      // if `showEnvSettings` is undefined use default value `true`
             showPathVisualization: this.task.settings.showPathVisualization ?? undefined,      // if `ShowPathVisualization` is undefined never send it

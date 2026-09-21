@@ -22,6 +22,7 @@ import { VirEnvHeaders } from "src/app/models/virEnvsHeader";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
 import { VEBuildingUtilService } from "src/app/services/ve-building-util.service";
 import { UtilService } from "src/app/services/util.service";
+import { CAMERA_FAR_CLIP_PLANE } from "src/app/models/virtual-world-settings";
 
 @Component({
   selector: "app-create-task-modal",
@@ -41,6 +42,7 @@ export class CreateTaskModalPage implements OnInit {
   @Input() excludedObjectsNames: string[] = [];  //* list of excluded objects from virtual environment
   
   visibleObjectsNames: string[] = [];  //* UI binding: all objects minus excluded ones
+  readonly cameraFarClipPlane = CAMERA_FAR_CLIP_PLANE;  //* UI binding: camera clipping slider range
 
   // VE building
   public isVEBuilding = false;

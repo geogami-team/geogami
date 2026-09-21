@@ -194,6 +194,52 @@
       </div>
     </ion-item>
 
+    <!-- Custom camera far clipping distance: off leaves the setting unset, so the camera keeps its default -->
+    <ion-item lines="none">
+      <ion-label>{{ "CreateGame.customCameraFarClipPlane" | translate }}</ion-label>
+      <ion-toggle
+        [ngModel]="task.settings.cameraFarClipPlane != null"
+        (ngModelChange)="task.settings.cameraFarClipPlane = $event ? cameraFarClipPlane.default : undefined"
+      ></ion-toggle>
+    </ion-item>
+
+    <!-- Camera far clipping distance -->
+    <ng-container *ngIf="task.settings.cameraFarClipPlane != null">
+      <ion-item lines="none" class="item-range">
+        <!-- see the .range-stack note on the avatar-speed row above -->
+        <div class="range-stack">
+          <ion-range
+            [(ngModel)]="task.settings.cameraFarClipPlane"
+            [min]="cameraFarClipPlane.min"
+            [max]="cameraFarClipPlane.max"
+            [step]="cameraFarClipPlane.step"
+            snaps
+            [color]="task.category == 'nav' ? 'primary' : 'secondary'"
+            ticks
+            pin
+          >
+            <ion-label slot="start">{{ cameraFarClipPlane.min }}m</ion-label>
+            <ion-icon
+              slot="start"
+              size="small"
+              [color]="task.category == 'nav' ? 'primary' : 'secondary'"
+              name="eye-outline"
+            >
+            </ion-icon>
+            <ion-icon
+              slot="end"
+              [color]="task.category == 'nav' ? 'primary' : 'secondary'"
+              name="eye-outline"
+            ></ion-icon>
+            <ion-label slot="end">{{ cameraFarClipPlane.max }}m</ion-label>
+          </ion-range>
+        </div>
+      </ion-item>
+      <p class="ion-padding-horizontal">
+        <ion-note>{{ "CreateGame.cameraFarClipPlaneHint" | translate: { distance: cameraFarClipPlane.default } }}</ion-note>
+      </p>
+    </ng-container>
+
     <!-- Disable avatar rotation -->
     <ion-item lines="none">
       <ion-label> {{ "CreateGame.disableAvatarRotation" | translate }} </ion-label>

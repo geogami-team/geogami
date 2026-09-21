@@ -274,6 +274,8 @@
     "setAvatarPosition": "حدد موقع واتجاه البداية للشخصية",
     "virEnvSettings": "إعدادات العالم الافتراضي",
     "avatarSpeed": "سرعة الشخصية",
+    "customCameraFarClipPlane": "مسافة قص بعيدة مخصصة للكاميرا",
+    "cameraFarClipPlaneHint": "تُخفى الأجسام التي تتجاوز هذه المسافة. القيمة الافتراضية: {{distance}} م.",
     "disableAvatarRotation": "تعطيل دوران الشخصية",
     "showEnvSettings": "عرض إعدادات البيئة",
     "showEnvPathVisualization": "عرض تصور المسار "

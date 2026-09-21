@@ -274,6 +274,8 @@
     "setAvatarPosition": "Définir la position et la direction initiales de l'avatar",
     "virEnvSettings": "Paramètres du monde virtuel",
     "avatarSpeed": "Vitesse de l'avatar",
+    "customCameraFarClipPlane": "Distance de coupure lointaine personnalisée",
+    "cameraFarClipPlaneHint": "Les objets au-delà de cette distance sont masqués. Par défaut : {{distance}} m.",
     "disableAvatarRotation": "Désactiver la rotation de l'avatar",
     "showEnvSettings": "Afficher les paramètres de l'environnement",
     "showEnvPathVisualization": "Afficher la visualisation du chemin "
