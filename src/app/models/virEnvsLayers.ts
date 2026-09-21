@@ -508,4 +508,15 @@ export const virEnvLayers: Readonly<any> = {
     center: [0.00198508411081081, 0.00237327009276786],
     zoom: 17,
   },
+  VirEnv_53: {
+    name: "grid map",
+    initialPosition: {
+      lng: 252.7 / 111000,
+      lat: 278.5 / 112000,
+    },
+    overlayCoords: VirEnv_52.overlayCoords, // same terrain and 2D map capture as VirEnv_52, only the paths differ
+    bounds: VirEnv_52.bounds,
+    center: [0.00198508411081081, 0.00237327009276786],
+    zoom: 17,
+  },
 };
