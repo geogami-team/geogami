@@ -487,7 +487,7 @@ export class CreateTaskModalPage implements OnInit {
       // Set default avatar speed if not set
       if (!this.task.settings.avatarSpeed && this.task.settings.avatarSpeed!= 0) {
         this.task.settings.avatarSpeed =
-          virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 2;
+          virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 5;
       }
 
       // Set default map size if not set
@@ -1188,7 +1188,7 @@ export class CreateTaskModalPage implements OnInit {
   // Set default avatar-speed when vir. env. is changed
   onEnvChanged(){
       this.task.settings.avatarSpeed =
-        virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 2;
+        virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 5;
       this.isVEBuilding = this.veBuildingUtilService.checkVEBuilding(
         this.virEnvType
       );
