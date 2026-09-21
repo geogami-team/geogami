@@ -257,6 +257,6 @@ export const VirEnvHeaders: ReadonlyArray<any> = [
   {
     envName: "grid map",
     layerName: "VirEnv_52",
-    img_url: "assets/vir_envs_layers/VirEnv_53.png",
+    img_url: "assets/vir_envs_layers/VirEnv_52.png",
   },
 ];
