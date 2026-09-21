@@ -274,6 +274,8 @@
     "setAvatarPosition": "Set avatar initial position and direction",
     "virEnvSettings": "Virtual world settings",
     "avatarSpeed": "Avatar speed",
+    "customCameraFarClipPlane": "Custom camera far clipping distance",
+    "cameraFarClipPlaneHint": "Objects beyond this distance are hidden. Default: {{distance}} m.",
     "disableAvatarRotation": "Disable avatar rotation",
     "showEnvSettings": "Show environment settings",
     "showEnvPathVisualization": "Show path visualization "

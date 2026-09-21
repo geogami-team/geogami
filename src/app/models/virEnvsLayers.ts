@@ -498,12 +498,23 @@ export const virEnvLayers: Readonly<any> = {
     objectsList: ["bear", "bull", "deer", "gorilla", "horse", "wolf", "tiger"],
   },
   VirEnv_52: {
-    name: "curly map",
+    name: "curvy map",
     initialPosition: {
       lng: 260 / 111000,
       lat: 270 / 112000,
     },
     overlayCoords: VirEnv_52.overlayCoords,
+    bounds: VirEnv_52.bounds,
+    center: [0.00198508411081081, 0.00237327009276786],
+    zoom: 17,
+  },
+  VirEnv_53: {
+    name: "grid map",
+    initialPosition: {
+      lng: 255 / 111000,
+      lat: 272 / 112000,
+    },
+    overlayCoords: VirEnv_52.overlayCoords, // same terrain and 2D map capture as VirEnv_52, only the paths differ
     bounds: VirEnv_52.bounds,
     center: [0.00198508411081081, 0.00237327009276786],
     zoom: 17,
