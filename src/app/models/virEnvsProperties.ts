@@ -273,7 +273,7 @@ export const VirEnv_51: Readonly<any> = {
 
 // The PNG covers a cropped area, rather than the whole terrain.
 // Image extent in Unity meters: X 26.90..413.94, Z 33.97..498.31.
-// Fitted against the bridges and trees that Map2D generated in VirEnv_52/VirEnv_53.prefab.
+// Fitted against the bridges and trees that Map2D generated in VirEnv_52.prefab.
 export const VirEnv_52: Readonly<any> = {
   overlayCoords: [
     [0.00024232637266265, 0.00444920429776444],
