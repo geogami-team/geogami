@@ -498,7 +498,7 @@ export const virEnvLayers: Readonly<any> = {
     objectsList: ["bear", "bull", "deer", "gorilla", "horse", "wolf", "tiger"],
   },
   VirEnv_52: {
-    name: "curly map",
+    name: "curvy map",
     initialPosition: {
       lng: 260 / 111000,
       lat: 270 / 112000,
