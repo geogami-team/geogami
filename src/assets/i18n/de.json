@@ -274,10 +274,8 @@
     "setAvatarPosition": "Anfangsposition und Richtung des Avatars festlegen",
     "virEnvSettings": "Einstellungen der virtuellen Welt",
     "avatarSpeed": "Avatar-Geschwindigkeit",
-    "cameraFarClipPlane": "Ferne Clipping-Distanz der Kamera (m)",
-    "cameraFarClipPlaneDefault": "Kamerastandard",
-    "cameraFarClipPlaneHint": "Objekte jenseits dieser Entfernung werden ausgeblendet. Leer lassen, um den Kamerastandard zu verwenden.",
-    "cameraFarClipPlaneInvalid": "Gib eine Kameraentfernung von mindestens 1 m ein oder lasse das Feld leer, um den Kamerastandard zu verwenden.",
+    "customCameraFarClipPlane": "Eigene ferne Clipping-Distanz der Kamera",
+    "cameraFarClipPlaneHint": "Objekte jenseits dieser Entfernung werden ausgeblendet. Standard: {{distance}} m.",
     "disableAvatarRotation": "Avatar-Rotation deaktivieren",
     "showEnvSettings": "Umgebungseinstellungen anzeigen",
     "showEnvPathVisualization": "Pfadvisualisierung anzeigen"

@@ -22,7 +22,7 @@ import { VirEnvHeaders } from "src/app/models/virEnvsHeader";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
 import { VEBuildingUtilService } from "src/app/services/ve-building-util.service";
 import { UtilService } from "src/app/services/util.service";
-import { parseCameraFarClipPlane } from "src/app/models/virtual-world-settings";
+import { CAMERA_FAR_CLIP_PLANE } from "src/app/models/virtual-world-settings";
 
 @Component({
   selector: "app-create-task-modal",
@@ -42,6 +42,7 @@ export class CreateTaskModalPage implements OnInit {
   @Input() excludedObjectsNames: string[] = [];  //* list of excluded objects from virtual environment
   
   visibleObjectsNames: string[] = [];  //* UI binding: all objects minus excluded ones
+  readonly cameraFarClipPlane = CAMERA_FAR_CLIP_PLANE;  //* UI binding: camera clipping slider range
 
   // VE building
   public isVEBuilding = false;
@@ -1074,17 +1075,6 @@ export class CreateTaskModalPage implements OnInit {
     if (dismissType == "close") {
       this.modalController.dismiss();
       return;
-    }
-
-    if (this.isVirtualWorld) {
-      const distance = parseCameraFarClipPlane(this.task.settings.cameraFarClipPlane);
-      if (distance === null) {
-        this.utilService.showValidationError(
-          this.translate.instant("CreateGame.cameraFarClipPlaneInvalid")
-        );
-        return;
-      }
-      this.task.settings.cameraFarClipPlane = distance;
     }
 
     // Every task needs a question/instruction so the player knows what to do —

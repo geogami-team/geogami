@@ -4,8 +4,6 @@ import { parseCameraFarClipPlane } from './virtual-world-settings';
 import { explorationTask } from './navigation-tasks';
 import { standardMapFeatures } from './standardMapFeatures';
 import { ExplorationTimer } from './exploration-timer';
-import { CreateTaskModalPage } from '../pages/create-game/create-task-modal/create-task-modal.page';
-import { CreateInfoModalComponent } from '../pages/create-game/create-info-modal/create-info-modal.component';
 import { PlayingGamePage } from '../pages/play-game/playing-game/playing-game.page';
 
 describe('Virtual world camera clipping distance', () => {
@@ -19,54 +17,19 @@ describe('Virtual world camera clipping distance', () => {
     return result;
   }
 
-  function editor(type: any, distance: any): any {
-    const modal: any = Object.create(type.prototype);
-    modal.task = task(distance);
-    modal.isVirtualWorld = true;
-    modal.virEnvType = 'VirEnv_52';
-    modal.isSingleMode = true;
-    modal.translate = { instant: (key: string) => key };
-    modal.utilService = { showValidationError: jasmine.createSpy('validation') };
-    modal.modalController = { dismiss: jasmine.createSpy('dismiss') };
-    return modal;
-  }
-
-  it('accepts distances and distinguishes defaults from invalid input', () => {
-    [undefined, null, '', ' '].forEach(value => {
+  it('uses the camera default for unset or unusable values', () => {
+    [undefined, null, '', ' ', 'invalid', NaN, Infinity, true, [], {}].forEach(value => {
       expect(parseCameraFarClipPlane(value)).toBeUndefined();
-    });
-    expect(parseCameraFarClipPlane('250.5')).toBe(250.5);
-    expect(parseCameraFarClipPlane(1)).toBe(1);
-    [0, -1, 0.5, NaN, Infinity, 1e40, 'invalid', true, [], {}].forEach(value => {
-      expect(parseCameraFarClipPlane(value)).toBeNull();
     });
   });
 
-  [CreateTaskModalPage, CreateInfoModalComponent].forEach(type => {
-    describe(type.name, () => {
-      it('saves a numeric value that survives JSON persistence', () => {
-        const modal = editor(type, '250.5');
-        modal.dismissModal();
-        const saved = JSON.parse(JSON.stringify(modal.modalController.dismiss.calls.mostRecent().args[0].data));
-        expect(saved.settings.cameraFarClipPlane).toBe(250.5);
-      });
-
-      it('clears an override when the author leaves the field blank', () => {
-        const modal = editor(type, '');
-        modal.dismissModal();
-        const saved = JSON.parse(JSON.stringify(modal.modalController.dismiss.calls.mostRecent().args[0].data));
-        expect(saved.settings.cameraFarClipPlane).toBeUndefined();
-      });
-
-      it('blocks saving invalid distances', () => {
-        [0, -5, Infinity, 'invalid'].forEach(value => {
-          const modal = editor(type, value);
-          modal.dismissModal();
-          expect(modal.modalController.dismiss).not.toHaveBeenCalled();
-          expect(modal.utilService.showValidationError).toHaveBeenCalledWith('CreateGame.cameraFarClipPlaneInvalid');
-        });
-      });
-    });
+  it('keeps distances within the slider range and clamps the rest', () => {
+    expect(parseCameraFarClipPlane(100)).toBe(100);
+    expect(parseCameraFarClipPlane('250.5')).toBe(250.5);
+    expect(parseCameraFarClipPlane(1000)).toBe(1000);
+    expect(parseCameraFarClipPlane(0)).toBe(100);
+    expect(parseCameraFarClipPlane(-5)).toBe(100);
+    expect(parseCameraFarClipPlane(5000)).toBe(1000);
   });
 
   function player(): any {
@@ -104,6 +67,7 @@ describe('Virtual world camera clipping distance', () => {
     page.taskInitialization = 0;
     page.explorationTimer = new ExplorationTimer();
     page.trackerService = { setTask: () => {}, addEvent: () => {} };
+    page.changeDetectorRef = { detectChanges: () => {} };
     page.map = { getLayer: () => null, getSource: () => null, hasControl: () => false,
       setPitch: () => {}, rotateTo: () => {} };
     page.landmarkControl = { removeQT: () => {}, removeSearchArea: () => {} };
@@ -115,12 +79,12 @@ describe('Virtual world camera clipping distance', () => {
     page.setAvatarInitialHeight = () => 100;
     page.startExplorationTimer = () => {};
 
-    [250, 75.5, undefined].forEach(distance => {
+    [[250, 250], [5000, 1000], [undefined, 0]].forEach(([distance, sent]) => {
       page.task = task(distance);
       page.initTask();
       flushMicrotasks();
       tick(1000);
-      expect(page.socketService.socket.emit.calls.mostRecent().args[1].cameraFarClipPlane).toBe(distance ?? 0);
+      expect(page.socketService.socket.emit.calls.mostRecent().args[1].cameraFarClipPlane).toBe(sent);
     });
     page.stopExplorationTimer();
   }));
