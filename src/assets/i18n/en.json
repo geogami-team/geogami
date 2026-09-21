@@ -274,6 +274,10 @@
     "setAvatarPosition": "Set avatar initial position and direction",
     "virEnvSettings": "Virtual world settings",
     "avatarSpeed": "Avatar speed",
+    "cameraFarClipPlane": "Camera far clipping distance (m)",
+    "cameraFarClipPlaneDefault": "Camera default",
+    "cameraFarClipPlaneHint": "Objects beyond this distance are hidden. Leave blank to use the camera default.",
+    "cameraFarClipPlaneInvalid": "Enter a camera distance of at least 1 m, or leave blank to use the camera default.",
     "disableAvatarRotation": "Disable avatar rotation",
     "showEnvSettings": "Show environment settings",
     "showEnvPathVisualization": "Show path visualization "

@@ -472,6 +472,23 @@
       </div>
     </ion-item>
 
+    <ion-item lines="none">
+      <ion-label position="stacked">
+        {{ "CreateGame.cameraFarClipPlane" | translate }}
+      </ion-label>
+      <ion-input
+        type="number"
+        inputmode="decimal"
+        min="1"
+        step="any"
+        [placeholder]="'CreateGame.cameraFarClipPlaneDefault' | translate"
+        [(ngModel)]="task.settings.cameraFarClipPlane"
+      ></ion-input>
+    </ion-item>
+    <p class="ion-padding-horizontal">
+      <ion-note>{{ "CreateGame.cameraFarClipPlaneHint" | translate }}</ion-note>
+    </p>
+
     <!-- Disable avatar rotation -->
     <ion-item lines="none">
       <ion-label>

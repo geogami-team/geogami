@@ -17,6 +17,7 @@ import { UtilService } from "src/app/services/util.service";
 import { TranslateService } from "@ngx-translate/core";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
 import { VEBuildingUtilService } from "src/app/services/ve-building-util.service";
+import { parseCameraFarClipPlane } from "src/app/models/virtual-world-settings";
 
 @Component({
   selector: "app-create-info-modal",
@@ -163,6 +164,17 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
     if (dismissType == "close") {
       this.modalController.dismiss();
       return;
+    }
+
+    if (this.isVirtualWorld) {
+      const distance = parseCameraFarClipPlane(this.task.settings.cameraFarClipPlane);
+      if (distance === null) {
+        this.utilService.showValidationError(
+          this.translate.instant("CreateGame.cameraFarClipPlaneInvalid")
+        );
+        return;
+      }
+      this.task.settings.cameraFarClipPlane = distance;
     }
 
     // An info task only shows its content to the player, so block saving an empty one
