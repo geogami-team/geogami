@@ -33,7 +33,11 @@ export class StartPage implements OnInit {
 
   // (translation)
   languages = [];
-  selected = "";
+  // Read live from the service so the picker follows language changes made
+  // elsewhere (e.g. the account language applied after login).
+  get selected(): string {
+    return this.languageService.selected;
+  }
 
   // latest app version
   latestAppVersionInfo: any;
@@ -75,8 +79,6 @@ export class StartPage implements OnInit {
 
     // (translation) get languages
     this.languages = this.languageService.getLangauges();
-    // (translation) set selected language (no need for it)
-    this.selected = this.languageService.selected;
 
     // Get user role
     this.user.subscribe((event) => {
