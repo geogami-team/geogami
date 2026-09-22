@@ -128,8 +128,8 @@
     "setCuratedGame": "تعيين كلعبة مختارة",
     "enterValidGameName": "يرجى إدخال اسم لعبة صالح.",
     "disableShareDataConsent": "تعطيل الموافقة على مشاركة البيانات",
-    "skipTaskPin": "ادخل كلمة السر لتخطي المهام (اختياري)",
-    "navigationPinPlaceholder": "رمز PIN مكون من 4 أرقام لتخطي المهام"
+    "skipTaskPin": "رمز \u2066PIN\u2069 للتنقل بين المهام (اختياري)",
+    "skipTaskPinPlaceholder": "رمز \u2066PIN\u2069 مكون من 4 أرقام لتخطي المهام"
   },
   "Events": {
     "title": "فعالياتي",
@@ -146,7 +146,7 @@
     "description": "الوصف (اختياري)",
     "descriptionPlaceholder": "وصف قصير",
     "searchGames": "البحث عن الألعاب",
-    "selectedCount": "تم اختيار {{count}} لعبة",
+    "selectedCount": "الألعاب المحددة: {{count}}",
     "noGamesFound": "لم يتم العثور على ألعاب",
     "noGamesYet": "لم يتم اختيار أي لعبة بعد",
     "back": "رجوع",
@@ -167,7 +167,7 @@
     "deleteConfirmLabel": "اكتب اسم الفعالية للتأكيد",
     "deleted": "تم حذف الفعالية",
     "deleteError": "تعذر حذف الفعالية",
-    "gameCount": "{{count}} لعبة",
+    "gameCount": "الألعاب: {{count}}",
     "sharedWithYou": "تمت مشاركتها معك",
     "pdfComingSoon": "تصدير PDF قريبًا",
     "pdfNoGames": "أضف لعبة واحدة على الأقل قبل تصدير ملف PDF",
@@ -278,7 +278,7 @@
     "cameraFarClipPlaneHint": "تُخفى الأجسام التي تتجاوز هذه المسافة. القيمة الافتراضية: {{distance}} م.",
     "disableAvatarRotation": "تعطيل دوران الشخصية",
     "showEnvSettings": "عرض إعدادات البيئة",
-    "showEnvPathVisualization": "عرض تصور المسار "
+    "showEnvPathVisualization": "عرض تصور المسار"
   },
   "EditGame": {
     "titleEditGame": "عدل GeoGami الخاص بك",
@@ -315,7 +315,7 @@
     "correctLocation": "هل أنت في المكان الصحيح تماماً؟ إذاً اضغط على 'موافق'!",
     "gameConnection": "رمز الاتصال",
     "pl_EnterCode": "أدخل رمز الاتصال",
-    "shareDataAgreement": "أوافق على معالجة البيانات المجمعة لأغراض البحث.",
+    "shareDataAgreement": "أوافق على معالجة البيانات التي يتم جمعها بعد إخفاء الهوية لأغراض البحث، واستخدامها لتقديم ملاحظات فردية للاعبين.",
     "allGames": "الكل",
     "myGames": "ألعابي",
     "published": "منشورة",
@@ -485,7 +485,7 @@
     "lookForSThingTakePhoto": "ابحث عن [...] بالقرب منك. التقط صورة.",
     "turnDirectionChoosePhoto": "اتجه في الاتجاه الذي تراه على الخريطة. اختر الصورة المناسبة.",
     "turnDirectionMapBased": "اتجه في الاتجاه الذي تراه على الخريطة.",
-    "turnDirectionPhotoBased": "Drehe dich in die Blickrichtung, die du auf dem Foto siehst.",
+    "turnDirectionPhotoBased": "استدر في الاتجاه الظاهر في الصورة.",
     "turnDirectionArrow": "أدر حتى تشير الأسهم إلى نفس الاتجاه.",
     "whereAreYouLooking": "إلى أين تنظر الآن؟ حدد اتجاه نظرك على الخريطة.",
     "turnDirectionPhoto": "اتجه في اتجاه الصورة. حدد اتجاه نظرك على الخريطة."

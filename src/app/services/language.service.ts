@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
 const LNG_KEY = 'SELECTED_LANGUAGE';
-const lngs = ['de', 'en'];
+const lngs = ['de', 'en', 'it', 'pt', 'fr', 'ar'];
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +20,13 @@ export class LanguageService {
     this.storage.get(LNG_KEY).then(val => {
       if (val) {
         this.setLanguage(val);
-        this.selected = val
       } else {
-        let langauge = this.translate.getBrowserCultureLang(); // Get browser lang
-        if (lngs.includes((langauge.toLowerCase().slice(0, 2)))) {
-          this.translate.setDefaultLang(langauge.toLowerCase().slice(0, 2));
-          this.selected = langauge.toLowerCase().slice(0, 2);
+        const browserLanguage = (this.translate.getBrowserCultureLang() || '')
+          .toLowerCase()
+          .slice(0, 2);
+        if (lngs.includes(browserLanguage)) {
+          this.translate.setDefaultLang(browserLanguage);
+          this.setLanguage(browserLanguage);
         } else {
           this.setLanguage('de') // german is the default lang if browser lang is not supported
         }
@@ -39,16 +40,31 @@ export class LanguageService {
       { value: 'de', img: 'DE', text: 'Deutsch' },
       { value: 'en', img: 'EN', text: 'English' },
       { value: 'it', img: 'IT', text: 'Italiano' },
-      { value: 'pt', img: 'PT', text: 'Portuguese' },
-      { value: 'fr', img: 'FR', text: 'French' },
-      { value: 'ar', img: 'AR', text: 'Arabic' },
+      { value: 'pt', img: 'PT', text: 'Português' },
+      { value: 'fr', img: 'FR', text: 'Français' },
+      { value: 'ar', img: 'AR', text: 'العربية' },
     ];
   }
 
-  setLanguage(lng) {
-    this.translate.use(lng);
-    this.selected = lng;
-    this.storage.set(LNG_KEY, lng)
+  setLanguage(lng: string) {
+    const normalizedLanguage = (lng || '').toLowerCase().slice(0, 2);
+    if (!lngs.includes(normalizedLanguage)) {
+      return;
+    }
+
+    this.translate.use(normalizedLanguage);
+    this.selected = normalizedLanguage;
+    this.applyDocumentLocale(normalizedLanguage);
+    this.storage.set(LNG_KEY, normalizedLanguage)
+  }
+
+  private applyDocumentLocale(lng: string) {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    document.documentElement.lang = lng;
+    document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
   }
 
   // Apply the language stored on a user account (set at registration or on

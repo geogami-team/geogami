@@ -93,17 +93,17 @@
     "virtualWorld": "Virtual world",
     "chooseGameList": "Choose a game from the list.",
     "chooseGameMap": "Choose a game from the map.",
-    "logInToAccess": "You must login to have access",
+    "logInToAccess": "You must log in to access this feature",
     "players": "players",
     "tasks": "tasks",
     "task": "task",
     "gameEnv": "Game environment",
-    "gameEnv_info": "Choose between playing GeoGami outside (real world) or indoor (virtual environment)",
-    "gameMode": "Game Mode",
-    "gameMode_info": "Choose between playing GeoGami indivisually or with a group. Minium number of players of a mutliplayer mode is 2",
+    "gameEnv_info": "Choose between playing GeoGami outside (real world) or indoors (virtual environment).",
+    "gameMode": "Game mode",
+    "gameMode_info": "Choose between playing GeoGami individually or with a group. Multiplayer mode requires at least 2 players.",
     "singlePlayer": "Single player",
     "multiplayer": "Multiplayer",
-    "loginToAccess": " (login to have access)"
+    "loginToAccess": " (log in to access)"
   },
   "CreateTasks": {
     "combineTasks": "List of created tasks:",
@@ -146,7 +146,7 @@
     "description": "Description (optional)",
     "descriptionPlaceholder": "Short description",
     "searchGames": "Search games",
-    "selectedCount": "{{count}} game(s) selected",
+    "selectedCount": "Selected games: {{count}}",
     "noGamesFound": "No games found",
     "noGamesYet": "No games selected yet",
     "back": "Back",
@@ -167,7 +167,7 @@
     "deleteConfirmLabel": "Type the event name to confirm",
     "deleted": "Event deleted",
     "deleteError": "Could not delete event",
-    "gameCount": "{{count}} game(s)",
+    "gameCount": "Games: {{count}}",
     "sharedWithYou": "Shared with you",
     "pdfComingSoon": "PDF export coming soon",
     "pdfNoGames": "Add at least one game before exporting a PDF",
@@ -205,8 +205,8 @@
     "update": "Update",
     "notNow": "Not Now",
     "games": "Games",
-    "scanCode": "Scan Code",
-    "scanCode_desc": "Scan game qr-code provided by instructor."
+    "scanCode": "Scan code",
+    "scanCode_desc": "Scan the game QR code provided by the instructor."
   },
   "AnalyzeGame": {
     "title": "Analyze your GeoGami",
@@ -278,7 +278,7 @@
     "cameraFarClipPlaneHint": "Objects beyond this distance are hidden. Default: {{distance}} m.",
     "disableAvatarRotation": "Disable avatar rotation",
     "showEnvSettings": "Show environment settings",
-    "showEnvPathVisualization": "Show path visualization "
+    "showEnvPathVisualization": "Show path visualization"
   },
   "EditGame": {
     "titleEditGame": "Edit your GeoGami",
@@ -288,8 +288,8 @@
     "title": "Information about GeoGami",
     "titleInfotext": "About GeoGami",
     "infotext1": "GeoGami is an app for creating and playing map-based games and is particularly suitable for use in educational institutions. The app is scientifically supported and didactically designed by the Institute for Geoinformatics at the University of Münster.",
-    "infotext2": "The focus of GeoGami is on fostering navigational map-reading competencies. Game users can choose between appropriate task types and support their players by turning on and off map features. GeoGami is also suitable for creating thematic games, rallies and digital excursions. ",
-    "infotext3": "You can find more information on our",
+    "infotext2": "The focus of GeoGami is on fostering navigational map-reading competencies. Game users can choose between appropriate task types and support their players by turning map features on and off. GeoGami is also suitable for creating thematic games, rallies, and digital excursions.",
+    "infotext3": "You can find more information on",
     "website": "our website"
   },
   "PlayGame": {
@@ -348,9 +348,9 @@
     "gameNotFound": "Game could not be found.",
     "deleteGame": "Delete Game",
     "deleteGameMsg": "Are you sure you want to delete this game?",
-    "useExternalVEApp": "Use external Virtual Enviroment App (WinOS/ MacOS)",
+    "useExternalVEApp": "Use the external virtual environment app (Windows/macOS)",
     "enterName": "Enter your name",
-    "askPlayerToScanQRCode": "Ask players to scan the below QR code or use game link to join the game.",
+    "askPlayerToScanQRCode": "Ask players to scan the QR code below or use the game link to join the game.",
     "pinDialogHeader": "Enter PIN",
     "pinDialogMessage": "Enter the 4-digit PIN to navigate.",
     "pinDialogPlaceholder": "PIN",
@@ -485,22 +485,22 @@
     "lookForSThingTakePhoto": "Search [...] near you. Take a photo.",
     "turnDirectionChoosePhoto": "Turn to the direction you see on the map. Choose the appropriate photo.",
     "turnDirectionMapBased": "Turn in the direction you see on the map.",
-    "turnDirectionPhotoBased": "Turn in the direction you see on the photo.",
+    "turnDirectionPhotoBased": "Turn in the direction shown in the photo.",
     "turnDirectionArrow": "Turn until the arrows point in the same direction.",
-    "whereAreYouLooking": "Where are you looking now? Mark your viewing-direction on the map..",
-    "turnDirectionPhoto": "Turn in the direction of the photo. Mark your viewing-direction on the map."
+    "whereAreYouLooking": "Where are you looking now? Mark your viewing direction on the map.",
+    "turnDirectionPhoto": "Turn in the direction shown in the photo. Mark your viewing direction on the map."
   },
   "QuestionType": {
     "isShownOnMap": "... is shown on the map",
     "isDisplayedAsPhoto": "... is displayed as a photo",
-    "withDiscribedText": "... is described with a text",
+    "withDiscribedText": "... is described in text",
     "bySelectingPhoto": "... by selecting a photo",
     "byMarkingObject": "... by marking the object on the map",
     "byTakingPhoto": "... by taking a photo",
     "isDisplayedWithPhoto": "... is displayed with a photo",
     "isIndicatedByArrow": "... is indicated by an arrow",
-    "correspondToDirection": "... corresponds to the current viewing-direction",
-    "byTakingLineOfSight": "... by taking the viewing-direction",
+    "correspondToDirection": "... corresponds to the current viewing direction",
+    "byTakingLineOfSight": "... by facing the indicated direction",
     "text": "Text",
     "textPhoto": "Text and photo",
     "textMapMarking": "Text and map marking",
@@ -508,14 +508,14 @@
     "byEnteringNumber": "... by entering a number",
     "byMarkingDirectionOnMap": "... by marking the direction on the map",
     "byEnteringText": "... by entering text",
-    "byMapping": "... by mapping"
+    "byMapping": "... by drawing on the map"
   },
   "DrawSetting": {
     "keepMappingOption": "Keep mapping on the map",
     "onlyCurrentTask": "only for the current task",
     "alsoNextTask": "also for the next task",
     "inEntireGame": "in the entire game",
-    "drawPointOnly": "Show only draw point"
+    "drawPointOnly": "Show only the drawn point"
   },
   "VerifyEmail": {
     "title": "Verify your email",
@@ -525,7 +525,7 @@
     "intro": "We sent a verification link to your email when you registered. If you didn't get it, you can resend it below.",
     "resend": "Resend verification email",
     "sending": "Sending…",
-    "wait": "Wait {{seconds}}s",
+    "wait": "Wait {{seconds}} s",
     "tipsTitle": "Didn't receive it?",
     "tipSpam": "Check your spam or junk folder.",
     "tipMinutes": "It can take a few minutes to arrive.",

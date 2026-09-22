@@ -92,15 +92,15 @@
     "realWorld": "Realraum",
     "virtualWorld": "Virtuelle Welt",
     "chooseGameList": "Wähle ein Spiel aus der Liste.",
-    "chooseGameMap": "Wähle ein Spiel aus der Karte.",
-    "logInToAccess": "Sie müssen sich anmelden, um Zugriff zu haben",
+    "chooseGameMap": "Wähle ein Spiel auf der Karte.",
+    "logInToAccess": "Du musst dich anmelden, um darauf zuzugreifen",
     "players": "Spieler",
     "tasks": "Aufgaben",
     "task": "Aufgabe",
     "gameEnv": "Spielumgebung",
-    "gameEnv_info": "Wähle ob Sie GeoGami draußen (Realraum) oder drinnen (virtuelle Umgebung) spielen möchten.",
-    "gameMode": "Spielemodus",
-    "gameMode_info": "Wählen ob Sie GeoGami einzeln oder in einer Gruppe spielen möchten. Die Mindestanzahl an Spielern im Mehrspielermodus beträgt 2.",
+    "gameEnv_info": "Wähle, ob du GeoGami draußen (Realraum) oder drinnen (virtuelle Umgebung) spielen möchtest.",
+    "gameMode": "Spielmodus",
+    "gameMode_info": "Wähle, ob du GeoGami allein oder in einer Gruppe spielen möchtest. Für den Mehrspielermodus werden mindestens 2 Personen benötigt.",
     "singlePlayer": "Einzelspieler",
     "multiplayer": "Mehrspieler",
     "loginToAccess": " (einloggen, um Zugang zu haben)"
@@ -126,7 +126,7 @@
     "sendingData": "Übertrage Daten...",
     "gameSaved": "Dein GeoGami wurde gespeichert!",
     "setCuratedGame": "Als kuratiertes Spiel einstellen",
-    "enterValidGameName": "Bitte geben Sie einen gültigen Spielname ein.",
+    "enterValidGameName": "Bitte gib einen gültigen Spielnamen ein.",
     "disableShareDataConsent": "Einwilligung zur Datenweitergabe deaktivieren",
     "skipTaskPin": "Navigations-PIN (optional)",
     "skipTaskPinPlaceholder": "4-stellige PIN zum Überspringen von Aufgaben"
@@ -146,7 +146,7 @@
     "description": "Beschreibung (optional)",
     "descriptionPlaceholder": "Kurze Beschreibung",
     "searchGames": "Spiele suchen",
-    "selectedCount": "{{count}} Spiel(e) ausgewählt",
+    "selectedCount": "Ausgewählte Spiele: {{count}}",
     "noGamesFound": "Keine Spiele gefunden",
     "noGamesYet": "Noch keine Spiele ausgewählt",
     "back": "Zurück",
@@ -167,7 +167,7 @@
     "deleteConfirmLabel": "Gib den Event-Namen ein, um zu bestätigen",
     "deleted": "Event gelöscht",
     "deleteError": "Event konnte nicht gelöscht werden",
-    "gameCount": "{{count}} Spiel(e)",
+    "gameCount": "Spiele: {{count}}",
     "sharedWithYou": "Mit dir geteilt",
     "pdfComingSoon": "PDF-Export folgt in Kürze",
     "pdfNoGames": "Füge mindestens ein Spiel hinzu, bevor du ein PDF exportierst",
@@ -176,11 +176,11 @@
     "realWorld": "Reale Welt",
     "virtual": "Virtuell",
     "singlePlayerOnly": "Nur Einzelspieler",
-    "reorderHint": "Ziehen Sie ein Spiel am Griff, um die Reihenfolge zu ändern.",
+    "reorderHint": "Ziehe ein Spiel am Griff, um die Reihenfolge zu ändern.",
     "gameUnpublished": "Unveröffentlicht",
     "gameDeleted": "Gelöscht",
     "removeGame": "Aus Event entfernen",
-    "unavailableNote": "Markierte Spiele sind nicht mehr öffentlich gelistet, gehören aber weiterhin zu diesem Event, und ihre QR-Codes funktionieren weiterhin. Entfernen Sie sie, wenn sie nicht enthalten sein sollen."
+    "unavailableNote": "Markierte Spiele sind nicht mehr öffentlich gelistet, gehören aber weiterhin zu diesem Event und ihre QR-Codes funktionieren weiterhin. Entferne sie, wenn sie nicht enthalten sein sollen."
   },
   "Start": {
     "myEvents": "Meine Events",
@@ -199,18 +199,18 @@
     "hello": "Hallo",
     "userpreferences": "Benutzereinstellungen",
     "appUpdateHeader": "App-Aktualisierung verfügbar",
-    "appUpdateMsg": "Es ist eine neue Version verfügbar, möchten Sie sie jetzt laden?",
+    "appUpdateMsg": "Eine neue Version ist verfügbar. Möchtest du sie jetzt herunterladen?",
     "majorAppUpdateHeader": "Wichtige App-Aktualisierung",
-    "majorAppUpdateMsg": "Bitte aktualisieren Sie, um die App weiterhin zu verwenden.",
+    "majorAppUpdateMsg": "Bitte aktualisiere die App, um sie weiterhin zu verwenden.",
     "update": "Aktualisieren",
-    "notNow": "Nicht Jetzt",
+    "notNow": "Nicht jetzt",
     "games": "Spiele",
-    "scanCode": "Code Scannen",
+    "scanCode": "Code scannen",
     "scanCode_desc": "Scanne den vom Kursleiter bereitgestellten QR-Code des Spiels."
   },
   "AnalyzeGame": {
     "title": "Analysiere dein GeoGami",
-    "emptyGameTracks": "Die von Ihnen erstellten Spiele verfügen noch über keine Streckendaten!",
+    "emptyGameTracks": "Die von dir erstellten Spiele haben noch keine Streckendaten!",
     "download": "herunterladen"
   },
   "CreateGame": {
@@ -255,7 +255,7 @@
     "keepFlag": "Fahne auf der Karte behalten",
     "accuracy": "Genauigkeit",
     "destination": "Zielort",
-    "multipleChoice": "Multiple Choice",
+    "multipleChoice": "Multiple-Choice",
     "correctNumber": "Korrekte Antwort (Zahl)",
     "reset": "Zurücksetzen",
     "threewrongtaskanswers": "Drei falsche Antwortmöglichkeiten:",
@@ -287,9 +287,9 @@
   "Info": {
     "title": "Informationen über GeoGami",
     "titleInfotext": "Über GeoGami",
-    "infotext1": "GeoGami ist eine App zum Erstellen und Spielen von kartenbasierten Games und eignet sich insbesondere für den Einsatz an Bildungseinrichtungen. Die App wird vom Institut für Geoinformatik der Westfälischen Wilhelms-Universität Münster wissenschaftlich begleitet und didaktisch konzeptioniert.",
-    "infotext2": "Der Schwerpunkt von GeoGami liegt auf der Förderung der kartengestützten Orientierungskompetenz. Die Spiele-Ersteller:innen können zwischen entsprechenden Aufgabentypen wählen und seine Spieler:innen durch das An- und Ausstellen von Kartenfeatures unterstützen. GeoGami eignet sich auch dazu, thematische Spiele, Rallyes und digitale Exkursionen anlegen.",
-    "infotext3": "Mehr Informationen findest du auf unserer",
+    "infotext1": "GeoGami ist eine App zum Erstellen und Spielen kartenbasierter Spiele und eignet sich besonders für den Einsatz in Bildungseinrichtungen. Die App wird vom Institut für Geoinformatik der Universität Münster wissenschaftlich begleitet und didaktisch konzipiert.",
+    "infotext2": "GeoGami fördert insbesondere die Orientierungskompetenz beim Lesen von Karten. Spielerstellende können passende Aufgabentypen auswählen und die Spielenden unterstützen, indem sie Kartenfunktionen ein- oder ausschalten. GeoGami eignet sich außerdem für thematische Spiele, Rallyes und digitale Exkursionen.",
+    "infotext3": "Mehr Informationen findest du auf",
     "website": "unserer Webseite"
   },
   "PlayGame": {
@@ -315,7 +315,7 @@
     "correctLocation": "Stehst du genau richtig? Dann drücke 'Okay'!",
     "gameConnection": "Verbindungscode",
     "pl_EnterCode": "Verbindungscode eingeben",
-    "shareDataAgreement": " Ich bin damit einverstanden, dass die erhobenen Daten in anonymisierter Form für Forschungszwecke verarbeitet und zur Erstellung individueller Rückmeldungen für die Spieler genutzt werden.",
+    "shareDataAgreement": "Ich bin damit einverstanden, dass die erhobenen Daten in anonymisierter Form für Forschungszwecke verarbeitet und zur Erstellung individueller Rückmeldungen für die Spielenden genutzt werden.",
     "allGames": "Alle",
     "myGames": "Meine Spiele",
     "published": "Veröffentlicht",
@@ -348,7 +348,7 @@
     "gameNotFound": "Das Spiel konnte nicht gefunden werden.",
     "deleteGame": "Spiel löschen",
     "deleteGameMsg": "Bist du sicher, dass du dieses Spiel löschen möchtest?",
-    "useExternalVEApp": "Externe Virtual Environment App verwenden (WinOS/MacOS)",
+    "useExternalVEApp": "Externe App für die virtuelle Umgebung verwenden (Windows/macOS)",
     "enterName": "Gib deinen Namen ein",
     "askPlayerToScanQRCode": "Bitte die Spieler, den untenstehenden QR-Code zu scannen oder den Spiellink zu verwenden, um am Spiel teilzunehmen.",
     "pinDialogHeader": "PIN eingeben",
@@ -395,20 +395,20 @@
     "deleteAccountMsg": "Bist du sicher, dass du dein Konto löschen möchtest?",
     "deleteAccount": "Konto löschen",
     "cancel": "Abbrechen",
-    "enterEmail": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen eine E-Mail zum Zurücksetzen Ihres Passworts.",
-    "enterVirCode": "Der Bestätigungscode wurde an {{email}} gesendet. Bitte geben Sie den unten stehenden Code zusammen mit Ihrem neuen Passwort ein.",
+    "enterEmail": "Gib deine E-Mail-Adresse ein. Wir senden dir eine E-Mail zum Zurücksetzen deines Passworts.",
+    "enterVirCode": "Der Bestätigungscode wurde an {{email}} gesendet. Bitte gib unten den Code und dein neues Passwort ein.",
     "editProfile": "Profil bearbeiten",
-    "pl_name": "Ihr Name",
+    "pl_name": "Dein Name",
     "language": "Standardsprache",
     "saveChanges": "Änderungen speichern",
     "profileUpdated": "Profil aktualisiert.",
-    "profileUpdateFailed": "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+    "profileUpdateFailed": "Das Profil konnte nicht aktualisiert werden. Bitte versuche es erneut.",
     "accountInfo": "Konto",
     "accountActions": "Kontoaktionen",
     "logout": "Abmelden",
     "login": "Anmelden",
     "nameRequired": "Der Name darf nicht leer sein.",
-    "deleteAccountTypeUsername": "Zur Bestätigung geben Sie bitte unten Ihren Benutzernamen „{{username}}“ ein.",
+    "deleteAccountTypeUsername": "Gib zur Bestätigung unten deinen Benutzernamen „{{username}}“ ein.",
     "deleteAccountWrongUsername": "Der eingegebene Benutzername stimmt nicht überein.",
     "showPassword": "Passwort anzeigen",
     "hidePassword": "Passwort verbergen"
@@ -515,7 +515,7 @@
     "onlyCurrentTask": "nur bei der aktuellen Aufgabe",
     "alsoNextTask": "auch bei der nächsten Aufgabe",
     "inEntireGame": "im gesamten Spiel",
-    "drawPointOnly": "Nur punkt anzeigen "
+    "drawPointOnly": "Nur den gezeichneten Punkt anzeigen"
   },
   "VerifyEmail": {
     "title": "E-Mail verifizieren",
@@ -525,7 +525,7 @@
     "intro": "Wir haben dir bei der Registrierung einen Bestätigungslink gesendet. Falls du ihn nicht erhalten hast, kannst du ihn unten erneut senden.",
     "resend": "Bestätigungs-E-Mail erneut senden",
     "sending": "Wird gesendet…",
-    "wait": "Warte {{seconds}}s",
+    "wait": "Warte {{seconds}} s",
     "tipsTitle": "Nicht erhalten?",
     "tipSpam": "Prüfe deinen Spam- oder Junk-Ordner.",
     "tipMinutes": "Es kann einige Minuten dauern, bis sie ankommt.",
@@ -543,26 +543,26 @@
       "playGame": {
         "heading": "Spiel spielen",
         "content": {
-          "0": "In GeoGami kannst du eigene und von anderen erstellte Spiele spielen.Für eine Liste der Spiele wählst du die Option \"Spiele\" im Hauptmenü aus, wenn du einen QR-Code hast, kannst du diesen einfach scannen",
-          "1": "Kontrolliere, ob oben im Dropdown-Menü \"Realraum\" ausgewählt ist und wähle zwischen Einzel- und Mehrspieler (Einzelspieler ist der Standard). Jetzt kannst du nach deinem Spiel suchen. Unten Rechts kannst du über die Map Spiele in deiner Nähe finden.",
-          "2": "Wenn du ein Spiel ausgewählt hast, musst du deinen Spielernamen eingeben. Um GeoGami zu spielen, verwendet GeoGami Deine akutelle GPS Position, aber speichert sie nicht. Gibst du dein Einverständnis, werden GPS und Interaktionsdaten DSGVO konform gespeichert (mehr Information unter \"Daten zu Lehr- und Forschungszwecken frei geben\") und können später vom Ersteller der Spiels zur Auswertung genutzt werden."
+          "0": "In GeoGami kannst du selbst erstellte Spiele und Spiele anderer spielen. Um eine Liste der Spiele anzuzeigen, wähle im Hauptmenü „Spiele“ aus. Falls du einen QR-Code hast, kannst du ihn stattdessen scannen.",
+          "1": "Vergewissere dich, dass oben im Auswahlmenü „Realraum“ ausgewählt ist, und wähle zwischen Einzel- und Mehrspielermodus. Der Einzelspielermodus ist voreingestellt. Nun kannst du nach deinem Spiel suchen. Über die Karten-Schaltfläche unten rechts findest du Spiele in deiner Nähe.",
+          "2": "Nachdem du ein Spiel ausgewählt hast, gib deinen Spielernamen ein. Zum Spielen verwendet die App deine aktuelle GPS-Position, speichert sie aber nicht. Wenn du zustimmst, werden GPS- und Interaktionsdaten DSGVO-konform gespeichert (siehe „Daten für Lehr- und Forschungszwecke teilen“) und können später von den Erstellenden des Spiels ausgewertet werden."
         }
       },
       "createGame": {
         "heading": "Spiel erstellen",
         "content": {
-          "0": "Du kannst beim Spiele erstellen alle Bedingungen und Schwierigkeiten selbst einstellen und sie auf die Spielenden zuschneiden. Drücke auch dafür im Hauptmenü auf Spiele.",
-          "1": "Unten rechts wird dir jetzt ein Plus-Symbol angezeigt. Wählst du dieses aus, kannst du ein neues Spiel erstellen. Wähle \"Realraum\"",
-          "2": "Erstelle jetzt die Aufgaben. Die einzelnen Aufgaben und ein Beispiel werden dir unter dem Reiter \"Aufgabentypen erklärt\""
+          "0": "Beim Erstellen eines Spiels kannst du alle Bedingungen und Schwierigkeitsgrade selbst festlegen und an die Spielenden anpassen. Wähle im Hauptmenü „Spiele“ aus, um zu beginnen.",
+          "1": "Unten rechts erscheint nun ein Plus-Symbol. Wähle es aus, um ein neues Spiel zu erstellen, und entscheide dich für „Realraum“.",
+          "2": "Erstelle nun die Aufgaben. Die einzelnen Aufgabentypen und ein Beispiel werden unter „Aufgabentypen“ erklärt."
         }
       },
       "editGame": {
         "heading": "Spiele bearbeiten/löschen/speichern",
         "content": {
-          "0": "Du kannst von dir erstellte Spiele wieder löschen, falls sie nicht mehr benötigt werden. Du kannst sie auch noch einmal bearbeiten, wenn dir Fehler im Spiel aufgefallen sind, oder du es generell verändern möchtest.",
-          "1": "Gehe dafür nach dem Einloggen auf \"Meine Spiele\". Beachte, dass nur die zu Spielumgebung und Spielmodus passenden Spiele angezeigt werden. Klicke auf das \"Bearbeiten\"-Symbol rechts neben dem Spiel.",
-          "2": "Jetzt kann das Spiel bearbeitet, gelöscht oder gespeichert werden. Wenn du das Spiel bearbeitest, sieht es genau so aus, als würdest du ein neues Spiel erstellen und dir stehen die gleichen Funktionen zur Verfügung.",
-          "3": "Drücke zum Speichern auf das Speichersymbol oben rechts. Gib den Spielnamen und den Spielort ein. Wenn die Aufgaben es verlangen, kann der Kartenausschniit angepasst werden. Speichere das Spiel nun endgültig."
+          "0": "Du kannst selbst erstellte Spiele löschen, wenn sie nicht mehr benötigt werden. Du kannst sie auch erneut bearbeiten, wenn du Fehler entdeckt hast oder etwas ändern möchtest.",
+          "1": "Gehe nach der Anmeldung zu „Meine Spiele“. Beachte, dass nur Spiele angezeigt werden, die zur aktuellen Spielumgebung und zum aktuellen Spielmodus passen. Wähle rechts neben einem Spiel das Symbol „Bearbeiten“ aus.",
+          "2": "Du kannst das Spiel nun bearbeiten, löschen oder speichern. Beim Bearbeiten stehen dir dieselben Funktionen wie beim Erstellen eines neuen Spiels zur Verfügung.",
+          "3": "Wähle zum Speichern oben rechts das Speichersymbol aus. Gib den Spielnamen und den Spielort ein. Falls es für die Aufgaben erforderlich ist, kannst du den Kartenausschnitt anpassen. Speichere anschließend das Spiel."
         }
       }
     },
@@ -571,59 +571,59 @@
       "navigation": {
         "heading": "Navigationsaufgaben",
         "content": {
-          "0": "Bei Navigationsaufgaben müssen die Spielenden immer einen bestimmten Ort erreichen um die Aufgabe zu lösen. Verschiedene Aufgabentypen legen fest welche Bedingungen dabei gelten und welche Hilfestellungen und Orientierungspunkte die Spielenden erhalten. Die einzelnen Aufgabentypen werden unter 'Lernen' genauer erläutert \n Wähle zunächst einen Aufgabentypen aus der Liste aus.",
-          "1": "Lege die Aufgabenstellug und den Zielort fest. Je mehr Orientierungspunkte es um die Fahne herum gibt, desto leichter ist es sie zu finden.",
-          "2": "Nutze ggf. die besonderen Tools (unter \"weitere Einstellungen\" erklärt) um die Schwierigkeit und den Lernprozess zu optimieren und auf deine Testungen anzupassen. (Link)\n Bestimme den Radius, der als erfolgreiches erreichen des Zielorts gewertet wird. Setzt du den Radius zu klein, kann es sein, dass Spielende die Aufgabe richtig lösen, dies aber nicht erkannt wird. Setzt du den Radius zu groß, kann die Aufgabe fälschlicherweise als richtig erkannt werden. Probiere dein Spiel deshalb am besten selbst aus. \n Klicke auf Kartenfeatures um Eigenschaften der Karte und der Marker einzustellen. Diese sind wichtig, um den Schwierigkeitsgrad festzulegen und um die Aufgabe so zu gestalten, dass das was du testen möchtest, getestet werden kann. Die Eigenschaften der Karten und der Marker sind in einem eigenen Reiter erklärt. (Link)"
+          "0": "Bei Navigationsaufgaben müssen die Spielenden einen bestimmten Ort erreichen, um die Aufgabe zu lösen. Die verschiedenen Aufgabentypen bestimmen, welche Bedingungen gelten und welche Hinweise und Orientierungspunkte die Spielenden erhalten. Jeder Aufgabentyp wird unter „Lernen“ genauer erklärt.\nWähle zunächst einen Aufgabentyp aus der Liste aus.",
+          "1": "Lege die Aufgabenstellung und den Zielort fest. Je mehr Orientierungspunkte es rund um die Fahne gibt, desto leichter ist sie zu finden.",
+          "2": "Nutze optional die unter „Weitere Einstellungen“ beschriebenen Werkzeuge, um die Schwierigkeit und das Lernerlebnis an dein Untersuchungsziel anzupassen.\nLege den Radius fest, innerhalb dessen der Zielort als erreicht gilt. Ist der Radius zu klein, kann eine richtig gelöste Aufgabe möglicherweise nicht erkannt werden. Ist er zu groß, kann die Aufgabe fälschlicherweise als gelöst gelten. Probiere dein Spiel daher am besten selbst aus.\nWähle „Kartenfunktionen“ aus, um die Eigenschaften der Karte und der Marker festzulegen. Sie sind wichtig, um die Schwierigkeit zu bestimmen und die Aufgabe passend zu gestalten. Die Karten- und Markereigenschaften werden in einem eigenen Abschnitt erklärt."
         }
       },
       "orientation": {
         "heading": "Orientierungsaufgaben",
         "content": {
-          "0": "Bei Orientierungsaufgaben müssen die Spielenden sich oder Objekte lokalisieren, bestimmen in welche Richtung sie gucken oder freie Aufgaben lösen. Die verschiedenen Aufgabentypen werden dir unter dem Reiter \"Lernen\" im Hauptmenü angezeigt.\n Wähle zunächst einen Aufgabentypen aus der Liste aus. ",
-          "1": "Je nach Aufgabentyp musst du die Aufgabe nun präzisieren. Dafür wird dir automatisch eine Reiter-Navigation angezeigt. Auch hierfür findest du mehr unter dem Reiter \"Lernen\" im Hauptmenü.",
-          "2": "Weitere aufgabenbedingte Einstellungsoptionen werden dir automatisch angezeigt. Die Eingaben für diese Einstellungen ergeben sich aus der Aufgabe. \n Nutze ggf. die besonderen Tools (unter \"weitere Einstellungen\" erklärt) um die Schwierigkeit und den Lernprozess zu optimieren und auf deine Testungen anzupassen. (Link) \n Klicke auf Kartenfeatures um Eigenschaften der Karte und der Marker einzustellen. Diese sind wichtig, um den Schwierigkeitsgrad festzulegen und um die Aufgabe so zu gestalten, dass das was du testen möchtest, getestet werden kann. Die Eigenschaften der Karten und der Marker sind in einem eigenen Reiter erklärt. (Link)"
+          "0": "Bei Orientierungsaufgaben müssen die Spielenden sich selbst oder Objekte lokalisieren, ihre Blickrichtung bestimmen oder freie Aufgaben lösen. Die verschiedenen Aufgabentypen findest du unter „Lernen“ im Hauptmenü.\nWähle zunächst einen Aufgabentyp aus der Liste aus.",
+          "1": "Je nach Aufgabentyp musst du die Aufgabe weiter konkretisieren. Die erforderlichen Registerkarten werden automatisch angezeigt. Weitere Informationen findest du unter „Lernen“ im Hauptmenü.",
+          "2": "Weitere aufgabenspezifische Einstellungen werden automatisch angezeigt. Welche Eingaben erforderlich sind, hängt von der Aufgabe ab.\nNutze optional die unter „Weitere Einstellungen“ beschriebenen Werkzeuge, um die Schwierigkeit und das Lernerlebnis an dein Untersuchungsziel anzupassen.\nWähle „Kartenfunktionen“ aus, um die Eigenschaften der Karte und der Marker festzulegen. Sie sind wichtig, um die Schwierigkeit zu bestimmen und die Aufgabe passend zu gestalten. Die Karten- und Markereigenschaften werden in einem eigenen Abschnitt erklärt."
         }
       },
       "free": {
         "heading": "Freie Aufgaben",
         "content": {
-          "0": "Freie Aufgaben erlauben eine Vielfalt an Möglichkeiten, die sich in Single-Choice Aufgaben und Frage-Antwort Aufgaben klassifizieren lassen \n Es kann in beiden Aufgabentypen durch Auswahl oder Erstellen eines Fotos oder Texts geantwortet werden",
-          "1": "Bei Single-Choice Aufgaben muss genau eine Antwort richtig sein. Um dennoch mehr Antwortmöglichkeiten zu erlauben, muss das Feedback ausgestellt werden."
+          "0": "Freie Aufgaben bieten viele Möglichkeiten und lassen sich in Single-Choice- sowie Frage-Antwort-Aufgaben gliedern.\nBei beiden Aufgabentypen können die Spielenden durch das Auswählen oder Erstellen eines Fotos oder Textes antworten.",
+          "1": "Bei Single-Choice-Aufgaben muss genau eine Antwort richtig sein. Damit mehrere Antwortmöglichkeiten angeboten werden können, muss das Feedback ausgeschaltet sein."
         }
       },
       "info": {
         "heading": "Informationsbaustein",
         "content": {
-          "0": "Diese dient meist dazu auf kommende Aufgaben vorzubereiten. Hier kannst du für die Spielenden Erklärungen einfügen und besondere Handlungsanweisungen für kommende Aufgaben geben. \n Verfasse einen Infomationstext mit den Informationen für die kommenden Aufgaben. \n Füge, wenn du möchtest, Fotos und Grafiken hinzu. Diese können als weitere Erklärung dienen. \n Klicke auf Kartenfeatures um Eigenschaften der Karte und der Marker einzustellen. Diese sind wichtig, um den Schwierigkeitsgrad festzulegen und um die Aufgabe so zu gestalten, dass das was du testen möchtest, getestet werden kann. Die Eigenschaften der Karten und der Marker sind in einem eigenen Reiter erklärt. (Link)"
+          "0": "Dieser Baustein dient hauptsächlich dazu, die Spielenden auf kommende Aufgaben vorzubereiten. Du kannst Erklärungen und besondere Anweisungen für die nächsten Aufgaben hinzufügen.\nVerfasse einen Informationstext mit den erforderlichen Details und ergänze bei Bedarf Fotos oder Grafiken.\nWähle „Kartenfunktionen“ aus, um die Eigenschaften der Karte und der Marker festzulegen. Diese werden in einem eigenen Abschnitt erklärt."
         }
       }
     },
-    "virtualWorld": {
+      "virtualWorld": {
       "sectionTitle": "Virtuelle Welt",
       "playGame": {
         "heading": "Spiel spielen",
         "content": {
-          "0": "In GeoGami kannst du eigene und von anderen erstellte Spiele spielen.Für eine Liste der Spiele wählst du die Option \"Spiele\" im Hauptmenü aus, wenn du einen QR-Code hast, kannst du diesen einfach scannen",
-          "1": "Klicke im Dropdown-Menü au \"Virtuelle Welt\" und wähle zwischen Einzel- und Mehrspieler (Einzelspieler ist der Standard). Jetzt kannst du nach deinem Spiel suchen.",
-          "2": "Wenn du ein Spiel ausgewählt hast, musst du deinen Spielernamen eingeben. Um GeoGami zu spielen, verwendet GeoGami Deine akutelle GPS Position, aber speichert sie nicht. Gibst du dein Einverständnis, werden GPS und Interaktionsdaten DSGVO konform gespeichert (mehr Information unter \"Daten zu Lehr- und Forschungszwecken frei geben\") und können später vom Ersteller der Spiels zur Auswertung genutzt werden."
+          "0": "In GeoGami kannst du selbst erstellte Spiele und Spiele anderer spielen. Um eine Liste der Spiele anzuzeigen, wähle im Hauptmenü „Spiele“ aus. Falls du einen QR-Code hast, kannst du ihn stattdessen scannen.",
+          "1": "Wähle im Auswahlmenü „Virtuelle Welt“ und entscheide dich zwischen Einzel- und Mehrspielermodus. Der Einzelspielermodus ist voreingestellt. Nun kannst du nach deinem Spiel suchen.",
+          "2": "Nachdem du ein Spiel ausgewählt hast, gib deinen Spielernamen ein. Zum Spielen verwendet die App deine aktuelle GPS-Position, speichert sie aber nicht. Wenn du zustimmst, werden GPS- und Interaktionsdaten DSGVO-konform gespeichert (siehe „Daten für Lehr- und Forschungszwecke teilen“) und können später von den Erstellenden des Spiels ausgewertet werden."
         }
       },
       "createGame": {
         "heading": "VR Spiel erstellen",
         "content": {
-          "0": "Du kannst beim Spiele erstellen alle Bedingungen und Schwierigkeiten selbst einstellen und sie auf die Spielenden zuschneiden. Drücke auch dafür im Hauptmenü auf Spiele.",
-          "1": "Unten rechts wird dir jetzt ein Plus-Symbol angezeigt. Wählst du dieses aus, kannst du ein neues Spiel erstellen. Wähle \"Virtuelle Welt\"",
-          "2": "Wähle eine virtuelle Welt. Diese kann mit jeder neuen Aufgabe geändert werden.Überlege, welche Eigenschaften die Welt haben soll (wieviele Straßen, Häuser, Bäume, andere Landmarken...).",
-          "3": "Erstelle jetzt die Aufgaben. Die einzelnen Aufgaben und ein Beispiel werden dir unter dem Reiter \"Aufgabentypen erklärt\""
+          "0": "Beim Erstellen eines Spiels kannst du alle Bedingungen und Schwierigkeitsgrade selbst festlegen und an die Spielenden anpassen. Wähle im Hauptmenü „Spiele“ aus, um zu beginnen.",
+          "1": "Unten rechts erscheint nun ein Plus-Symbol. Wähle es aus, um ein neues Spiel zu erstellen, und entscheide dich für „Virtuelle Welt“.",
+          "2": "Wähle eine virtuelle Welt aus. Du kannst sie für jede neue Aufgabe ändern. Überlege, welche Eigenschaften die Welt haben soll, etwa wie viele Straßen, Häuser, Bäume oder andere Orientierungspunkte sie enthält.",
+          "3": "Erstelle nun die Aufgaben. Die einzelnen Aufgabentypen und ein Beispiel werden unter „Aufgabentypen“ erklärt."
         }
       },
       "editGame": {
         "heading": "Spiele bearbeiten/löschen/speichern",
         "content": {
-          "0": "Du kannst von dir erstellte Spiele wieder löschen. Du kannst sie auch noch einmal bearbeiten, wenn dir Fehler im Spiel aufgefallen sind, oder du es generell verändern möchtest. Kuratiere sie, wenn du der Meinung bist, dass auch andere dieses Spiel gebrauchen könnten.",
-          "1": "Gehe dafür nach dem Einloggen auf \"Meine Spiele\". Beachte, dass nur die zu Spielumgebung und Spielmodus passenden Spiele angezeigt werden. Klicke auf das \"Bearbeiten\"-Symbol rechts neben dem Spiel.",
-          "2": "Jetzt kann das Spiel bearbeitet, gelöscht oder gespeichert werden. Wenn du das Spiel bearbeitest, sieht es genau so aus, als würdest du ein neues Spiel erstellen und dir stehen die gleichen Funktionen zur Verfügung.",
-          "3": "Drücke zum Speichern auf das Speichersymbol oben rechts. Gib den Spielnamen und den Spielort ein. Wenn die Aufgaben es verlangen, kann der Kartenausschniit angepasst werden. Speichere das Spiel nun endgültig."
+          "0": "Du kannst selbst erstellte Spiele löschen oder bearbeiten, wenn du Fehler entdeckt hast oder etwas ändern möchtest. Markiere ein Spiel als kuratiert, wenn es auch für andere Personen nützlich sein könnte.",
+          "1": "Gehe nach der Anmeldung zu „Meine Spiele“. Beachte, dass nur Spiele angezeigt werden, die zur aktuellen Spielumgebung und zum aktuellen Spielmodus passen. Wähle rechts neben einem Spiel das Symbol „Bearbeiten“ aus.",
+          "2": "Du kannst das Spiel nun bearbeiten, löschen oder speichern. Beim Bearbeiten stehen dir dieselben Funktionen wie beim Erstellen eines neuen Spiels zur Verfügung.",
+          "3": "Wähle zum Speichern oben rechts das Speichersymbol aus. Gib den Spielnamen und den Spielort ein. Falls es für die Aufgaben erforderlich ist, kannst du den Kartenausschnitt anpassen. Speichere anschließend das Spiel."
         }
       }
     },
@@ -632,31 +632,31 @@
       "navigation": {
         "heading": "Navigationsaufgaben",
         "content": {
-          "0": "Bei Navigationsaufgaben müssen die Spielenden immer einen bestimmten Ort erreichen um die Aufgabe zu lösen. Verschiedene Aufgabentypen legen fest welche Bedingungen dabei gelten und welche Hilfestellungen und Orientierungspunkte die Spielenden erhalten. Die einzelnen Aufgabentypen werden unter 'Lernen' genauer erläutert. \n Wähle zunächst einen Aufgabentypen aus der Liste aus.",
-          "1": "Lege optional die Position des Avatars und seine Blickrichtung fest. So kannst du forcieren welchen Weg die Spielenden zurücklegen und ob sie von Beginn in die richtige Blickrichtung gucken oder nicht.",
-          "2": "Lege den Zielort fest. Je mehr Orientierungspunkte es um die Fahne herum gibt, desto leichter ist es sie zu finden. Nutze ggf. die besonderen Tools (unter \"weitere Einstellungen\" erklärt) um die Schwierigkeit und den Lernprozess zu optimieren und auf deine Testungen anzupassen. (Link) \n Bestimme den Radius, der als erfolgreiches erreichen des Zielorts gewertet wird. Setzt du den Radius zu klein, kann es sein, dass Spielende die Aufgabe richtig lösen, dies aber nicht erkannt wird. Setzt du den Radius zu groß, kann die Aufgabe fälschlicherweise als richtig erkannt werden. Probiere dein Spiel deshalb am besten selbst aus. \n Klicke auf Kartenfeatures um Eigenschaften der Karte und der Marker einzustellen. Diese sind wichtig, um den Schwierigkeitsgrad festzulegen und um die Aufgabe so zu gestalten, dass das was du testen möchtest, getestet werden kann. Die Eigenschaften der Karten und der Marker sind in einem eigenen Reiter erklärt. (Link)"
+          "0": "Bei Navigationsaufgaben müssen die Spielenden einen bestimmten Ort erreichen, um die Aufgabe zu lösen. Die verschiedenen Aufgabentypen bestimmen, welche Bedingungen gelten und welche Hinweise und Orientierungspunkte die Spielenden erhalten. Jeder Aufgabentyp wird unter „Lernen“ genauer erklärt.\nWähle zunächst einen Aufgabentyp aus der Liste aus.",
+          "1": "Lege optional die Startposition und Blickrichtung des Avatars fest. So kannst du steuern, welchen Weg die Spielenden zurücklegen und ob sie zu Beginn in die richtige Richtung blicken.",
+          "2": "Lege den Zielort fest. Je mehr Orientierungspunkte es rund um die Fahne gibt, desto leichter ist sie zu finden. Nutze optional die unter „Weitere Einstellungen“ beschriebenen Werkzeuge, um die Schwierigkeit und das Lernerlebnis an dein Untersuchungsziel anzupassen.\nLege den Radius fest, innerhalb dessen der Zielort als erreicht gilt. Ist der Radius zu klein, kann eine richtig gelöste Aufgabe möglicherweise nicht erkannt werden. Ist er zu groß, kann die Aufgabe fälschlicherweise als gelöst gelten. Probiere dein Spiel daher am besten selbst aus.\nWähle „Kartenfunktionen“ aus, um die Eigenschaften der Karte und der Marker festzulegen. Diese werden in einem eigenen Abschnitt erklärt."
         }
       },
       "orientation": {
         "heading": "Orientierungsaufgaben",
         "content": {
-          "0": "Wähle zunächst einen Aufgabentypen aus der Liste aus. Je nach Aufgabentyp musst du die Aufgabe nun präzisieren. Dafür wird dir automatisch eine Reiter-Navigation angezeigt.",
-          "1": "Lege optional die Position des Avatars und seine Blickrichtung fest. So kannst du forcieren welchen Weg die Spielenden zurücklegen und ob sie von Beginn in die richtige Blickrichtung gucken oder nicht. So variierst du die Schwierigkeit und kannst genau das testen, was du möchtest.",
-          "2": "Setze nun die aufgabenbezogenen Ziele (Suchgebiet, Suchobjekt, Ausrichtung) auf der Karte fest und nimm weitere Einstelungen vor (Feedback, mehrere Versuche, Kartenfeatures)."
+          "0": "Wähle zunächst einen Aufgabentyp aus der Liste aus. Je nach Aufgabentyp musst du die Aufgabe weiter konkretisieren. Die erforderlichen Registerkarten werden automatisch angezeigt.",
+          "1": "Lege optional die Startposition und Blickrichtung des Avatars fest. So kannst du steuern, welchen Weg die Spielenden zurücklegen und ob sie zu Beginn in die richtige Richtung blicken. Dadurch kannst du die Schwierigkeit variieren und gezielt untersuchen, was dich interessiert.",
+          "2": "Platziere nun die aufgabenspezifischen Ziele wie Suchgebiet, Suchobjekt oder Ausrichtung auf der Karte und nimm weitere Einstellungen vor, etwa Feedback, mehrere Versuche und Kartenfunktionen."
         }
       },
       "free": {
         "heading": "Freie Aufgaben",
         "content": {
-          "0": "Freie Aufgaben erlauben eine Vielfalt an Möglichkeiten, die sich in Single-Choice Aufgaben und Frage-Antwort Aufgaben klassifizieren lassen \n Es kann in beiden Aufgabentypen durch Auswahl oder Erstellen eines Fotos oder Texts geantwortet werden. Optional kann der Avatar und seine Blickrichtung auf der Karte platziert werden.",
-          "1": "Bei Single-Choice Aufgaben muss genau eine Antwort richtig sein. Um dennoch mehr Antwortmöglichkeiten zu erlauben, muss das Feedback ausgestellt werden."
+          "0": "Freie Aufgaben bieten viele Möglichkeiten und lassen sich in Single-Choice- sowie Frage-Antwort-Aufgaben gliedern.\nBei beiden Aufgabentypen können die Spielenden durch das Auswählen oder Erstellen eines Fotos oder Textes antworten. Optional kannst du den Avatar und seine Blickrichtung auf der Karte platzieren.",
+          "1": "Bei Single-Choice-Aufgaben muss genau eine Antwort richtig sein. Damit mehrere Antwortmöglichkeiten angeboten werden können, muss das Feedback ausgeschaltet sein."
         }
       },
       "info": {
         "heading": "Informationsbaustein",
         "content": {
-          "0": "Diese dient meist dazu auf kommende Aufgaben vorzubereiten. Hier kannst du für die Spielenden Erklärungen einfügen und besondere Handlungsanweisungen für kommende Aufgaben geben. \n Füge, wenn du möchtest, Fotos und Grafiken hinzu. Verfasse einen Infomationstext mit den Informationen für die kommenden Aufgaben.",
-          "1": "Setze optional den Avatar und seine Blickrichtung fest. Füge, wenn du möchtest, Fotos und Grafiken hinzu. Diese können als weitere Erklärung dienen. \n Klicke auf Kartenfeatures um Eigenschaften der Karte und der Marker einzustellen. Diese sind wichtig, um den Schwierigkeitsgrad festzulegen und um die Aufgabe so zu gestalten, dass das was du testen möchtest, getestet werden kann. Die Eigenschaften der Karten und der Marker sind in einem eigenen Reiter erklärt. (Link)"
+          "0": "Dieser Baustein dient hauptsächlich dazu, die Spielenden auf kommende Aufgaben vorzubereiten. Du kannst Erklärungen und besondere Anweisungen hinzufügen. Ergänze bei Bedarf Fotos oder Grafiken und verfasse einen Informationstext mit den Details zu den nächsten Aufgaben.",
+          "1": "Lege optional die Startposition und Blickrichtung des Avatars fest. Fotos und Grafiken können als zusätzliche Erklärung dienen.\nWähle „Kartenfunktionen“ aus, um die Eigenschaften der Karte und der Marker festzulegen. Diese werden in einem eigenen Abschnitt erklärt."
         }
       }
     },
@@ -665,14 +665,14 @@
       "overview": {
         "heading": "Kartenfeatures",
         "content": {
-          "0": "Zoom: Hier kannst du einstellen, ob der Zoom auf die Aufgabe, die Karte, vom Spieler selbst oder gar nicht gesetzt werden soll.",
-          "1": "Kartenbereich: Hier kannst du einstellen, ob der gesamte Kartenausschnitt oder ein Bestimmter ständig zu sehen ist, oder ob sich der Kartenbereich mitbewegt und somit verschieben kann.",
-          "2": "Kartenrotation: Hier stellst du die Ausrichtung der Karte ein (guckt man immer nach oben oder ist oben immer Norden?)",
-          "3": "Positionsmarker: Die Positionsmarkereinstellung verändert die Aufgabe gravierend. Ist er ausgeschaltet, müssen sich die Spielenden allein an der Umwelt orientieren um zu entscheiden wo sie sich befinden. Ist er angeschaltet, können sie sich anhand des Markers orientieren. Ist er nur zu Aufgabenbeginn angeschaltet, können sie sich einmalig am Anfang orientieren, ist er auf Knopdfruck angeschaltet, können die Spielenden selbst entscheiden, wie oft sie diese Hilfe gebrauchen",
-          "4": "Blickrichtungsmarker: Es gelten die gleichen Hinweise, wie beim Positionsmarker. Allerdings wird nicht nur der Ort an dem man sich befindet dargestellt, sondern auch die Richtung in die man guckt. Nur mit eingeschaltetem Positionsmarker ist diese Funktion nutzbar.",
-          "5": "Trackaufzeichnung; Wenn du die Trackaufzeichnung anstellst, kann der Spielende live seine eigene Spielbewegung auf der Karte sehen und visuell nachvollziehen. Bei Kindern ist es beliebt, so Formen wie einen Kreis oder ein Herz auf die Karte zu \"malen\". Trackaufzeichnung bezieht sich nur auf das visualisieren auf der Karte: Im Hintergrund zeichnet GeoGami immer den Track auf.",
-          "6": "Straßenmarkierung: Du kannst den Abschnitt der Straße, an dem du dich befindest so rot markieren. Anders als beim Positionsmarker erfährst du aber nicht deine exakte Position.",
-          "7": "Hervorhebung von Landmarken: Damit kannst du auf Dinge in der Landschaft hinweisen, die beispielsweise die Orientierung erleichtern können"
+          "0": "Zoom: Lege fest, ob der Zoom auf die Aufgabe oder das Spiel ausgerichtet, von den Spielenden eingestellt oder gar nicht festgelegt werden soll.",
+          "1": "Kartenausschnitt: Lege fest, ob der gesamte oder ein bestimmter Kartenausschnitt immer sichtbar ist oder ob er sich mit den Spielenden bewegt.",
+          "2": "Kartenrotation: Lege die Ausrichtung der Karte fest. Zeigt die Blickrichtung immer nach oben oder befindet sich Norden immer oben?",
+          "3": "Positionsmarker: Diese Einstellung verändert die Aufgabe deutlich. Ist der Marker ausgeschaltet, müssen sich die Spielenden allein anhand ihrer Umgebung orientieren. Ist er eingeschaltet, können sie den Marker zur Orientierung nutzen. Wird er nur zu Beginn der Aufgabe angezeigt, steht diese Hilfe einmalig zur Verfügung. Bei der Einstellung „auf Knopfdruck“ entscheiden die Spielenden selbst, wie oft sie die Hilfe verwenden.",
+          "4": "Blickrichtungsmarker: Es gelten dieselben Hinweise wie für den Positionsmarker. Zusätzlich zum Standort zeigt dieser Marker die Blickrichtung an. Die Funktion ist nur verfügbar, wenn der Positionsmarker eingeschaltet ist.",
+          "5": "Trackaufzeichnung: Wenn du sie aktivierst, können die Spielenden ihre Bewegungen live auf der Karte verfolgen. Kinder zeichnen damit gern Formen wie Kreise oder Herzen auf die Karte. Die Einstellung betrifft nur die Darstellung auf der Karte; im Hintergrund zeichnet GeoGami den Track immer auf.",
+          "6": "Straßenmarkierung: Du kannst den Straßenabschnitt, auf dem sich die spielende Person befindet, rot hervorheben. Anders als der Positionsmarker zeigt diese Funktion nicht die genaue Position.",
+          "7": "Landmarken hervorheben: Damit kannst du auf Elemente in der Landschaft hinweisen, die beispielsweise die Orientierung erleichtern."
         }
       }
     },
@@ -681,14 +681,14 @@
       "settings": {
         "heading": "Weitere Einstellungen",
         "content": {
-          "0": "Je nach Aufgabentyp kannst du noch weitere EInstellungen vornehmen, die das Spielerlebnis verbessern oder das Ziel der Aufgabe besser ansprechen. \n Eingabebestätigung an- und ausschalten; So bestimmst du, ob die Spielenden selber feststellen müssen, dass sie die Aufgabe richtig gelöst haben.",
-          "1": "Fahne anzeigen; So bestimmst du den Schwierigkeitsgrad der Aufgabe, da du einstellen kannst, ob die Zielfahne auf der Karte sichtbar ist.",
-          "2": "Feedback an- und ausschalten; So bestimmst du ob die Spielenden direkt erfahren, ob sie die Aufgabe richtig oder falsch gelöst haben.",
-          "3": "Fahne auf der Karte behalten; So bestimmst du ob, das Ziel dieser Aufgabe bei den nächsten Aufgaben sichtbar bleibt.",
-          "4": "Mehrere Versuche einstellen; so bestimmst du, ob die Spielenden eine neue Chance erhalten, wenn sie die Aufgabe falsch lösen (nur bei Themenaufgaben).",
-          "5": "Genauigkeit: Hier kannst du einstellen, wie nah man sich am Ziel befinden muss, damit man als \"am richtigen Ort\" angesehen wird. Aufgrund von GPS-Ungenauigkeiten sollte hier keine zu kleine Distanz gewählt werden.",
-          "6": "Unter Kartenfeatures können noch Einstellungen zum Positionsmarker und zur Interaktion mit der Karte selbst vorgenommen werden. Unter \"Lernen\" im Hauptmenü können diese ausprobiert werden.",
-          "7": "Hervorhebung von Landmarken: Damit kannst du auf Dinge in der Landschaft hinweisen, die beispielsweise die Orientierung erleichtern können"
+          "0": "Je nach Aufgabentyp kannst du weitere Einstellungen vornehmen, die das Spielerlebnis verbessern oder das Ziel der Aufgabe besser unterstützen.\nEingabebestätigung aktivieren oder deaktivieren: Damit legst du fest, ob die Spielenden selbst bestätigen müssen, dass sie die Aufgabe richtig gelöst haben.",
+          "1": "Fahne anzeigen: Damit bestimmst du den Schwierigkeitsgrad der Aufgabe, indem du festlegst, ob die Zielfahne auf der Karte sichtbar ist.",
+          "2": "Feedback aktivieren oder deaktivieren: Damit legst du fest, ob die Spielenden sofort erfahren, ob sie die Aufgabe richtig gelöst haben.",
+          "3": "Fahne auf der Karte behalten: Damit legst du fest, ob das Ziel dieser Aufgabe während der folgenden Aufgaben sichtbar bleibt.",
+          "4": "Mehrere Versuche aktivieren: Damit legst du fest, ob die Spielenden nach einer falschen Lösung eine weitere Chance erhalten. Diese Einstellung gilt nur für Themenaufgaben.",
+          "5": "Genauigkeit: Lege fest, wie nah sich die Spielenden am Ziel befinden müssen, damit es als erreicht gilt. Wähle wegen möglicher GPS-Ungenauigkeiten keinen zu kleinen Abstand.",
+          "6": "Unter „Kartenfunktionen“ kannst du weitere Einstellungen für den Positionsmarker und die Interaktion mit der Karte vornehmen. Probiere sie unter „Lernen“ im Hauptmenü aus.",
+          "7": "Landmarken hervorheben: Damit kannst du auf Elemente in der Landschaft hinweisen, die beispielsweise die Orientierung erleichtern."
         }
       }
     }
