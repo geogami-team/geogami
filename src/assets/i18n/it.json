@@ -365,6 +365,7 @@
     "classQrHint": "I giocatori che scansionano questo codice o aprono questo link giocheranno a questo gioco e i loro risultati compariranno nella tua dashboard.",
     "copyLink": "Copia link",
     "linkCopied": "Link copiato",
+    "consentRequiredToPlay": "Senza questo consenso non è possibile avviare questo gioco.",
     "classConsentLocked": "Questo gioco è stato aperto dal link del tuo docente, quindi per giocare è necessario condividere i tuoi risultati.",
     "instructorLabel": "Docente",
     "unrecognisedQr": "Codice QR non riconosciuto.",

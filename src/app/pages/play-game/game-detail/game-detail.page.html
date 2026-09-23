@@ -76,15 +76,22 @@
         <ion-label text-wrap style="font-weight: bold"
           >{{ "PlayGame.shareDataAgreement" | translate }}</ion-label
         >
-        <ion-checkbox slot="start" [disabled]="disableShareData_cbox" [(ngModel)]="shareData_cbox"></ion-checkbox>
+        <ion-checkbox slot="start" [(ngModel)]="shareData_cbox"></ion-checkbox>
       </ion-item>
-      <!-- Phase 3: explain why consent is locked for a class play -->
-      <ion-item lines="none" *ngIf="consentLockedByInstructor">
+      <!-- Phase 3: explain why this game needs consent before it can start -->
+      <ion-item lines="none" *ngIf="consentRequiredByInstructor">
         <ion-note color="medium" class="ion-text-wrap">
           {{ 'PlayGame.classConsentLocked' | translate }}
           <span *ngIf="instructorName">
             <br />{{ 'PlayGame.instructorLabel' | translate }}: {{ instructorName }}
           </span>
+        </ion-note>
+      </ion-item>
+      <!-- Consent is required for this game but has not been given: say so,
+           rather than silently leaving the start button disabled. -->
+      <ion-item lines="none" *ngIf="consentRequired && !shareData_cbox">
+        <ion-note color="danger" class="ion-text-wrap">
+          {{ 'PlayGame.consentRequiredToPlay' | translate }}
         </ion-note>
       </ion-item>
     </ion-card>
@@ -231,7 +238,10 @@
 
 <ion-footer *ngIf="game && !showInstructionView">
   <ion-toolbar>
-    <ion-button expand="block" (click)="startGame()" [disabled]="!playerName"
+    <ion-button
+      expand="block"
+      (click)="startGame()"
+      [disabled]="!playerName || (consentRequired && !shareData_cbox)"
       >{{ "General.start" | translate }}</ion-button
     >
   </ion-toolbar>
