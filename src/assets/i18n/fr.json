@@ -285,6 +285,9 @@
     "titleEditGameTasks": "Modifier"
   },
   "Info": {
+    "legal": "Informations légales",
+    "imprint": "Mentions légales",
+    "privacy": "Politique de confidentialité",
     "title": "Informations sur GeoGami",
     "titleInfotext": "À propos de GeoGami",
     "infotext1": "GeoGami est une application pour créer et jouer à des jeux basés sur des cartes et est particulièrement adaptée à une utilisation dans les établissements d'enseignement. L'application est soutenue scientifiquement et conçue didactiquement par l'Institut de géoinformatique de l'Université de Münster.",

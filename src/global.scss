@@ -35,6 +35,14 @@ ion-modal.tracks-visualization-modal {
     font-weight: 600;
     text-align: center;
 }
+
+/* Ionic's native input/textarea uses `text-align: inherit`. Ensure Arabic
+   placeholders and entered values start on the RTL side of the field. */
+html[dir='rtl'] ion-input,
+html[dir='rtl'] ion-textarea {
+  text-align: right;
+}
+
 /* ── Form rows inside the create/edit modals ────────────────────────────────
    ion-item lays a label and its control out in a row, and Ionic's item
    internals use `flex-direction: inherit`, so setting the direction on the

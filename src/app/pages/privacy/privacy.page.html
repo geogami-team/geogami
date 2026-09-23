@@ -1,0 +1,703 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color="dark" defaultHref="/info" text="{{ 'General.back_button' | translate }}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ "Info.privacy" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- German version: legally binding -->
+  <div class="legal" *ngIf="showGerman; else english" lang="de" dir="ltr">
+    <ion-button fill="clear" size="small" (click)="toggleLanguage()">English version</ion-button>
+
+    <h1>Datenschutzerklärung</h1>
+    <p class="legal-meta">Stand: September 2026</p>
+
+    <p>
+      Diese Datenschutzerklärung informiert Sie darüber, welche personenbezogenen
+      Daten wir bei der Nutzung von GeoGami verarbeiten, zu welchen Zwecken und
+      auf welcher Rechtsgrundlage. Sie gilt für die GeoGami-App (Web-App sowie
+      Apps für Android und iOS), den zugehörigen Server, die virtuellen
+      Spielwelten und das GeoGami-Dashboard.
+    </p>
+
+    <h2>Inhalt</h2>
+    <ol class="legal-toc">
+      <li><a (click)="scrollTo('p-controller')">Verantwortliche Stelle</a></li>
+      <li><a (click)="scrollTo('p-dpo')">Behördlicher Datenschutz</a></li>
+      <li><a (click)="scrollTo('p-principles')">Grundsätze und Rechtsgrundlagen</a></li>
+      <li><a (click)="scrollTo('p-hosting')">Aufruf der App und Server-Protokolle</a></li>
+      <li><a (click)="scrollTo('p-account')">Nutzerkonto</a></li>
+      <li><a (click)="scrollTo('p-play')">Spielen eines Spiels</a></li>
+      <li><a (click)="scrollTo('p-tracks')">Speicherung von Spielverläufen und Forschung</a></li>
+      <li><a (click)="scrollTo('p-create')">Erstellen und Teilen von Spielen</a></li>
+      <li><a (click)="scrollTo('p-services')">Karten und weitere Dienste</a></li>
+      <li><a (click)="scrollTo('p-device')">Speicherung auf Ihrem Gerät</a></li>
+      <li><a (click)="scrollTo('p-stores')">App Stores und Berechtigungen</a></li>
+      <li><a (click)="scrollTo('p-rights')">Ihre Rechte</a></li>
+      <li><a (click)="scrollTo('p-changes')">Änderungen</a></li>
+    </ol>
+
+    <h2 id="p-controller">1. Verantwortliche Stelle</h2>
+    <p>
+      Universität Münster<br />
+      Institut für Geoinformatik – SIL (Spatial Intelligence Lab)<br />
+      Prof. Dr. Angela Schwering<br />
+      Heisenbergstraße 2<br />
+      48149 Münster<br />
+      Telefon: +49 251 83-30001<br />
+      E-Mail: <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>
+    </p>
+
+    <h2 id="p-dpo">2. Behördlicher Datenschutz</h2>
+    <p>
+      Bei Fragen zum Datenschutz können Sie sich auch an den behördlichen
+      Datenschutz der Universität Münster wenden:
+    </p>
+    <p>
+      Stabsstelle Datenschutz<br />
+      Schlossplatz 2<br />
+      48149 Münster<br />
+      E-Mail: <a href="mailto:datenschutz@uni-muenster.de">datenschutz&#64;uni-muenster.de</a>
+    </p>
+
+    <h2 id="p-principles">3. Grundsätze und Rechtsgrundlagen</h2>
+    <p>
+      GeoGami wird am Institut für Geoinformatik für Lehre und Forschung
+      entwickelt und betrieben. Wir verarbeiten personenbezogene Daten nur,
+      soweit dies für den Betrieb der App, für den Einsatz in der Lehre und für
+      die wissenschaftliche Forschung erforderlich ist. GeoGami enthält keine
+      Werbung und keine Analyse- oder Tracking-Dienste. Wir verkaufen keine
+      Daten.
+    </p>
+    <p>
+      Soweit nicht anders angegeben, ist Rechtsgrundlage der Verarbeitung
+      Art. 6 Abs. 1 lit. e DSGVO in Verbindung mit § 3 Datenschutzgesetz
+      Nordrhein-Westfalen (DSG NRW) und § 3 Hochschulgesetz NRW (Wahrnehmung der
+      Aufgaben der Universität in Forschung und Lehre). Die Speicherung von
+      Spielverläufen für Forschungszwecke beruht auf Ihrer Einwilligung
+      (Art. 6 Abs. 1 lit. a DSGVO, § 17 DSG NRW).
+    </p>
+    <p>
+      Alle Verbindungen zwischen der App und unseren Servern sind per TLS
+      (HTTPS) verschlüsselt. Passwörter speichern wir ausschließlich als
+      kryptografischen Hashwert.
+    </p>
+
+    <h2 id="p-hosting">4. Aufruf der App und Server-Protokolle</h2>
+    <p>
+      Die Web-App wird über den Hosting-Dienst Netlify, Inc. (San Francisco,
+      USA) ausgeliefert. Beim Aufruf verarbeitet Netlify technisch notwendige
+      Daten wie Ihre IP-Adresse, Datum und Uhrzeit, die aufgerufene Datei sowie
+      Informationen zu Browser und Betriebssystem. Dabei können Daten in die USA
+      übermittelt werden (siehe Abschnitt 9).
+    </p>
+    <p>
+      Die App kommuniziert mit unserem Server (api.geogami.uni-muenster.de), der
+      an der Universität Münster betrieben wird. Der Server protokolliert jeden
+      Zugriff mit IP-Adresse, Datum und Uhrzeit, angefragter Adresse, Statuscode,
+      übertragener Datenmenge, zuvor besuchter Seite (Referrer) und
+      Browser-Kennung. Diese Protokolle dienen der Sicherheit und der
+      Fehleranalyse.
+      <!-- TODO(legal): true only once the API log fix ships (no request bodies, 14-day rotation). -->
+      Sie werden nach 14 Tagen automatisch gelöscht.
+    </p>
+
+    <h2 id="p-account">5. Nutzerkonto</h2>
+    <p>
+      Zum Spielen brauchen Sie kein Konto. Ein Konto benötigen Sie, um Spiele zu
+      erstellen, zu bearbeiten und auszuwerten. Dabei speichern wir Ihren
+      Benutzernamen, Ihre E-Mail-Adresse, optional Ihren Namen, Ihr Passwort
+      (nur als Hashwert), die gewählte Sprache, Ihre Rolle und den Zeitpunkt der
+      Registrierung. Sie dürfen als Benutzernamen ein Pseudonym verwenden.
+    </p>
+    <p>
+      An Ihre E-Mail-Adresse senden wir nur Nachrichten, die für Ihr Konto
+      erforderlich sind, z. B. zur Bestätigung der E-Mail-Adresse und zum
+      Zurücksetzen des Passworts. Der Versand erfolgt über den Mailserver der
+      Universität Münster.
+    </p>
+    <p>
+      Sie können Ihr Konto jederzeit selbst löschen: im Profil über
+      „Konto löschen“. Ihre Kontodaten werden dabei sofort gelöscht. Von Ihnen
+      erstellte Spiele, hochgeladene Medien und die Spielverläufe Ihrer Spiele
+      werden dabei derzeit nicht automatisch mitgelöscht. Auf Anfrage an
+      <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>
+      löschen wir auch diese.
+    </p>
+
+    <h2 id="p-play">6. Spielen eines Spiels</h2>
+    <p>
+      Vor Spielbeginn geben Sie einen Spielnamen ein. Bitte verwenden Sie einen
+      Spitznamen und nicht Ihren vollständigen Namen.
+    </p>
+    <p>Während eines Spiels verarbeitet die App auf Ihrem Gerät:</p>
+    <ul>
+      <li>
+        Ihren Standort (GPS) und die Kompassausrichtung Ihres Geräts – nur
+        während eines laufenden Spiels in der realen Welt, nicht im Hintergrund;
+      </li>
+      <li>in virtuellen Spielwelten statt Ihres Standorts die Position Ihres Avatars;</li>
+      <li>
+        Ihre Interaktionen mit der Karte (Tippen, Zoomen, Verschieben,
+        sichtbarer Kartenausschnitt) und Ihre Antworten, jeweils mit Zeitstempel;
+      </li>
+      <li>
+        Geräteinformationen (Modell, Hersteller, Gerätename, Betriebssystem und
+        -version, App-Version);
+      </li>
+      <li>Fotos und Audioaufnahmen, wenn eine Aufgabe dies verlangt.</li>
+    </ul>
+    <p>
+      Fotos und Audioaufnahmen werden beim Aufnehmen auf unseren Server
+      hochgeladen, damit sie im Spiel angezeigt bzw. abgespielt werden können.
+      Bitte nehmen Sie keine Personen ohne deren Einverständnis auf.
+    </p>
+    <p>
+      Bei einigen Aufgaben wird Ihr aktueller Standort an die Overpass API
+      übermittelt, um Straßen in Ihrer Nähe zu ermitteln (siehe Abschnitt 9).
+    </p>
+    <p>
+      In Mehrspieler-Spielen werden Ihr Spielname und Ihre Position während des
+      Spiels in Echtzeit über unseren Server an die anderen Spielenden derselben
+      Spielrunde übertragen.
+    </p>
+
+    <h2 id="p-tracks">7. Speicherung von Spielverläufen und Forschung</h2>
+    <!-- TODO(legal): true only once the consent checkbox can no longer be locked on (declining then just blocks games that require consent). -->
+    <p>
+      Vor Spielbeginn fragen wir Sie, ob die im Spiel erhobenen Daten
+      (Spielverlauf) gespeichert und für Forschungszwecke sowie für individuelle
+      Rückmeldungen an die Spielenden genutzt werden dürfen. Nur wenn Sie
+      einwilligen, wird der Spielverlauf auf unserem Server gespeichert. Die
+      Einwilligung ist freiwillig. Die meisten Spiele können Sie auch ohne
+      Einwilligung spielen. Bei Spielen, die eine Lehrkraft oder Studienleitung
+      per QR-Code oder Link verteilt hat, ist die Einwilligung Voraussetzung für
+      die Teilnahme, weil diese Spiele der Auswertung der Spielverläufe dienen.
+    </p>
+    <p>
+      Ein Spielverlauf enthält Ihren Spielnamen, den Namen des Spiels, Beginn und
+      Ende, den Verlauf Ihres Standorts bzw. Ihrer Avatarposition, die
+      Kartenausschnitte, Ihre Interaktionen und Antworten sowie die
+      Geräteinformationen.
+    </p>
+    <h3>Wer Spielverläufe sehen kann</h3>
+    <ul>
+      <li>
+        die Person, die das Spiel erstellt hat, und Personen, mit denen sie das
+        Spiel geteilt hat;
+      </li>
+      <li>
+        bei Spielen, die eine Lehrkraft oder Studienleitung per QR-Code oder
+        Link an Teilnehmende verteilt hat: nur diese Person;
+      </li>
+      <li>Personen, mit denen ein einzelner Spielverlauf ausdrücklich geteilt wurde;</li>
+      <li>die Administratorinnen und Administratoren des GeoGami-Teams am Institut für Geoinformatik.</li>
+    </ul>
+    <p>
+      Die Auswertung erfolgt in der App und im GeoGami-Dashboard
+      (dashboard.geogami.uni-muenster.de).
+    </p>
+    <h3>Forschung und Studien</h3>
+    <p>
+      Wir werten Spielverläufe am Institut für Geoinformatik aus, um das Lernen
+      mit Karten zu erforschen und GeoGami weiterzuentwickeln. Ergebnisse
+      veröffentlichen wir nur in einer Form, die keine Rückschlüsse auf einzelne
+      Personen zulässt.
+    </p>
+    <p>
+      Wird GeoGami in einer wissenschaftlichen Studie eingesetzt, erhalten die
+      Teilnehmenden vorab eine gesonderte Studieninformation und
+      Einwilligungserklärung. Diese legt Zweck, Umfang und Speicherdauer der
+      Daten fest und geht diesem Abschnitt vor.
+    </p>
+    <h3>Speicherdauer</h3>
+    <p>
+      Spielverläufe aus Studien speichern wir für die in der jeweiligen
+      Einwilligungserklärung genannte Dauer.
+    </p>
+    <h3>Widerruf</h3>
+    <p>
+      Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft
+      widerrufen, z. B. per E-Mail an
+      <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>.
+      Damit wir Ihren Spielverlauf finden, nennen Sie uns bitte das Spiel, Datum
+      und ungefähre Uhrzeit sowie Ihren Spielnamen. Die Rechtmäßigkeit der bis
+      zum Widerruf erfolgten Verarbeitung bleibt unberührt.
+    </p>
+    <h3>Kinder und Schulen</h3>
+    <p>
+      GeoGami wird häufig im Unterricht eingesetzt. Bei Kindern unter 16 Jahren
+      ist für die Einwilligung die Zustimmung der Erziehungsberechtigten
+      erforderlich. Lehrkräfte, die GeoGami mit einer Klasse nutzen, klären dies
+      bitte vorab mit den Erziehungsberechtigten bzw. im Rahmen der schulischen
+      Vorgaben und stellen bitte sicher, dass Schülerinnen und Schülern, die
+      nicht einwilligen, keine Nachteile entstehen.
+    </p>
+
+    <h2 id="p-create">8. Erstellen und Teilen von Spielen</h2>
+    <p>
+      Wenn Sie Spiele erstellen, speichern wir die Spielinhalte (z. B. Titel,
+      Aufgaben, Orte und Karteneinstellungen) sowie von Ihnen hochgeladene
+      Bilder und Audiodateien auf unserem Server und ordnen sie Ihrem Konto zu.
+      Spiele, die Sie als öffentlich markieren, können alle Nutzenden sehen und
+      spielen. Wenn Sie ein Spiel mit anderen Nutzenden teilen, können diese das
+      Spiel und seine Spielverläufe sehen. Bitte laden Sie keine Fotos hoch, auf
+      denen Personen ohne deren Einverständnis erkennbar sind.
+    </p>
+
+    <h2 id="p-services">9. Karten und weitere Dienste</h2>
+    <p>
+      Für die Kartendarstellung und einzelne Funktionen binden wir die folgenden
+      Dienste ein. Dabei werden jeweils Ihre IP-Adresse und technische Angaben zu
+      Browser bzw. Gerät an den Anbieter übertragen.
+    </p>
+    <ul>
+      <li>
+        <strong>Mapbox</strong> (Mapbox, Inc., Washington, D.C., USA): Karten,
+        Satellitenbilder und die Kartenbibliothek Mapbox GL JS. Übertragen wird
+        auch der angefragte Kartenausschnitt.
+        <a href="https://www.mapbox.com/legal/privacy" target="_blank" rel="noopener">Datenschutzerklärung von Mapbox</a>
+      </li>
+      <li>
+        <strong>OpenStreetMap</strong> (OpenStreetMap Foundation, Vereinigtes
+        Königreich): Kartenkacheln für einzelne Kartenebenen.
+        <a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener">Datenschutzerklärung der OSMF</a>
+      </li>
+      <li>
+        <strong>Overpass API</strong> (overpass-api.de): Abfrage von
+        OpenStreetMap-Daten zu Straßen in der Nähe Ihres aktuellen Standorts.
+        Übertragen wird dabei auch dieser Standort.
+      </li>
+      <!-- TODO(legal): remove this item once the fonts are self-hosted. -->
+      <li>
+        <strong>Google Fonts</strong> (Google Ireland Limited, Gordon House,
+        Barrow Street, Dublin 4, Irland): Schriftarten. Eine Verarbeitung in den
+        USA ist möglich.
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Datenschutzerklärung von Google</a>
+      </li>
+    </ul>
+    <p>
+      Soweit Daten in die USA übermittelt werden (Netlify, Mapbox, Google),
+      erfolgt dies auf Grundlage des Angemessenheitsbeschlusses der
+      EU-Kommission zum EU-U.S. Data Privacy Framework, soweit der Anbieter
+      danach zertifiziert ist, und im Übrigen auf Grundlage von
+      EU-Standardvertragsklauseln. Für das Vereinigte Königreich besteht ein
+      Angemessenheitsbeschluss der EU-Kommission.
+    </p>
+
+    <h2 id="p-device">10. Speicherung auf Ihrem Gerät</h2>
+    <p>
+      Die App speichert im lokalen Speicher Ihres Browsers bzw. Ihres Geräts:
+      Ihre Anmeldedaten (Zugangs-Token), die gewählte Sprache, das laufende
+      Spiel und noch nicht übertragene Spielverläufe. Die Web-App nutzt außerdem
+      einen Service Worker, der App-Dateien zwischenspeichert, damit die App
+      schneller lädt. Diese Speicherung ist für die von Ihnen genutzten
+      Funktionen unbedingt erforderlich (§ 25 Abs. 2 Nr. 2 TDDDG). Wir verwenden
+      keine Cookies zu Analyse- oder Werbezwecken.
+    </p>
+
+    <h2 id="p-stores">11. App Stores und Berechtigungen</h2>
+    <p>
+      Wenn Sie GeoGami aus dem Google Play Store oder dem Apple App Store
+      herunterladen, verarbeiten Google bzw. Apple dabei Daten nach ihren eigenen
+      Datenschutzbestimmungen. Darauf haben wir keinen Einfluss.
+    </p>
+    <p>Die App fragt nur die Berechtigungen an, die sie für einzelne Funktionen braucht:</p>
+    <ul>
+      <li>Standort – für Spiele in der realen Welt;</li>
+      <li>Kamera – für Fotoaufgaben und zum Scannen von QR-Codes (QR-Codes werden nur auf dem Gerät ausgewertet);</li>
+      <li>Mikrofon – für Aufgaben mit Audioaufnahme;</li>
+      <li>Bewegungs- und Ausrichtungssensoren – für die Kompassanzeige.</li>
+    </ul>
+    <p>
+      Sie können Berechtigungen jederzeit in den Einstellungen Ihres Geräts
+      entziehen; die jeweilige Funktion steht dann nicht zur Verfügung.
+    </p>
+
+    <h2 id="p-rights">12. Ihre Rechte</h2>
+    <p>Sie haben nach der DSGVO das Recht auf</p>
+    <ul>
+      <li>Auskunft über Ihre gespeicherten Daten (Art. 15 DSGVO),</li>
+      <li>Berichtigung unrichtiger Daten (Art. 16 DSGVO),</li>
+      <li>Löschung (Art. 17 DSGVO),</li>
+      <li>Einschränkung der Verarbeitung (Art. 18 DSGVO),</li>
+      <li>Datenübertragbarkeit (Art. 20 DSGVO),</li>
+      <li>
+        Widerspruch gegen eine Verarbeitung nach Art. 6 Abs. 1 lit. e DSGVO aus
+        Gründen, die sich aus Ihrer besonderen Situation ergeben
+        (Art. 21 DSGVO),
+      </li>
+      <li>Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO).</li>
+    </ul>
+    <p>
+      Wenden Sie sich dazu an
+      <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>
+      oder an die Stabsstelle Datenschutz (Abschnitt 2).
+    </p>
+    <p>
+      Sie haben außerdem das Recht, sich bei einer Datenschutz-Aufsichtsbehörde
+      zu beschweren. Zuständig für die Universität Münster ist:
+    </p>
+    <p>
+      Landesbeauftragte für Datenschutz und Informationsfreiheit
+      Nordrhein-Westfalen<br />
+      Postfach 20 04 44<br />
+      40102 Düsseldorf<br />
+      Telefon: 0211 38424-0<br />
+      <a href="https://www.ldi.nrw.de" target="_blank" rel="noopener">www.ldi.nrw.de</a>
+    </p>
+    <p>
+      Eine automatisierte Entscheidungsfindung einschließlich Profiling im Sinne
+      von Art. 22 DSGVO findet nicht statt.
+    </p>
+
+    <h2 id="p-changes">13. Änderungen</h2>
+    <p>
+      Wir passen diese Datenschutzerklärung an, wenn sich GeoGami oder die
+      Rechtslage ändert. Es gilt die jeweils in der App veröffentlichte Fassung.
+      Das Impressum finden Sie <a routerLink="/imprint">hier</a>.
+    </p>
+  </div>
+
+  <!-- English translation -->
+  <ng-template #english>
+    <div class="legal" lang="en" dir="ltr">
+      <ion-button fill="clear" size="small" (click)="toggleLanguage()">Deutsche Fassung</ion-button>
+
+      <h1>Privacy policy</h1>
+      <p class="legal-meta">
+        Last updated: September 2026. This translation is provided for
+        convenience; only the German version is legally binding.
+      </p>
+
+      <p>
+        This privacy policy explains which personal data we process when you use
+        GeoGami, for what purposes and on what legal basis. It applies to the
+        GeoGami app (web app and apps for Android and iOS), the associated
+        server, the virtual game worlds and the GeoGami dashboard.
+      </p>
+
+      <h2>Contents</h2>
+      <ol class="legal-toc">
+        <li><a (click)="scrollTo('p-controller')">Controller</a></li>
+        <li><a (click)="scrollTo('p-dpo')">Data protection office</a></li>
+        <li><a (click)="scrollTo('p-principles')">Principles and legal bases</a></li>
+        <li><a (click)="scrollTo('p-hosting')">Loading the app and server logs</a></li>
+        <li><a (click)="scrollTo('p-account')">User account</a></li>
+        <li><a (click)="scrollTo('p-play')">Playing a game</a></li>
+        <li><a (click)="scrollTo('p-tracks')">Storing game tracks and research</a></li>
+        <li><a (click)="scrollTo('p-create')">Creating and sharing games</a></li>
+        <li><a (click)="scrollTo('p-services')">Maps and other services</a></li>
+        <li><a (click)="scrollTo('p-device')">Storage on your device</a></li>
+        <li><a (click)="scrollTo('p-stores')">App stores and permissions</a></li>
+        <li><a (click)="scrollTo('p-rights')">Your rights</a></li>
+        <li><a (click)="scrollTo('p-changes')">Changes</a></li>
+      </ol>
+
+      <h2 id="p-controller">1. Controller</h2>
+      <p>
+        University of Münster (Universität Münster)<br />
+        Institute for Geoinformatics – SIL (Spatial Intelligence Lab)<br />
+        Prof. Dr. Angela Schwering<br />
+        Heisenbergstraße 2<br />
+        48149 Münster, Germany<br />
+        Phone: +49 251 83-30001<br />
+        Email: <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>
+      </p>
+
+      <h2 id="p-dpo">2. Data protection office</h2>
+      <p>
+        For data protection questions you can also contact the data protection
+        office of the University of Münster:
+      </p>
+      <p>
+        Stabsstelle Datenschutz<br />
+        Schlossplatz 2<br />
+        48149 Münster, Germany<br />
+        Email: <a href="mailto:datenschutz@uni-muenster.de">datenschutz&#64;uni-muenster.de</a>
+      </p>
+
+      <h2 id="p-principles">3. Principles and legal bases</h2>
+      <p>
+        GeoGami is developed and operated by the Institute for Geoinformatics for
+        teaching and research. We process personal data only as far as needed to
+        run the app, to use it in teaching and for scientific research. GeoGami
+        contains no advertising and no analytics or tracking services. We do not
+        sell data.
+      </p>
+      <p>
+        Unless stated otherwise, the legal basis is Art. 6(1)(e) GDPR in
+        conjunction with § 3 of the North Rhine-Westphalia Data Protection Act
+        (DSG NRW) and § 3 of the North Rhine-Westphalia Higher Education Act
+        (the university's tasks in research and teaching). Storing game tracks
+        for research is based on your consent (Art. 6(1)(a) GDPR, § 17 DSG NRW).
+      </p>
+      <p>
+        All connections between the app and our servers are encrypted with TLS
+        (HTTPS). We store passwords only as a cryptographic hash.
+      </p>
+
+      <h2 id="p-hosting">4. Loading the app and server logs</h2>
+      <p>
+        The web app is delivered by the hosting service Netlify, Inc. (San
+        Francisco, USA). When you open it, Netlify processes technically
+        necessary data such as your IP address, date and time, the requested file
+        and information about your browser and operating system. This may
+        involve a transfer to the USA (see section 9).
+      </p>
+      <p>
+        The app communicates with our server (api.geogami.uni-muenster.de), which
+        is operated at the University of Münster. The server logs every request
+        with IP address, date and time, requested address, status code, amount of
+        data transferred, referring page and browser identifier. These logs are
+        used for security and troubleshooting and are deleted automatically
+        after 14 days.
+      </p>
+
+      <h2 id="p-account">5. User account</h2>
+      <p>
+        You do not need an account to play. You need one to create, edit and
+        evaluate games. For an account we store your username, email address,
+        optionally your name, your password (as a hash only), your chosen
+        language, your role and the time of registration. You may use a
+        pseudonym as your username.
+      </p>
+      <p>
+        We only send emails that are necessary for your account, e.g. to confirm
+        your email address or to reset your password. They are sent via the mail
+        server of the University of Münster.
+      </p>
+      <p>
+        You can delete your account yourself at any time under "Delete account"
+        in your profile. Your account data is deleted immediately. Games you
+        created, media you uploaded and the game tracks of your games are
+        currently not deleted automatically; on request to
+        <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>
+        we delete them as well.
+      </p>
+
+      <h2 id="p-play">6. Playing a game</h2>
+      <p>
+        Before a game starts you enter a player name. Please use a nickname
+        rather than your full name.
+      </p>
+      <p>During a game the app processes on your device:</p>
+      <ul>
+        <li>
+          your location (GPS) and the compass heading of your device – only
+          while a real-world game is running, not in the background;
+        </li>
+        <li>in virtual game worlds, the position of your avatar instead of your location;</li>
+        <li>
+          your interactions with the map (taps, zooming, panning, visible map
+          section) and your answers, each with a timestamp;
+        </li>
+        <li>
+          device information (model, manufacturer, device name, operating system
+          and version, app version);
+        </li>
+        <li>photos and audio recordings, if a task asks for them.</li>
+      </ul>
+      <p>
+        Photos and audio recordings are uploaded to our server when they are
+        taken so that they can be shown or played in the game. Please do not
+        record other people without their consent.
+      </p>
+      <p>
+        For some tasks your current location is sent to the Overpass API to find
+        nearby streets (see section 9).
+      </p>
+      <p>
+        In multiplayer games your player name and position are sent in real time
+        via our server to the other players of the same game session.
+      </p>
+
+      <h2 id="p-tracks">7. Storing game tracks and research</h2>
+      <p>
+        Before a game starts we ask whether the data collected during the game
+        (game track) may be stored and used for research and to give players
+        individual feedback. The game track is stored on our server only if you
+        agree. Consent is voluntary. You can play most games without it. For
+        games that a teacher or study lead handed out via QR code or link,
+        consent is required to take part, because these games serve to evaluate
+        the game tracks.
+      </p>
+      <p>
+        A game track contains your player name, the name of the game, start and
+        end time, the history of your location or avatar position, the map
+        sections, your interactions and answers, and the device information.
+      </p>
+      <h3>Who can see game tracks</h3>
+      <ul>
+        <li>the person who created the game and people they shared the game with;</li>
+        <li>
+          for games that a teacher or study lead handed out to participants via
+          QR code or link: only that person;
+        </li>
+        <li>people a single game track was explicitly shared with;</li>
+        <li>the administrators of the GeoGami team at the Institute for Geoinformatics.</li>
+      </ul>
+      <p>
+        Game tracks are evaluated in the app and in the GeoGami dashboard
+        (dashboard.geogami.uni-muenster.de).
+      </p>
+      <h3>Research and studies</h3>
+      <p>
+        We analyse game tracks at the Institute for Geoinformatics to research
+        learning with maps and to improve GeoGami. We only publish results in a
+        form that does not allow conclusions about individual people.
+      </p>
+      <p>
+        When GeoGami is used in a scientific study, participants receive separate
+        study information and a consent form beforehand. It defines the purpose,
+        scope and retention period of the data and takes precedence over this
+        section.
+      </p>
+      <h3>Retention</h3>
+      <p>
+        Game tracks from studies are kept for the period stated in the respective
+        consent form.
+      </p>
+      <h3>Withdrawing consent</h3>
+      <p>
+        You can withdraw your consent at any time with effect for the future,
+        e.g. by email to
+        <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>.
+        So that we can find your game track, please tell us the game, the date
+        and approximate time, and your player name. Withdrawal does not affect
+        the lawfulness of processing before the withdrawal.
+      </p>
+      <h3>Children and schools</h3>
+      <p>
+        GeoGami is often used in school lessons. For children under 16, consent
+        requires the approval of their parents or guardians. Teachers who use
+        GeoGami with a class, please clarify this with the parents or guardians
+        beforehand or in line with the school's rules, and please make sure that
+        students who do not consent are not disadvantaged.
+      </p>
+
+      <h2 id="p-create">8. Creating and sharing games</h2>
+      <p>
+        When you create games we store the game content (e.g. title, tasks,
+        locations and map settings) and the images and audio files you upload on
+        our server and link them to your account. Games you mark as public can be
+        seen and played by all users. If you share a game with other users, they
+        can see the game and its game tracks. Please do not upload photos in
+        which people can be recognised without their consent.
+      </p>
+
+      <h2 id="p-services">9. Maps and other services</h2>
+      <p>
+        We use the following services for maps and individual features. Each
+        receives your IP address and technical information about your browser or
+        device.
+      </p>
+      <ul>
+        <li>
+          <strong>Mapbox</strong> (Mapbox, Inc., Washington, D.C., USA): maps,
+          satellite imagery and the Mapbox GL JS map library. The requested map
+          section is transmitted as well.
+          <a href="https://www.mapbox.com/legal/privacy" target="_blank" rel="noopener">Mapbox privacy policy</a>
+        </li>
+        <li>
+          <strong>OpenStreetMap</strong> (OpenStreetMap Foundation, United
+          Kingdom): map tiles for some map layers.
+          <a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener">OSMF privacy policy</a>
+        </li>
+        <li>
+          <strong>Overpass API</strong> (overpass-api.de): queries OpenStreetMap
+          data about streets near your current location. That location is
+          transmitted as well.
+        </li>
+        <li>
+          <strong>Google Fonts</strong> (Google Ireland Limited, Gordon House,
+          Barrow Street, Dublin 4, Ireland): fonts. Processing in the USA is
+          possible.
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google privacy policy</a>
+        </li>
+      </ul>
+      <p>
+        Where data is transferred to the USA (Netlify, Mapbox, Google), this is
+        based on the European Commission's adequacy decision for the EU-U.S. Data
+        Privacy Framework where the provider is certified under it, and
+        otherwise on EU standard contractual clauses. For the United Kingdom
+        there is an adequacy decision of the European Commission.
+      </p>
+
+      <h2 id="p-device">10. Storage on your device</h2>
+      <p>
+        The app stores in your browser's or device's local storage: your login
+        data (access tokens), your chosen language, the running game and game
+        tracks not yet uploaded. The web app also uses a service worker that
+        caches app files so the app loads faster. This storage is strictly
+        necessary for the features you use (§ 25(2) no. 2 TDDDG). We do not use
+        cookies for analytics or advertising.
+      </p>
+
+      <h2 id="p-stores">11. App stores and permissions</h2>
+      <p>
+        If you download GeoGami from the Google Play Store or the Apple App
+        Store, Google or Apple process data under their own privacy policies. We
+        have no influence on this.
+      </p>
+      <p>The app only asks for the permissions a feature needs:</p>
+      <ul>
+        <li>location – for real-world games;</li>
+        <li>camera – for photo tasks and for scanning QR codes (QR codes are only read on the device);</li>
+        <li>microphone – for tasks with audio recording;</li>
+        <li>motion and orientation sensors – for the compass.</li>
+      </ul>
+      <p>
+        You can revoke permissions at any time in your device settings; the
+        corresponding feature is then unavailable.
+      </p>
+
+      <h2 id="p-rights">12. Your rights</h2>
+      <p>Under the GDPR you have the right to</p>
+      <ul>
+        <li>access your stored data (Art. 15 GDPR),</li>
+        <li>have incorrect data corrected (Art. 16 GDPR),</li>
+        <li>erasure (Art. 17 GDPR),</li>
+        <li>restriction of processing (Art. 18 GDPR),</li>
+        <li>data portability (Art. 20 GDPR),</li>
+        <li>
+          object to processing under Art. 6(1)(e) GDPR on grounds relating to
+          your particular situation (Art. 21 GDPR),
+        </li>
+        <li>withdraw consent with effect for the future (Art. 7(3) GDPR).</li>
+      </ul>
+      <p>
+        To exercise these rights, contact
+        <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>
+        or the data protection office (section 2).
+      </p>
+      <p>
+        You also have the right to lodge a complaint with a data protection
+        supervisory authority. The authority responsible for the University of
+        Münster is:
+      </p>
+      <p>
+        Landesbeauftragte für Datenschutz und Informationsfreiheit
+        Nordrhein-Westfalen<br />
+        Postfach 20 04 44<br />
+        40102 Düsseldorf, Germany<br />
+        Phone: +49 211 38424-0<br />
+        <a href="https://www.ldi.nrw.de" target="_blank" rel="noopener">www.ldi.nrw.de</a>
+      </p>
+      <p>
+        No automated decision-making, including profiling, within the meaning of
+        Art. 22 GDPR takes place.
+      </p>
+
+      <h2 id="p-changes">13. Changes</h2>
+      <p>
+        We update this privacy policy when GeoGami or the law changes. The
+        version published in the app applies. You can find the legal notice
+        <a routerLink="/imprint">here</a>.
+      </p>
+    </div>
+  </ng-template>
+</ion-content>

@@ -1,0 +1,158 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color="dark" defaultHref="/info" text="{{ 'General.back_button' | translate }}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ "Info.imprint" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- German version: legally binding -->
+  <div class="legal" *ngIf="showGerman; else english" lang="de" dir="ltr">
+    <ion-button fill="clear" size="small" (click)="toggleLanguage()">English version</ion-button>
+
+    <h1>Impressum</h1>
+    <p class="legal-meta">Angaben gemäß § 5 DDG</p>
+
+    <h2>Anbieter</h2>
+    <p>
+      Universität Münster<br />
+      Körperschaft des öffentlichen Rechts<br />
+      Institut für Geoinformatik<br />
+      SIL – Spatial Intelligence Lab<br />
+      Heisenbergstraße 2<br />
+      48149 Münster<br />
+      Deutschland
+    </p>
+
+    <h2>Verantwortlich</h2>
+    <p>
+      Prof. Dr. Angela Schwering<br />
+      Leitung des Spatial Intelligence Lab<br />
+      Anschrift wie oben
+    </p>
+
+    <h2>Kontakt</h2>
+    <p>
+      Telefon: +49 251 83-30001<br />
+      E-Mail: <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>
+    </p>
+
+    <h2>Umsatzsteuer-Identifikationsnummer</h2>
+    <p>USt-IdNr. gemäß § 27a Umsatzsteuergesetz: DE 126118759</p>
+
+    <h2>Zuständige Aufsichtsbehörde</h2>
+    <p>
+      Ministerium für Kultur und Wissenschaft des Landes Nordrhein-Westfalen<br />
+      Völklinger Straße 49<br />
+      40221 Düsseldorf
+    </p>
+
+    <h2>Inhalte von Nutzenden</h2>
+    <p>
+      Spiele in GeoGami werden von Nutzenden erstellt, die für deren Inhalte
+      selbst verantwortlich sind. Wenn Ihnen rechtswidrige Inhalte auffallen,
+      melden Sie diese bitte an
+      <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>.
+      Wir prüfen jede Meldung und entfernen rechtswidrige Inhalte umgehend.
+    </p>
+
+    <h2>Links auf andere Websites</h2>
+    <p>
+      GeoGami enthält Links zu Websites Dritter. Für deren Inhalte sind
+      ausschließlich die jeweiligen Anbieter verantwortlich.
+    </p>
+
+    <h2>Urheberrecht</h2>
+    <p>
+      Der Quellcode der GeoGami-App ist unter der MIT-Lizenz veröffentlicht
+      (<a href="https://github.com/origami-team/geogami" target="_blank" rel="noopener">github.com/origami-team/geogami</a>).
+      Inhalte Dritter (z. B. Animationen, Icons und Sounds) sind mit Quelle und
+      Lizenz auf der <a routerLink="/info">Info-Seite</a> aufgeführt.
+    </p>
+
+    <h2>Datenschutz</h2>
+    <p>
+      Wie wir mit Ihren Daten umgehen, erklären wir in unserer
+      <a routerLink="/privacy">Datenschutzerklärung</a>.
+    </p>
+  </div>
+
+  <!-- English translation -->
+  <ng-template #english>
+    <div class="legal" lang="en" dir="ltr">
+      <ion-button fill="clear" size="small" (click)="toggleLanguage()">Deutsche Fassung</ion-button>
+
+      <h1>Legal notice (Impressum)</h1>
+      <p class="legal-meta">
+        Information pursuant to § 5 of the German Digital Services Act (DDG).
+        This translation is provided for convenience; only the German version
+        is legally binding.
+      </p>
+
+      <h2>Provider</h2>
+      <p>
+        University of Münster (Universität Münster)<br />
+        Public-law corporation (Körperschaft des öffentlichen Rechts)<br />
+        Institute for Geoinformatics<br />
+        SIL – Spatial Intelligence Lab<br />
+        Heisenbergstraße 2<br />
+        48149 Münster<br />
+        Germany
+      </p>
+
+      <h2>Responsible person</h2>
+      <p>
+        Prof. Dr. Angela Schwering<br />
+        Head of the Spatial Intelligence Lab<br />
+        Address as above
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Phone: +49 251 83-30001<br />
+        Email: <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>
+      </p>
+
+      <h2>VAT identification number</h2>
+      <p>VAT ID pursuant to § 27a of the German VAT Act: DE 126118759</p>
+
+      <h2>Supervisory authority</h2>
+      <p>
+        Ministry of Culture and Science of the State of North Rhine-Westphalia
+        (Ministerium für Kultur und Wissenschaft des Landes Nordrhein-Westfalen)<br />
+        Völklinger Straße 49<br />
+        40221 Düsseldorf, Germany
+      </p>
+
+      <h2>User-generated content</h2>
+      <p>
+        Games in GeoGami are created by users, who are responsible for their
+        content. If you notice illegal content, please report it to
+        <a href="mailto:geogami@uni-muenster.de">geogami&#64;uni-muenster.de</a>.
+        We review every report and remove illegal content promptly.
+      </p>
+
+      <h2>Links to other websites</h2>
+      <p>
+        GeoGami contains links to third-party websites. Their providers alone
+        are responsible for the content of those websites.
+      </p>
+
+      <h2>Copyright</h2>
+      <p>
+        The source code of the GeoGami app is published under the MIT License
+        (<a href="https://github.com/origami-team/geogami" target="_blank" rel="noopener">github.com/origami-team/geogami</a>).
+        Third-party content (e.g. animations, icons and sounds) is listed with
+        its source and license on the <a routerLink="/info">info page</a>.
+      </p>
+
+      <h2>Privacy</h2>
+      <p>
+        How we handle your data is explained in our
+        <a routerLink="/privacy">privacy policy</a>.
+      </p>
+    </div>
+  </ng-template>
+</ion-content>
