@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { IUser } from '../interfaces/iUser';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { UtilService } from './util.service';
@@ -406,6 +406,40 @@ export class AuthService {
         `${environment.apiURL}/user/user/${userId}/trigger-password-reset`,
         {},
         { headers: this.createHeaders(), observe: "response" }
+      )
+      .toPromise();
+  }
+
+  // admin: audit log — paginated list (keyset by createdAt via `before`)
+  getAuditLogs(opts: { limit?: number; before?: string; severity?: string } = {}): Promise<any> {
+    let params = new HttpParams();
+    if (opts.limit) params = params.set("limit", String(opts.limit));
+    if (opts.before) params = params.set("before", opts.before);
+    if (opts.severity) params = params.set("severity", opts.severity);
+    return this.http
+      .get(`${environment.apiURL}/audit`, {
+        headers: this.createHeaders(),
+        params,
+      })
+      .toPromise();
+  }
+
+  // admin: count of audit entries newer than this admin's last "seen" mark
+  getAuditUnreadCount(): Promise<any> {
+    return this.http
+      .get(`${environment.apiURL}/audit/unread-count`, {
+        headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
+  // admin: mark the audit log as read up to now (clears this admin's badge)
+  markAuditSeen(): Promise<any> {
+    return this.http
+      .post(
+        `${environment.apiURL}/audit/seen`,
+        {},
+        { headers: this.createHeaders() }
       )
       .toPromise();
   }

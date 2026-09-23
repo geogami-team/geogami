@@ -1,0 +1,39 @@
+.alert-row {
+  --background: rgba(var(--ion-color-danger-rgb), 0.08);
+}
+
+// Entries that arrived since this admin last opened the log. Shown only for
+// this visit — opening the page moves the "seen" mark, so next time they are
+// styled like any other row.
+.new-row {
+  --background: rgba(var(--ion-color-success-rgb), 0.1);
+  border-left: 4px solid var(--ion-color-success);
+}
+
+// A new row that is also a security alert keeps the red tint; the green accent
+// bar on the left still marks it as new.
+.new-row.alert-row {
+  --background: rgba(var(--ion-color-danger-rgb), 0.08);
+}
+
+.new-chip {
+  margin-left: 6px;
+  vertical-align: middle;
+  font-size: 10px;
+}
+
+.muted {
+  color: var(--ion-color-medium);
+  font-size: 0.85em;
+}
+
+.empty {
+  text-align: center;
+  color: var(--ion-color-medium);
+  margin-top: 32px;
+}
+
+.load-more {
+  margin-top: 16px;
+  text-align: center;
+}

@@ -209,6 +209,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: "user/audit-log",
+    loadChildren: () =>
+      import("./pages/user/audit-log/audit-log.module").then(
+        (m) => m.AuditLogPageModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
     path: "game-type-menu/:worldType",
     loadChildren: () =>
       import("./pages/multiplayer/game-type-menu/game-type-menu.module").then(

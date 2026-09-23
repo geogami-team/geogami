@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { SelectionModel } from "@angular/cdk/collections";
-import { AlertController, ModalController, ToastController } from "@ionic/angular";
+import { AlertController, ModalController, NavController, ToastController } from "@ionic/angular";
 import { UserDetailsModalComponent } from "./user-details-modal/user-details-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "src/app/services/auth-service.service";
@@ -38,13 +38,45 @@ export class UserManagementPage implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  // Audit-log badge state (admins only).
+  auditUnread = 0;
+  auditAlerts = 0;
+
   constructor(
     private authService: AuthService,
     public _translate: TranslateService,
     public toastController: ToastController,
     public alertController: AlertController,
-    public modalController: ModalController
+    public modalController: ModalController,
+    public navCtrl: NavController
   ) {}
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin;
+  }
+
+  // Runs on first open and every time we return from the audit-log page, so the
+  // unread badge stays current.
+  ionViewWillEnter() {
+    this.loadAuditUnread();
+  }
+
+  loadAuditUnread() {
+    if (!this.isAdmin) return;
+    this.authService
+      .getAuditUnreadCount()
+      .then((res: any) => {
+        this.auditUnread = (res && res.count) || 0;
+        this.auditAlerts = (res && res.alertCount) || 0;
+      })
+      .catch(() => {
+        /* badge is best-effort; ignore errors */
+      });
+  }
+
+  openAuditLog() {
+    this.navCtrl.navigateForward("user/audit-log");
+  }
 
   // Open a modal with the user's profile and (lazily-loaded) created games.
   async openUserDetails(user: any) {
