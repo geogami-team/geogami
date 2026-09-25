@@ -275,18 +275,21 @@ export class AuthService {
     return window.localStorage.getItem('bg_accesstoken');
   }
 
-  // Delete my account
-  DeleteMyAccount(user: string): Promise<any> {
+  // Delete my account. The server takes the account from the access token and
+  // ignores the request body, so no user data is sent.
+  DeleteMyAccount(): Promise<any> {
     return this.http
-      .post(`${environment.apiURL}/user/delete-me`, user, {
+      .post(`${environment.apiURL}/user/delete-me`, {}, {
         headers: this.createHeaders()
       })
       .toPromise();
   }
 
-  // Delete account and logout
-  DeleteAccountLogout(user: string) {
-    this.DeleteMyAccount(user);
+  // Delete the account, then log out — but only after the server has confirmed
+  // the deletion. If the request fails this rejects without logging out, so the
+  // caller can tell the user their account still exists.
+  async DeleteAccountLogout(): Promise<void> {
+    await this.DeleteMyAccount();
     this.logout();
   }
 

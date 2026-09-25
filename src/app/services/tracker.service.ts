@@ -413,7 +413,9 @@ export class TrackerService {
       appVersion: device.appVersion,
       appBuild: device.appBuild,
       appId: device.appId,
-      device_name: device.name,
+      // device.name is deliberately NOT collected: on many phones it is the
+      // owner's real name ("Anna's iPhone"), which would turn a pseudonymous
+      // track into an identifiable one for no analytical benefit.
       device_manufacturer: device.manufacturer,
     };
   }

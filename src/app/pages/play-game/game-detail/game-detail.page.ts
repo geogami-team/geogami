@@ -66,7 +66,12 @@ export class GameDetailPage implements OnInit {
   instructorId: string;
   showInstructionView: boolean = false; // only for multi-player game
 
-  disableShareData_cbox: boolean = false; // to disable shareData checkbox when game setting disableShareData is true
+  // True when this game can only be played with data-sharing consent (either the
+  // game's `disableShareData` setting or a class play opened from an instructor
+  // link). The consent box is never ticked or disabled for the player — they can
+  // always decline; declining just means this particular game can't be started.
+  // Consent that cannot be refused is not valid consent under the GDPR.
+  consentRequired: boolean = false;
 
   // Class QR (Phase 2): any logged-in user can show a QR/link that opens this
   // game pre-tagged with their user id (via `uId`), so plays are attributed to
@@ -74,11 +79,11 @@ export class GameDetailPage implements OnInit {
   classQrLink: string = "";
   isClassQrModalOpen: boolean = false;
   // Phase 3: true when this play was opened from a class QR/link (instructor in
-  // the URL) on a single-player game — consent is then forced on and locked.
-  consentLockedByInstructor: boolean = false;
+  // the URL) on a single-player game — consent is then required to play.
+  consentRequiredByInstructor: boolean = false;
   // Display names: myName = the logged-in instructor (shown in the QR modal);
   // instructorName = the instructor of a scanned class link (shown to students
-  // under the locked consent). Carried in the link as `iName` (display only).
+  // under the consent note). Carried in the link as `iName` (display only).
   myName: string = "";
   instructorName: string = "";
   // Event id from an event QR/link; tags the resulting track with the event.
@@ -151,21 +156,18 @@ export class GameDetailPage implements OnInit {
               `&iName=${encodeURIComponent(this.myName)}`;
           }
 
-          // set share data checkbox status based on game setting
-          if(this.game.disableShareData !== undefined){
-            this.disableShareData_cbox = this.game.disableShareData;  // set disableShareData checkbox status based on game setting
-            if(this.disableShareData_cbox){
-              this.shareData_cbox = true; // if disableShareData is true, check shareData checkbox
-            }
+          // The game's own setting can make sharing a condition of playing. The
+          // box is left unticked — the player decides.
+          if (this.game.disableShareData) {
+            this.consentRequired = true;
           }
 
           // Phase 3: a class play (single-player game opened from an instructor
-          // QR/link) must share data so the track reaches the instructor — force
-          // consent on and lock the toggle.
+          // QR/link) exists to send the track to the instructor, so consent is a
+          // condition of starting it — but it is still the player's to give.
           if (!game.isMultiplayerGame && this.instructorId) {
-            this.shareData_cbox = true;
-            this.disableShareData_cbox = true;
-            this.consentLockedByInstructor = true;
+            this.consentRequired = true;
+            this.consentRequiredByInstructor = true;
           }
           
           // VR world
@@ -711,9 +713,11 @@ export class GameDetailPage implements OnInit {
   async playAsInstructor() {
     this.instructorId = this.authService.getUserId();
     this.instructorName = this.myName;
+    // The instructor is recording their own play deliberately, so consent is
+    // pre-ticked here — they can still untick it, which cancels the recording.
     this.shareData_cbox = true;
-    this.disableShareData_cbox = true;
-    this.consentLockedByInstructor = true;
+    this.consentRequired = true;
+    this.consentRequiredByInstructor = true;
     // Default the player name to the instructor's name if none was entered.
     if (!this.playerName) {
       this.playerName = this.myName;

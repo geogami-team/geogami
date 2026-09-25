@@ -178,13 +178,35 @@ export class ProfilePage implements OnInit {
               );
               return false;
             }
-            this.authService.DeleteAccountLogout(this.user);
+            // Close the dialog now; the deletion runs afterwards and only a
+            // confirmed delete logs the user out.
+            this.confirmDeleteAccount();
             return true;
           },
         },
       ],
     });
     await alert.present();
+  }
+
+  // Runs the deletion and reports the outcome. On failure (network error, rate
+  // limit, server error) the user stays logged in, because their account still
+  // exists — previously they were logged out regardless of the result.
+  private async confirmDeleteAccount() {
+    try {
+      await this.authService.DeleteAccountLogout();
+      this.utilService.showToast(
+        this._translate.instant("User.deleteAccountSuccess"),
+        "success",
+        3000
+      );
+    } catch (err) {
+      this.utilService.showToast(
+        this._translate.instant("User.deleteAccountFailed"),
+        "danger",
+        4000
+      );
+    }
   }
 
   navigateRegister() {
