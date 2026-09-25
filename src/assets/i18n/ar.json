@@ -414,6 +414,8 @@
     "nameRequired": "لا يمكن ترك الاسم فارغًا.",
     "deleteAccountTypeUsername": "للتأكيد، يرجى كتابة اسم المستخدم “{{username}}” أدناه.",
     "deleteAccountWrongUsername": "اسم المستخدم المُدخل غير متطابق.",
+    "deleteAccountSuccess": "تم حذف الحساب.",
+    "deleteAccountFailed": "تعذّر حذف الحساب. يُرجى المحاولة لاحقًا.",
     "showPassword": "إظهار كلمة المرور",
     "hidePassword": "إخفاء كلمة المرور"
   },

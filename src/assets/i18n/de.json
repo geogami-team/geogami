@@ -414,6 +414,8 @@
     "nameRequired": "Der Name darf nicht leer sein.",
     "deleteAccountTypeUsername": "Gib zur Bestätigung unten deinen Benutzernamen „{{username}}“ ein.",
     "deleteAccountWrongUsername": "Der eingegebene Benutzername stimmt nicht überein.",
+    "deleteAccountSuccess": "Das Konto wurde gelöscht.",
+    "deleteAccountFailed": "Das Konto konnte nicht gelöscht werden. Bitte später erneut versuchen.",
     "showPassword": "Passwort anzeigen",
     "hidePassword": "Passwort verbergen"
   },

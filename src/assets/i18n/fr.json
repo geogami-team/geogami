@@ -414,6 +414,8 @@
     "nameRequired": "Le nom ne peut pas être vide.",
     "deleteAccountTypeUsername": "Pour confirmer, veuillez saisir votre nom d'utilisateur « {{username}} » ci-dessous.",
     "deleteAccountWrongUsername": "Le nom d'utilisateur saisi ne correspond pas.",
+    "deleteAccountSuccess": "Le compte a été supprimé.",
+    "deleteAccountFailed": "Le compte n'a pas pu être supprimé. Veuillez réessayer plus tard.",
     "showPassword": "Afficher le mot de passe",
     "hidePassword": "Masquer le mot de passe"
   },

@@ -414,6 +414,8 @@
     "nameRequired": "O nome não pode estar vazio.",
     "deleteAccountTypeUsername": "Para confirmar, introduza abaixo o seu nome de utilizador “{{username}}”.",
     "deleteAccountWrongUsername": "O nome de utilizador introduzido não corresponde.",
+    "deleteAccountSuccess": "A conta foi eliminada.",
+    "deleteAccountFailed": "Não foi possível eliminar a conta. Tente novamente mais tarde.",
     "showPassword": "Mostrar palavra-passe",
     "hidePassword": "Ocultar palavra-passe"
   },
