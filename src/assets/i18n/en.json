@@ -318,7 +318,7 @@
     "correctLocation": "Are you exactly right? Then press 'okay'!",
     "gameConnection": "Connection code",
     "pl_EnterCode": "Enter connection code",
-    "shareDataAgreement": "I agree that the collected data may be processed anonymously for research purposes and used to create individual feedback for players.",
+    "shareDataAgreement": "I agree that the data collected during play may be processed under my player name for research purposes and to create individual feedback for players. Results are only published in anonymised, aggregated form.",
     "allGames": "All",
     "myGames": "My games",
     "published": "Published",

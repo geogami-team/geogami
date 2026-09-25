@@ -318,7 +318,7 @@
     "correctLocation": "Êtes-vous exactement au bon endroit ? Alors appuyez sur 'd'accord' !",
     "gameConnection": "Code de connexion",
     "pl_EnterCode": "Entrez le code de connexion",
-    "shareDataAgreement": "J’accepte que les données collectées soient traitées sous forme anonymisée à des fins de recherche et utilisées pour fournir un retour individuel aux joueurs.",
+    "shareDataAgreement": "J’accepte que les données collectées pendant le jeu soient traitées sous mon nom de joueur à des fins de recherche et pour créer un retour individuel pour les joueurs. Les résultats ne sont publiés que sous une forme anonymisée et agrégée.",
     "allGames": "Tous",
     "myGames": "Mes jeux",
     "published": "Publiés",
