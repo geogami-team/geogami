@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color="dark" defaultHref="/user/user-management" text="{{ 'General.back_button' | translate }}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Audit log</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="severity" (ionChange)="onSeverityChange()">
+      <ion-segment-button value="all">
+        <ion-label>All events</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="alert">
+        <ion-label>Security alerts</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list lines="full">
+    <ion-item
+      *ngFor="let e of entries"
+      [class.alert-row]="e.severity === 'alert'"
+      [class.new-row]="isNew(e)"
+    >
+      <ion-icon
+        slot="start"
+        [name]="e.severity === 'alert' ? 'warning-outline' : 'document-text-outline'"
+        [color]="e.severity === 'alert' ? 'danger' : 'medium'"
+      ></ion-icon>
+      <ion-label class="ion-text-wrap">
+        <h3>
+          {{ actionLabel(e.action) }}
+          <ion-badge *ngIf="isNew(e)" color="success" class="new-chip">New</ion-badge>
+        </h3>
+        <p>{{ e.createdAt | date: "medium" }}</p>
+        <p>
+          <span *ngIf="e.actorUsername">by {{ e.actorUsername }}</span>
+          <span *ngIf="!e.actorUsername">by (unauthenticated)</span>
+          <span *ngIf="e.targetUsername && e.targetUsername !== e.actorUsername">
+            → {{ e.targetUsername }}</span
+          >
+        </p>
+        <p *ngIf="metaSummary(e)">{{ metaSummary(e) }}</p>
+        <p class="muted" *ngIf="e.ip">IP: {{ e.ip }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="empty" *ngIf="!loading && entries.length === 0">
+    <p>No audit entries yet.</p>
+  </div>
+
+  <div class="load-more" *ngIf="hasMore">
+    <ion-button fill="outline" expand="block" (click)="loadMore()" [disabled]="loading">
+      Load more
+    </ion-button>
+  </div>
+
+  <div class="load-more" *ngIf="loading">
+    <ion-spinner name="dots"></ion-spinner>
+  </div>
+</ion-content>

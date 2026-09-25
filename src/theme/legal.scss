@@ -1,0 +1,39 @@
+// Shared styles for the legal pages (imprint + privacy policy).
+
+.legal {
+  max-width: 760px;
+  margin: 0 auto;
+  line-height: 1.5;
+
+  h1 {
+    font-size: 1.6em;
+    margin-top: 8px;
+  }
+
+  h2 {
+    font-size: 1.2em;
+    margin-top: 28px;
+  }
+
+  h3 {
+    font-size: 1em;
+    margin-top: 18px;
+  }
+
+  ul {
+    padding-inline-start: 20px;
+  }
+
+  a {
+    word-break: break-word;
+  }
+
+  .legal-meta {
+    color: var(--ion-color-medium);
+    font-size: 0.9em;
+  }
+
+  .legal-toc a {
+    cursor: pointer;
+  }
+}

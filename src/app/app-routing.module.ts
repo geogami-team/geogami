@@ -156,6 +156,16 @@ const routes: Routes = [
       import("./pages/info/info.module").then((m) => m.InfoPageModule),
   },
   {
+    path: "imprint",
+    loadChildren: () =>
+      import("./pages/imprint/imprint.module").then((m) => m.ImprintPageModule),
+  },
+  {
+    path: "privacy",
+    loadChildren: () =>
+      import("./pages/privacy/privacy.module").then((m) => m.PrivacyPageModule),
+  },
+  {
     path: "showroom",
     loadChildren: () =>
       import("./pages/showroom/showroom/showroom.module").then(
@@ -195,6 +205,14 @@ const routes: Routes = [
     loadChildren: () =>
       import("./pages/user/user-management/user-management.module").then(
         (m) => m.UserManagementPageModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "user/audit-log",
+    loadChildren: () =>
+      import("./pages/user/audit-log/audit-log.module").then(
+        (m) => m.AuditLogPageModule
       ),
     canActivate: [AuthGuard],
   },

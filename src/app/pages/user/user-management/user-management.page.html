@@ -4,6 +4,16 @@
       <ion-back-button color="dark" defaultHref="/" text="{{ 'General.back_button' | translate }}"></ion-back-button>
     </ion-buttons>
     <ion-title> User Management</ion-title>
+    <ion-buttons slot="end" *ngIf="isAdmin">
+      <ion-button (click)="openAuditLog()" title="Audit log">
+        <ion-icon slot="icon-only" name="shield-checkmark-outline"></ion-icon>
+        <ion-badge
+          *ngIf="auditUnread > 0"
+          [color]="auditAlerts > 0 ? 'danger' : 'primary'"
+          class="audit-badge"
+        >{{ auditUnread }}</ion-badge>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
