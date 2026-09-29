@@ -87,9 +87,9 @@
           </span>
         </ion-note>
       </ion-item>
-      <!-- Opened from an instructor QR/link but consent not given: say so,
+      <!-- Consent is required for this game but has not been given: say so,
            rather than silently leaving the start button disabled. -->
-      <ion-item lines="none" *ngIf="consentRequiredByInstructor && !shareData_cbox">
+      <ion-item lines="none" *ngIf="consentRequired && !shareData_cbox">
         <ion-note color="danger" class="ion-text-wrap">
           {{ 'PlayGame.consentRequiredToPlay' | translate }}
         </ion-note>
@@ -241,7 +241,7 @@
     <ion-button
       expand="block"
       (click)="startGame()"
-      [disabled]="!playerName || (consentRequiredByInstructor && !shareData_cbox)"
+      [disabled]="!playerName || (consentRequired && !shareData_cbox)"
       >{{ "General.start" | translate }}</ion-button
     >
   </ion-toolbar>

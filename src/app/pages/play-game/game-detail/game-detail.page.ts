@@ -66,18 +66,20 @@ export class GameDetailPage implements OnInit {
   instructorId: string;
   showInstructionView: boolean = false; // only for multi-player game
 
+  // True when this game can only be played with data-sharing consent (either the
+  // game's `disableShareData` setting or a class play opened from an instructor
+  // link). The consent box is never ticked or disabled for the player — they can
+  // always decline; declining just means this particular game can't be started.
+  // Consent that cannot be refused is not valid consent under the GDPR.
+  consentRequired: boolean = false;
+
   // Class QR (Phase 2): any logged-in user can show a QR/link that opens this
   // game pre-tagged with their user id (via `uId`), so plays are attributed to
   // them as instructor. Set once the game loads and a user is logged in.
   classQrLink: string = "";
   isClassQrModalOpen: boolean = false;
-  // Phase 3: true when this play was opened from a class/event QR or link
-  // (instructor `uId` in the URL) on a single-player game. This is the only case
-  // in which consent is a condition of starting (privacy page §7); every other
-  // game, including one with the author's `disableShareData` toggle on, can be
-  // played without it. The box is never ticked or disabled for the player —
-  // declining just means this game can't be started. Consent that cannot be
-  // refused is not valid consent under the GDPR.
+  // Phase 3: true when this play was opened from a class QR/link (instructor in
+  // the URL) on a single-player game — consent is then required to play.
   consentRequiredByInstructor: boolean = false;
   // Display names: myName = the logged-in instructor (shown in the QR modal);
   // instructorName = the instructor of a scanned class link (shown to students
@@ -154,10 +156,17 @@ export class GameDetailPage implements OnInit {
               `&iName=${encodeURIComponent(this.myName)}`;
           }
 
+          // The game's own setting can make sharing a condition of playing. The
+          // box is left unticked — the player decides.
+          if (this.game.disableShareData) {
+            this.consentRequired = true;
+          }
+
           // Phase 3: a class play (single-player game opened from an instructor
           // QR/link) exists to send the track to the instructor, so consent is a
           // condition of starting it — but it is still the player's to give.
           if (!game.isMultiplayerGame && this.instructorId) {
+            this.consentRequired = true;
             this.consentRequiredByInstructor = true;
           }
           
@@ -707,6 +716,7 @@ export class GameDetailPage implements OnInit {
     // The instructor is recording their own play deliberately, so consent is
     // pre-ticked here — they can still untick it, which cancels the recording.
     this.shareData_cbox = true;
+    this.consentRequired = true;
     this.consentRequiredByInstructor = true;
     // Default the player name to the instructor's name if none was entered.
     if (!this.playerName) {
