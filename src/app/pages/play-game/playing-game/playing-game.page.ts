@@ -190,6 +190,10 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   isZoomedToTaskMapPoint = false;
   showCorrectPositionModal = false;
 
+  // (V.E.): refit the env. map when the map panel is resized, until the player moves the map
+  autoFitVirEnvMap = false;
+  mapResizeObserver: ResizeObserver;
+
   numberInput: number;
   textInput: string;
 
@@ -731,6 +735,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopExplorationTimer();
+    this.mapResizeObserver?.disconnect();
     // console.log(" ngOnDestroy")
     // To disconnect socket connection
     // this.socketService.disconnectSocket();
@@ -1214,6 +1219,22 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       }
     });
 
+    // (V.E.): the VE app resizes the map panel after a task has started (task's map size, map size slider),
+    // so keep the whole env. map in view until the player moves the map
+    if (this.isVirtualWorld) {
+      this.map.on("movestart", ({ originalEvent }) => {
+        if (originalEvent) {
+          this.autoFitVirEnvMap = false;
+        }
+      });
+      this.mapResizeObserver = new ResizeObserver(() => {
+        if (this.autoFitVirEnvMap) {
+          this.fitVirEnvMap();
+        }
+      });
+      this.mapResizeObserver.observe(this.mapContainer.nativeElement);
+    }
+
     // ToDO: Device-orientation subscription (except with realworld game using web browser)
     // ToDo: test it
     if (!this.isVirtualWorld) {
@@ -1661,6 +1682,37 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     }
   }
 
+  /* (V.E.): show the whole env. map when a task starts, whatever the size of the map panel */
+  fitVirEnvMap() {
+    const layer = virEnvLayers[this.virEnvType];
+    if (!layer || layer.keepInitialView) {
+      return;
+    }
+
+    // the map panel may have been resized (e.g. by the VE app) since the map was created
+    this.map.resize();
+
+    const imageBounds = new mapboxgl.LngLatBounds();
+    layer.overlayCoords.forEach((coord) => imageBounds.extend(coord));
+
+    // keep the image clear of the task card, which floats over the bottom of the map
+    const mapRect = this.mapContainer.nativeElement.getBoundingClientRect();
+    const card = this.panel?.nativeElement.querySelector(".task-control");
+    const cardOverlap = card ? mapRect.bottom - card.getBoundingClientRect().top : 0;
+    const bottom = Math.min(Math.max(cardOverlap, 0) + 20, mapRect.height / 2);
+
+    // the env. maxBounds is too tight for narrow panels and would clamp the fit,
+    // so fit without it and then widen it just enough to allow the fitted view
+    this.map.setMaxBounds(null);
+    this.map.fitBounds(imageBounds, {
+      padding: { top: 20, right: 20, bottom, left: 20 },
+      bearing: this.map.getBearing(),
+      duration: 0,
+    });
+    const envBounds = new mapboxgl.LngLatBounds(layer.bounds[0], layer.bounds[1]);
+    this.map.setMaxBounds(envBounds.extend(this.map.getBounds()));
+  }
+
   async initGame() {
     /* multiplayer */
     if (this.isSingleMode) {
@@ -2078,6 +2130,9 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       } catch (e) {
       // console.log(e);
       }
+    } else {
+      this.autoFitVirEnvMap = true;
+      this.fitVirEnvMap();
     }
 
     if (
