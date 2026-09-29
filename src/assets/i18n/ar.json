@@ -127,7 +127,7 @@
     "gameSaved": "تم حفظ لعبتك!",
     "setCuratedGame": "تعيين كلعبة مختارة",
     "enterValidGameName": "يرجى إدخال اسم لعبة صالح.",
-    "disableShareDataConsent": "تعطيل الموافقة على مشاركة البيانات",
+    "disableShareDataConsent": "اشتراط الموافقة على مشاركة البيانات للعب",
     "skipTaskPin": "رمز \u2066PIN\u2069 للتنقل بين المهام (اختياري)",
     "skipTaskPinPlaceholder": "رمز \u2066PIN\u2069 مكون من 4 أرقام لتخطي المهام"
   },

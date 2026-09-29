@@ -67,6 +67,7 @@ export const virEnvLayers: Readonly<any> = {
     center: [0.001351351351 / 2 + 0.00023, 0.001517857143 / 2 + 0.000175],
     bounds: VirEnv_5.bounds,
     zoom: 19,
+    keepInitialView: true, // zoom study: starts zoomed in on purpose (#534), not fitted to the full map
     zoomInLayer1: "VirEnv_5_zoom1",
     zoomThreashold: VirEnv_5.zoomThreashold,
   },
@@ -316,6 +317,7 @@ export const virEnvLayers: Readonly<any> = {
     center: [0.001531531532 / 2 + 0.00031, 0.001339285714 / 2 + 0.00023],
     bounds: VirEnv_34.bounds,
     zoom: 19,
+    keepInitialView: true, // zoom study: starts zoomed in on purpose (#534), not fitted to the full map
     zoomInLayer1: "VirEnv_35_zoom1",
     zoomThreashold: VirEnv_34.zoomThreashold,
   },
@@ -326,6 +328,7 @@ export const virEnvLayers: Readonly<any> = {
     center: [0.002119500085399295, 0.0008621423878878431],
     bounds: VirEnv_36.bounds,
     zoom: 18.45,
+    keepInitialView: true, // zoom study: starts zoomed in on purpose (#534), not fitted to the full map
     zoomInLayer1: "VirEnv_36_zoom1",
     zoomInLayer2: "VirEnv_36_zoom2",
     zoomThreashold: VirEnv_36.zoomThreashold,

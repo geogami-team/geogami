@@ -127,7 +127,7 @@
     "gameSaved": "O seu GeoGami foi guardado!",
     "setCuratedGame": "Definir como jogo selecionado",
     "enterValidGameName": "Introduza um nome de jogo válido.",
-    "disableShareDataConsent": "Desativar o consentimento para a partilha de dados",
+    "disableShareDataConsent": "Exigir o consentimento de partilha de dados para jogar",
     "skipTaskPin": "PIN de navegação (opcional)",
     "skipTaskPinPlaceholder": "PIN de 4 dígitos para saltar tarefas"
   },
