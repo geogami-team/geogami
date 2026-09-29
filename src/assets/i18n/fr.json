@@ -127,7 +127,7 @@
     "gameSaved": "Votre jeu a été enregistré !",
     "setCuratedGame": "Définir comme jeu sélectionné",
     "enterValidGameName": "Veuillez entrer un nom de jeu valide.",
-    "disableShareDataConsent": "Désactiver le consentement de partage des données",
+    "disableShareDataConsent": "Exiger le consentement au partage des données pour jouer",
     "skipTaskPin": "PIN de navigation (optionnel)",
     "skipTaskPinPlaceholder": "PIN à 4 chiffres pour passer les tâches"
   },

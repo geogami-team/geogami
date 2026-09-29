@@ -127,7 +127,7 @@
     "gameSaved": "Dein GeoGami wurde gespeichert!",
     "setCuratedGame": "Als kuratiertes Spiel einstellen",
     "enterValidGameName": "Bitte gib einen gültigen Spielnamen ein.",
-    "disableShareDataConsent": "Einwilligung zur Datenweitergabe deaktivieren",
+    "disableShareDataConsent": "Einwilligung zur Datenweitergabe zum Spielen voraussetzen",
     "skipTaskPin": "Navigations-PIN (optional)",
     "skipTaskPinPlaceholder": "4-stellige PIN zum Überspringen von Aufgaben"
   },

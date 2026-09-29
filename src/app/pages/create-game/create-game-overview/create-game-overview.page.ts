@@ -58,7 +58,7 @@ export class CreateGameOverviewPage implements AfterViewInit {
   isVRMirrored: boolean = false;
   virEnvType: string; // new to store vir env type
 
-  disableShareData: boolean = false;      // to disable share data consent
+  disableShareData: boolean = false;      // players must consent to data sharing to play
   skipTaskPin: string = "";      // to store skip task pin
 
   userRole: String = "";
@@ -492,7 +492,7 @@ export class CreateGameOverviewPage implements AfterViewInit {
       virEnvType: this.virEnvType /* to store vir env name */,
       isVisible: true, // new game is visible by default
       isPublished: false, // new games start as drafts; creator publishes them explicitly
-      disableShareData: this.disableShareData, // to disable share data consent
+      disableShareData: this.disableShareData, // players must consent to data sharing to play
       skipTaskPin: this.skipTaskPin, // to store skip task pin
       isMultiplayerGame: !this.isSingleMode ? true : undefined,
       numPlayers: !this.isSingleMode ? this.numPlayers : undefined,

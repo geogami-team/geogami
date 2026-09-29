@@ -57,7 +57,7 @@ export class EditGameOverviewPage implements AfterViewInit {
   isVirtualWorld: boolean = false;
   isVRMirrored: boolean = false;
 
-  disableShareData: boolean = false;      // to disable share data consent
+  disableShareData: boolean = false;      // players must consent to data sharing to play
   skipTaskPin: string = "";      // to store skip task pin
 
   userRole: String = "";
@@ -478,7 +478,7 @@ export class EditGameOverviewPage implements AfterViewInit {
       geofence: this.geofence,
       name: this.game.name,
       place: this.game.place,
-      disableShareData: this.disableShareData, // to disable share data consent
+      disableShareData: this.disableShareData, // players must consent to data sharing to play
       skipTaskPin: this.skipTaskPin, // to store skip task pin
       tasksCount: this.game.tasks.length, //* it might happen that user add or remove tasks, so we need to update the tasks
     });

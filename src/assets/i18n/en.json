@@ -127,7 +127,7 @@
     "gameSaved": "Your game has been saved!",
     "setCuratedGame": "Set as a curated game",
     "enterValidGameName": "Please enter a valid game name.",
-    "disableShareDataConsent": "Disable share data consent",
+    "disableShareDataConsent": "Require data sharing consent to play",
     "skipTaskPin": "Navigation PIN (optional)",
     "skipTaskPinPlaceholder": "4-digit PIN to skip tasks"
   },
