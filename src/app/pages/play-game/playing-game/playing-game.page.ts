@@ -1222,8 +1222,9 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     // (V.E.): the VE app resizes the map panel after a task has started (task's map size, map size slider),
     // so keep the whole env. map in view until the player moves the map
     if (this.isVirtualWorld) {
+      // note: mapbox also passes the window resize event as originalEvent when the map panel (iframe) is resized
       this.map.on("movestart", ({ originalEvent }) => {
-        if (originalEvent) {
+        if (originalEvent && originalEvent.type !== "resize") {
           this.autoFitVirEnvMap = false;
         }
       });
