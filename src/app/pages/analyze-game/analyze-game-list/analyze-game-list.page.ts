@@ -24,7 +24,7 @@ export class AnalyzeGameListPage implements OnInit {
   tracks: any[] = [];
   gamesWithTracks: any[] = [];
 
-  // to only allow admins and scholars to see this page
+  // to only allow logged-in users to see this page (the API scopes which tracks each caller sees)
   user = this.authService.getUser();
   userRole: string;
 
@@ -51,11 +51,17 @@ export class AnalyzeGameListPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    // Check user role. Allow only ["admin", "contentAdmin", "scholar"] to access evlaute page
+    // Check user role. Allow ["admin", "contentAdmin", "trackAccess", "scholar", "user"] to access evaluate page
     this.user.subscribe((event) => {
       if (
         event == null ||
-        !["admin", "contentAdmin", "scholar"].includes(event["roles"][0])
+        ![
+          "admin",
+          "contentAdmin",
+          "trackAccess",
+          "scholar",
+          "user",
+        ].includes(event["roles"][0])
       ) {
         this.navCtrl.navigateForward("/");
       }
