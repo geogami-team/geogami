@@ -71,7 +71,7 @@ import { OrigamiOrientationService } from "src/app/services/origami-orientation.
 import { throttle } from "rxjs/operators";
 
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
-import { SocketService } from "src/app/services/socket.service";
+import { SocketService, VE_CLOSE_FRAME_MESSAGE } from "src/app/services/socket.service";
 import { AvatarPosition } from "src/app/models/avatarPosition";
 import { Coords } from "src/app/models/coords";
 import { TranslateService } from "@ngx-translate/core";
@@ -2716,6 +2716,12 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.positionSubscription.unsubscribe();
       this.deviceOrientationSubscription.unsubscribe();
     } else {
+      // Ask the page hosting the WebGL frame (playing-virenv) to close it directly;
+      // the socket round-trip below is lost if a socket reconnected during the game.
+      if (window.top !== window.self) {
+        window.top.postMessage({ type: VE_CLOSE_FRAME_MESSAGE }, "*");
+      }
+
       // Ve-multi and single player (disconnect socket connection when done btn is pressed) - to make sure vr app is closed before disconnecting socket connection
       this.socketService.closeVEGame();
       // disconnect when user navigate home
