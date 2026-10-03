@@ -135,6 +135,11 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   lastKnownPosition: GeolocationPosition;
 
   // VR world
+  // Avatar keys bound in the VE's InputMaster (walk, rotate, speed up/down)
+  private static readonly AVATAR_KEYS = new Set([
+    "KeyW", "KeyA", "KeyS", "KeyD", "KeyQ", "KeyE",
+    "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+  ]);
   isVirtualWorld: boolean = false;
   isVRMirrored: boolean = false; // for multi VR designs
   virEnvType: string = null;
@@ -574,6 +579,12 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.sTaskNo = JSON.parse(params.bundle).sTaskNo;
     });
 
+    // Capture phase, so the keys reach here before mapbox's arrow-key panning
+    if (this.isVirtualWorld && window.parent !== window) {
+      window.addEventListener("keydown", this.handOverAvatarKey, true);
+      window.addEventListener("keyup", this.handOverAvatarKey, true);
+    }
+
     this.game = null;
     this.game = new Game(
       0,
@@ -705,6 +716,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   /******************/
   ionViewWillLeave() {
     this.stopExplorationTimer();
+    window.removeEventListener("keydown", this.handOverAvatarKey, true);
+    window.removeEventListener("keyup", this.handOverAvatarKey, true);
     // Disconnect server when leaving playing-page
     if (!this.isSingleMode) {
       this.disconnectSocketIO();
@@ -736,10 +749,30 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.stopExplorationTimer();
     this.mapResizeObserver?.disconnect();
+    window.removeEventListener("keydown", this.handOverAvatarKey, true);
+    window.removeEventListener("keyup", this.handOverAvatarKey, true);
     // console.log(" ngOnDestroy")
     // To disconnect socket connection
     // this.socketService.disconnectSocket();
   }
+
+  /* In the VE this page runs in the Vuplex iframe over the Unity canvas, so after a click
+     here the keyboard stays in this frame and the avatar stops responding. Hand avatar keys
+     to the Unity page (its WebGL template listens for "geogami:ve-key"), which takes focus
+     back and replays the key. Keys typed into an answer field stay here. */
+  private handOverAvatarKey = (e: KeyboardEvent) => {
+    if (!PlayingGamePage.AVATAR_KEYS.has(e.code)) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const target = e.composedPath()[0] as HTMLElement;
+    if (target?.isContentEditable || target?.closest?.("input, textarea, select")) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+    window.parent.postMessage(
+      { type: "geogami:ve-key", event: e.type, key: e.key, code: e.code, keyCode: e.keyCode },
+      "*"
+    );
+  };
 
   // With VR env only
   connectSocketIO(task) {
