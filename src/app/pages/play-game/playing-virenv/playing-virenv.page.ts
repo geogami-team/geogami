@@ -1,7 +1,16 @@
 import { HttpParams } from "@angular/common/http";
-import { Component, OnInit, SecurityContext } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  SecurityContext,
+  ViewChild,
+} from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
+import { NavController } from "@ionic/angular";
+import { VE_CLOSE_FRAME_MESSAGE } from "src/app/services/socket.service";
 import { environment } from "src/environments/environment";
 
 @Component({
@@ -10,14 +19,28 @@ import { environment } from "src/environments/environment";
   styleUrls: ["./playing-virenv.page.scss"],
 })
 export class PlayingVirenvPage implements OnInit {
+  @ViewChild("veFrame") veFrame: ElementRef<HTMLIFrameElement>;
+
   webGLURL: string = null;
   url: string = null;
   urlSafe: SafeResourceUrl;
+  @ViewChild("veFrame") veFrame: ElementRef<HTMLIFrameElement>;
 
   constructor(
     private route: ActivatedRoute,
-    private readonly domSanitizer: DomSanitizer
+    private readonly domSanitizer: DomSanitizer,
+    private navCtrl: NavController
   ) {}
+
+  /* The VE's error banner (e.g. environment failed to load) has a "Back to game list"
+     button, as this page has no controls around the frame. Its WebGL template posts
+     "geogami:ve-exit" when it is pressed. */
+  @HostListener("window:message", ["$event"])
+  onVEMessage(event: MessageEvent) {
+    if (event.data?.type !== "geogami:ve-exit") return;
+    if (event.source !== this.veFrame?.nativeElement.contentWindow) return;
+    this.navCtrl.navigateBack("play-game/play-game-list");
+  }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -47,5 +70,25 @@ export class PlayingVirenvPage implements OnInit {
   /* To sanitize url before being shown in iframe */
   sanitizedURL(url: string) {
     return this.domSanitizer.bypassSecurityTrustResourceUrl(this.webGLURL);
+  }
+
+  /**
+   * Close the WebGL frame when the game is finished.
+   * Unlike the "closeWebGLFrame" socket event, this doesn't depend on the sockets
+   * still being in the game room (they are not after a reconnect).
+   */
+  @HostListener("window:message", ["$event"])
+  onFrameMessage(event: MessageEvent) {
+    if (event.data?.type !== VE_CLOSE_FRAME_MESSAGE) return;
+    if (!this.isFromVEFrame(event.source as Window)) return;
+    this.navCtrl.navigateRoot("/");
+  }
+
+  /* the inner GeoGami app is a direct child of our WebGL frame (Vuplex iframe); parent is readable cross-origin */
+  private isFromVEFrame(source: Window) {
+    console.log("🚀 ~~~~~~ PlayingVirenvPage ~ isFromVEFrame ~ source:", source)
+    const frameWindow = this.veFrame?.nativeElement.contentWindow;
+    console.log("🚀 ~~~~~ PlayingVirenvPage ~ isFromVEFrame ~ frameWindow:", frameWindow)
+    return !!frameWindow && !!source && source.parent === frameWindow;
   }
 }
