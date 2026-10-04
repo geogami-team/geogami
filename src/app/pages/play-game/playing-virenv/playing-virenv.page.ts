@@ -31,16 +31,6 @@ export class PlayingVirenvPage implements OnInit {
     private navCtrl: NavController
   ) {}
 
-  /* The VE's error banner (e.g. environment failed to load) has a "Back to game list"
-     button, as this page has no controls around the frame. Its WebGL template posts
-     "geogami:ve-exit" when it is pressed. */
-  @HostListener("window:message", ["$event"])
-  onVEMessage(event: MessageEvent) {
-    if (event.data?.type !== "geogami:ve-exit") return;
-    if (event.source !== this.veFrame?.nativeElement.contentWindow) return;
-    this.navCtrl.navigateBack("play-game/play-game-list");
-  }
-
   ngOnInit() {
     this.route.params.subscribe((params) => {
       if (params) {
@@ -72,15 +62,24 @@ export class PlayingVirenvPage implements OnInit {
   }
 
   /**
-   * Close the WebGL frame when the game is finished.
-   * Unlike the "closeWebGLFrame" socket event, this doesn't depend on the sockets
-   * still being in the game room (they are not after a reconnect).
+   * Messages from the WebGL frame. Angular (v12) registers only one @HostListener per
+   * event on a component (the last one wins), so all of them are handled here:
+   * - "geogami:ve-exit": the "Back to game list" button in the VE's error banner
+   *   (e.g. environment failed to load), as this page has no controls around the frame.
+   * - VE_CLOSE_FRAME_MESSAGE: close the WebGL frame when the game is finished.
+   *   Unlike the "closeWebGLFrame" socket event, this doesn't depend on the sockets
+   *   still being in the game room (they are not after a reconnect).
    */
   @HostListener("window:message", ["$event"])
   onFrameMessage(event: MessageEvent) {
-    if (event.data?.type !== VE_CLOSE_FRAME_MESSAGE) return;
-    if (!this.isFromVEFrame(event.source as Window)) return;
-    this.navCtrl.navigateRoot("/");
+    if (event.data?.type === "geogami:ve-exit") {
+      // posted by the WebGL template itself, i.e. our iframe's own window
+      if (event.source !== this.veFrame?.nativeElement.contentWindow) return;
+      this.navCtrl.navigateBack("play-game/play-game-list");
+    } else if (event.data?.type === VE_CLOSE_FRAME_MESSAGE) {
+      if (!this.isFromVEFrame(event.source as Window)) return;
+      this.navCtrl.navigateRoot("/");
+    }
   }
 
   /* the inner GeoGami app is a direct child of our WebGL frame (Vuplex iframe); parent is readable cross-origin */
