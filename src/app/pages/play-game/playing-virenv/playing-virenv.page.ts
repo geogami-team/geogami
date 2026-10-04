@@ -24,7 +24,6 @@ export class PlayingVirenvPage implements OnInit {
   webGLURL: string = null;
   url: string = null;
   urlSafe: SafeResourceUrl;
-  @ViewChild("veFrame") veFrame: ElementRef<HTMLIFrameElement>;
 
   constructor(
     private route: ActivatedRoute,
