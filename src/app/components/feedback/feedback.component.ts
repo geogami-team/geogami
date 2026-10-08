@@ -214,6 +214,27 @@ export class FeedbackComponent {
     this.task = task;
   }
 
+  private getTargetDirection(compassHeading: number): number {
+    const bearing = this.task.question.direction?.bearing;
+    if (this.task.answer.type === AnswerType.DIRECTION) {
+      return bearing ?? 0;
+    }
+    return this.task.question.type === QuestionType.MAP_DIRECTION_PHOTO
+      ? bearing ?? compassHeading
+      : compassHeading;
+  }
+
+  private getDirectionDifference(heading: number, target: number): number {
+    // Compare the shortest angle, including headings on either side of north.
+    return this.Math.abs(((heading - target) % 360 + 540) % 360 - 180);
+  }
+
+  private isDirectionCorrect(heading: number, compassHeading: number): boolean {
+    return heading != null && this.getDirectionDifference(
+      heading, this.getTargetDirection(compassHeading)
+    ) <= this.DIRECTION_TRESHOLD;
+  }
+
   public async setAnswer({
     selectedPhoto,
     isCorrectPhotoSelected,
@@ -429,15 +450,8 @@ export class FeedbackComponent {
     }
 
     if (this.task.answer.type == AnswerType.DIRECTION) {
-      // // console.log(this.Math.abs(directionBearing - compassHeading));
-      this.initFeedback(
-        this.Math.abs(directionBearing - compassHeading) <=
-          this.DIRECTION_TRESHOLD,
-        { clickDirection }
-      );
-      isCorrect =
-        this.Math.abs(directionBearing - compassHeading) <=
-        this.DIRECTION_TRESHOLD;
+      isCorrect = this.isDirectionCorrect(compassHeading, compassHeading);
+      this.initFeedback(isCorrect, { compassHeading, clickDirection });
       answer = {
         compassHeading,
         correct: isCorrect,
@@ -445,31 +459,9 @@ export class FeedbackComponent {
     }
 
     if (this.task.answer.type == AnswerType.MAP_DIRECTION) {
-      if (clickDirection != 0) {
-        if (
-          this.task.question.type == QuestionType.MAP_DIRECTION_PHOTO &&
-          this.task.question.direction?.bearing != undefined
-        ) {
-          this.initFeedback(
-            this.Math.abs(
-              clickDirection - this.task.question.direction.bearing
-            ) <= this.DIRECTION_TRESHOLD,
-            { clickDirection }
-          );
-          isCorrect =
-            this.Math.abs(
-              clickDirection - this.task.question.direction.bearing
-            ) <= this.DIRECTION_TRESHOLD;
-        } else {
-          this.initFeedback(
-            this.Math.abs(clickDirection - compassHeading) <=
-              this.DIRECTION_TRESHOLD,
-            { clickDirection }
-          );
-          isCorrect =
-            this.Math.abs(clickDirection - compassHeading) <=
-            this.DIRECTION_TRESHOLD;
-        }
+      if (clickDirection != null) {
+        isCorrect = this.isDirectionCorrect(clickDirection, compassHeading);
+        this.initFeedback(isCorrect, { compassHeading, clickDirection });
         answer = {
           clickDirection,
           correct: isCorrect,
@@ -837,13 +829,13 @@ export class FeedbackComponent {
       this.task.answer.type == AnswerType.MAP_DIRECTION ||
       this.task.answer.type == AnswerType.DIRECTION
     ) {
-      let evalDirection = this.direction;
-      if (this.task.question.direction?.bearing) {
-        evalDirection = this.task.question.direction.bearing;
-      }
-
-      const absClckDir = this.Math.abs(options.clickDirection - evalDirection);
-      // console.log(absClckDir);
+      const compassHeading = options.compassHeading ?? this.direction;
+      const heading = this.task.answer.type === AnswerType.DIRECTION
+        ? compassHeading
+        : options.clickDirection;
+      const absClckDir = this.getDirectionDifference(
+        heading, this.getTargetDirection(compassHeading)
+      );
 
       this.feedback.hint = "";
 
@@ -966,16 +958,16 @@ export class FeedbackComponent {
         position = this.task.question.direction.position.geometry.coordinates;
       } else {
         position = [
-          this.lastKnownPosition.coords.longitude,
-          this.lastKnownPosition.coords.latitude,
+          this.isVirtualWorld
+            ? this.avatarLastKnownPosition.coords.longitude
+            : this.lastKnownPosition.coords.longitude,
+          this.isVirtualWorld
+            ? this.avatarLastKnownPosition.coords.latitude
+            : this.lastKnownPosition.coords.latitude,
         ];
       }
 
-      if (this.task.question.direction?.bearing) {
-        direction = this.task.question.direction.bearing;
-      } else {
-        direction = this.direction || 0;
-      }
+      direction = this.getTargetDirection(this.direction) ?? 0;
 
       this.map.addSource("direction-solution", {
         type: "geojson",
@@ -994,6 +986,7 @@ export class FeedbackComponent {
           "icon-size": 0.65,
           "icon-offset": [0, -8],
           "icon-rotate": direction,
+          "icon-rotation-alignment": "map",
         },
       });
     }
@@ -1029,7 +1022,10 @@ export class FeedbackComponent {
           "icon-image": "directionv2",
           "icon-size": 0.65,
           "icon-offset": [0, -8],
-          "icon-rotate": this.direction ?? 0,
+          "icon-rotate": this.task.question.type === QuestionType.MAP_DIRECTION_PHOTO
+            ? this.getTargetDirection(this.direction)
+            : this.direction ?? 0,
+          "icon-rotation-alignment": "map",
         },
       });
     }
@@ -1263,26 +1259,14 @@ export class FeedbackComponent {
     if (this.task.answer.type == AnswerType.DIRECTION) {
       answer = {
         compassHeading,
-        correct: this.Math.abs(directionBearing - compassHeading) <= 22.5,
+        correct: this.isDirectionCorrect(compassHeading, compassHeading),
       };
     }
 
     if (this.task.answer.type == AnswerType.MAP_DIRECTION) {
       let isCorrect = false;
-      if (clickDirection != 0) {
-        if (
-          this.task.question.type == QuestionType.MAP_DIRECTION_PHOTO &&
-          this.task.question.direction?.bearing != undefined
-        ) {
-          isCorrect =
-            this.Math.abs(
-              clickDirection - this.task.question.direction.bearing
-            ) <= this.DIRECTION_TRESHOLD;
-        } else {
-          isCorrect =
-            this.Math.abs(clickDirection - compassHeading) <=
-            this.DIRECTION_TRESHOLD;
-        }
+      if (clickDirection != null) {
+        isCorrect = this.isDirectionCorrect(clickDirection, compassHeading);
         answer = {
           clickDirection,
           correct: isCorrect,

@@ -255,8 +255,33 @@ export const VirEnvHeaders: ReadonlyArray<any> = [
     img_url: "assets/vir_envs_layers/VirEnv_51.png",
   },
   {
-    envName: "grid map",
+    envName: "Grid map",
     layerName: "VirEnv_52",
     img_url: "assets/vir_envs_layers/VirEnv_52.png",
+  },
+  {
+    envName: "Grid map no LOB",
+    layerName: "VirEnv_53",
+    img_url: "assets/vir_envs_layers/VirEnv_52.png",
+  },
+  {
+    envName: "Curvy map",
+    layerName: "VirEnv_54",
+    img_url: "assets/vir_envs_layers/VirEnv_54.png",
+  },
+  {
+    envName: "Curvy map no LOB",
+    layerName: "VirEnv_55",
+    img_url: "assets/vir_envs_layers/VirEnv_54.png",
+  },
+  {
+    envName: "Grid map - rotated",
+    layerName: "VirEnv_56",
+    img_url: "assets/vir_envs_layers/VirEnv_56.png",
+  },
+  {
+    envName: "Curvy map - rotated",
+    layerName: "VirEnv_57",
+    img_url: "assets/vir_envs_layers/VirEnv_57.png",
   },
 ];
