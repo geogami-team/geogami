@@ -94,7 +94,7 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
 
     // Set default avatar-speed and building floor of new tasks
     if (this.isVirtualWorld) {
-      if (!this.task.settings.avatarSpeed) {
+      if (this.task.settings.avatarSpeed == null) {
         this.task.settings.avatarSpeed =
           virEnvLayers[this.virEnvType].defaultAvatarSpeed ?? 5;
       }
