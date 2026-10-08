@@ -583,6 +583,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     if (this.isVirtualWorld && window.parent !== window) {
       window.addEventListener("keydown", this.handOverAvatarKey, true);
       window.addEventListener("keyup", this.handOverAvatarKey, true);
+      window.addEventListener("message", this.skipTaskAfterVELoadFailure);
     }
 
     this.game = null;
@@ -718,6 +719,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     this.stopExplorationTimer();
     window.removeEventListener("keydown", this.handOverAvatarKey, true);
     window.removeEventListener("keyup", this.handOverAvatarKey, true);
+    window.removeEventListener("message", this.skipTaskAfterVELoadFailure);
     // Disconnect server when leaving playing-page
     if (!this.isSingleMode) {
       this.disconnectSocketIO();
@@ -751,6 +753,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     this.mapResizeObserver?.disconnect();
     window.removeEventListener("keydown", this.handOverAvatarKey, true);
     window.removeEventListener("keyup", this.handOverAvatarKey, true);
+    window.removeEventListener("message", this.skipTaskAfterVELoadFailure);
     // console.log(" ngOnDestroy")
     // To disconnect socket connection
     // this.socketService.disconnectSocket();
@@ -772,6 +775,21 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       { type: "geogami:ve-key", event: e.type, key: e.key, code: e.code, keyCode: e.keyCode },
       "*"
     );
+  };
+
+  /* When a task's environment fails to load, the VE's error banner offers "Skip this task"
+     (its WebGL template posts "geogami:ve-skip-task" here). This page still holds the game's
+     progress, so move on from here instead of the player leaving and losing it. Unlike the
+     next button, it doesn't ask for the skip PIN: the task can't be played anyway, and the
+     skip is logged so it can be told apart in the track. */
+  private skipTaskAfterVELoadFailure = (e: MessageEvent) => {
+    if (e.source !== window.parent || e.data?.type !== "geogami:ve-skip-task") return;
+    if (!this.task || PlayingGamePage.showSuccess) return;
+
+    this.cancelPinDialog();
+    this.trackerService.addEvent({ type: "TASK_SKIPPED_VE_LOAD_FAILED" });
+    this.nextTask();
+    this.changeDetectorRef.detectChanges();
   };
 
   // With VR env only
