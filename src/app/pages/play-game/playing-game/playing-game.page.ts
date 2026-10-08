@@ -111,7 +111,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   directionArrow = false;
   swipe = false;
 
-  clickDirection = 0;
+  clickDirection: number = null;
 
   rotationControl: RotationControl;
   viewDirectionControl: ViewDirectionControl;
@@ -2127,7 +2127,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
     this.photo = "";
     this.photoURL = "";
-    this.clickDirection = 0;
+    this.clickDirection = null;
+    this.directionBearing = this.task.question.direction?.bearing ?? 0;
 
     this.numberInput = undefined;
     this.textInput = undefined;
@@ -2210,14 +2211,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       }
     }
 
-    if (this.task.question.type == QuestionType.MAP_DIRECTION) {
-      this.directionBearing = this.task.question.direction.bearing || 0;
-    }
-
     // TODO: remove excluded games after finishing the study
     if (this.task.question.type == QuestionType.MAP_DIRECTION_MARKER && (this.game.name != "Test-WebGL-Yousef" && this.game.name != "Bibek's study")) {
-      this.directionBearing = this.task.question.direction.bearing || 0;
-
       this.map.addSource("viewDirectionTask", {
         type: "geojson",
         data: this.task.question.direction.position.geometry,
