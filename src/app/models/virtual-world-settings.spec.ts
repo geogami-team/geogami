@@ -73,6 +73,7 @@ describe('Virtual world camera clipping distance', () => {
     page.landmarkControl = { removeQT: () => {}, removeSearchArea: () => {} };
     page.geolocateControl = { setType: () => {} };
     page.zoomBounds = () => Promise.resolve();
+    page.fitVirEnvMap = () => {};
     page._initMapFeatures = () => Promise.resolve();
     page.setAvatarInitialPosition = () => [0, 0];
     page.setAvatarInitialRotation = () => 0;

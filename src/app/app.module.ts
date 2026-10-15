@@ -65,75 +65,68 @@ import { EnvTypeQuestionTextModule } from "./components/env-type-question-text/e
 const config: SocketIoConfig = { url: environment.apiURL, options: {} }; // openstack server
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PopoverComponent,
-    CreateTaskModalPage,
-    MapFeaturesModalPage,
-    CreateModuleModalPage,
-    CreateInfoModalComponent,
-    MapComponent,
-    PhotoUploadMultipleChoiceComponent,
-    PhotoUploadComponent,
-    MultipleChoiceTextComponent,
-    AudioRecorderComponent,
-    QuestionTypeComponent,
-    AnswerTypeComponent,
-    TypeToTextPipe,
-    LangTranslatePipe,
-    // PopupComponent,
-  ],
-  exports: [],
-  entryComponents: [
-    PopoverComponent,
-    CreateTaskModalPage,
-    MapFeaturesModalPage,
-    CreateModuleModalPage,
-    CreateInfoModalComponent,
-  ],
-  imports: [
-    AudioPlayerModule,
-    EditorVisibilityModule,
-    EnvTypeQuestionTextModule,
-    FormsModule,
-    BrowserModule,
-    HttpClientModule,
-    SocketIoModule.forRoot(config),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-    }),
-    IonicModule.forRoot({
-      backButtonText: "Zurück",
-      mode: 'md'
-    }),
-    AppRoutingModule,
-    HttpClientModule,
-    ServiceWorkerModule.register("ngsw-worker.js", {
-      enabled: environment.production,
-    }),
-    IonicStorageModule.forRoot({
-      driverOrder: ["localstorage", "indexeddb"],
-    }),
-    MarkdownModule.forRoot(),
-    BrowserAnimationsModule,
-    NgxQRCodeModule,
-    // FormControl
-  ],
-  providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    DeviceOrientation,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true,
-    },
-    HelperService,
-    Network,
-  ],
-  bootstrap: [AppComponent],
+    declarations: [
+        AppComponent,
+        PopoverComponent,
+        CreateTaskModalPage,
+        MapFeaturesModalPage,
+        CreateModuleModalPage,
+        CreateInfoModalComponent,
+        MapComponent,
+        PhotoUploadMultipleChoiceComponent,
+        PhotoUploadComponent,
+        MultipleChoiceTextComponent,
+        AudioRecorderComponent,
+        QuestionTypeComponent,
+        AnswerTypeComponent,
+        TypeToTextPipe,
+        LangTranslatePipe,
+        // PopupComponent,
+    ],
+    exports: [],
+    imports: [
+        AudioPlayerModule,
+        EditorVisibilityModule,
+        EnvTypeQuestionTextModule,
+        FormsModule,
+        BrowserModule,
+        HttpClientModule,
+        SocketIoModule.forRoot(config),
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: createTranslateLoader,
+                deps: [HttpClient],
+            },
+        }),
+        IonicModule.forRoot({
+            backButtonText: "Zurück",
+            mode: 'md'
+        }),
+        AppRoutingModule,
+        HttpClientModule,
+        ServiceWorkerModule.register("ngsw-worker.js", {
+            enabled: environment.production,
+        }),
+        IonicStorageModule.forRoot({
+            driverOrder: ["localstorage", "indexeddb"],
+        }),
+        MarkdownModule.forRoot(),
+        BrowserAnimationsModule,
+        NgxQRCodeModule,
+        // FormControl
+    ],
+    providers: [
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+        DeviceOrientation,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptor,
+            multi: true,
+        },
+        HelperService,
+        Network,
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {}

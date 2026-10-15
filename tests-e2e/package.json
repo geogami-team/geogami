@@ -1,0 +1,12 @@
+{
+  "name": "geogami-e2e",
+  "private": true,
+  "description": "Browser smoke tests for GeoGami UI. Independent of the app's Angular version.",
+  "scripts": {
+    "test": "playwright test",
+    "test:update-snapshots": "playwright test --update-snapshots"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.1"
+  }
+}
