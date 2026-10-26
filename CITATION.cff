@@ -10,16 +10,15 @@ type: software
 authors:
   - given-names: Yousef
     family-names: Qamaz
+  - given-names: Angela
+    family-names: Schwering
+  - given-names: Mitko
+    family-names: Aleksanrov 
   - given-names: Felix
     family-names: Erdmann
-  - given-names: ' Janina'
+  - given-names: Janina
     family-names: Bistron
-  - given-names: 'Sandhya '
-    family-names: Rajendran
-  - given-names: Annabell
-    family-names: Petri
-  - given-names: 'AHMED '
-    family-names: ALY
+  - given-names: GeoGami Community
 identifiers:
   - type: doi
     value: 10.5281/zenodo.10018830
