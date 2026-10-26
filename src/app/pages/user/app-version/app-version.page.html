@@ -1,0 +1,161 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        color="dark"
+        defaultHref="/user/app-management"
+        [text]="'General.back_button' | translate"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ "AppVersion.pageTitle" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Everything sits in one centred column instead of spanning the whole window. -->
+  <div class="page-column">
+    <!-- Loading -->
+    <div class="status" *ngIf="loading">
+      <ion-spinner name="dots"></ion-spinner>
+      <p>{{ "AppVersion.loading" | translate }}</p>
+    </div>
+
+    <!-- The saved settings could not be loaded: nothing is shown as if it were saved. -->
+    <ion-card color="danger" *ngIf="!loading && loadError" role="alert">
+      <ion-card-content>
+        <p>{{ "AppVersion.loadFailed" | translate }}</p>
+        <ion-button fill="outline" color="light" (click)="load()">
+          {{ "AppVersion.retry" | translate }}
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <ng-container *ngIf="!loading && !loadError && draft">
+      <ion-card class="summary">
+        <ion-card-content>
+          <p class="intro">{{ "AppVersion.intro" | translate }}</p>
+          <p class="meta">
+            <ng-container *ngIf="saved.revision > 0; else notSaved">
+              {{ "AppVersion.lastSaved" | translate: { revision: saved.revision, date: (saved.updatedAt | date: "medium") } }}
+              <ng-container *ngIf="saved.updatedBy">
+                {{ "AppVersion.lastSavedBy" | translate: { user: saved.updatedBy } }}
+              </ng-container>
+            </ng-container>
+            <ng-template #notSaved>{{ "AppVersion.notSavedYet" | translate }}</ng-template>
+          </p>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Someone else saved first: the draft is kept until the admin reloads -->
+      <ion-card class="notice" color="warning" *ngIf="conflict" role="alert">
+        <ion-card-content>
+          <p>{{ "AppVersion.conflictText" | translate }}</p>
+          <ion-button fill="outline" color="dark" (click)="reloadAfterConflict()">
+            {{ "AppVersion.reloadLatest" | translate }}
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="settings">
+        <h2 class="card-title">{{ "AppVersion.promptTitle" | translate }}</h2>
+        <ion-list lines="full">
+          <ion-item id="app-version-enabled">
+            <ion-label class="ion-text-wrap">
+              <h3>{{ "AppVersion.enabled" | translate }}</h3>
+              <p>{{ "AppVersion.enabledHint" | translate }}</p>
+            </ion-label>
+            <ion-toggle slot="end" [(ngModel)]="draft.enabled"></ion-toggle>
+          </ion-item>
+
+          <ion-item id="app-version-ios">
+            <ion-label class="ion-text-wrap">
+              <h3>{{ "AppVersion.ios" | translate }}</h3>
+            </ion-label>
+            <ion-toggle slot="end" [(ngModel)]="draft.ios"></ion-toggle>
+          </ion-item>
+
+          <ion-item id="app-version-android">
+            <ion-label class="ion-text-wrap">
+              <h3>{{ "AppVersion.android" | translate }}</h3>
+            </ion-label>
+            <ion-toggle slot="end" [(ngModel)]="draft.android"></ion-toggle>
+          </ion-item>
+
+          <ion-item id="app-version-version">
+            <ion-label position="stacked">{{ "AppVersion.version" | translate }}</ion-label>
+            <ion-input
+              [(ngModel)]="draft.version"
+              required
+              [pattern]="versionPattern"
+              placeholder="6.2.0"
+              inputmode="decimal"
+              autocomplete="off"
+              spellcheck="false"
+            ></ion-input>
+            <ion-note slot="helper">
+              {{ "AppVersion.versionHint" | translate }}
+              <ng-container *ngIf="githubLatest">
+                {{ "AppVersion.githubLatest" | translate: { version: githubLatest } }}
+              </ng-container>
+            </ion-note>
+            <ion-note slot="error">{{ "AppVersion.versionInvalid" | translate }}</ion-note>
+          </ion-item>
+
+          <ion-item id="app-version-major">
+            <ion-label class="ion-text-wrap">
+              <h3>{{ "AppVersion.major" | translate }}</h3>
+              <p>{{ "AppVersion.majorHint" | translate }}</p>
+            </ion-label>
+            <ion-toggle slot="end" [(ngModel)]="draft.major"></ion-toggle>
+          </ion-item>
+
+          <ion-item id="app-version-build" lines="none">
+            <ion-label position="stacked">{{ "AppVersion.build" | translate }}</ion-label>
+            <ion-input
+              [(ngModel)]="draft.build"
+              [pattern]="buildPattern"
+              inputmode="numeric"
+              autocomplete="off"
+            ></ion-input>
+            <ion-note slot="helper">{{ "AppVersion.buildHint" | translate }}</ion-note>
+            <ion-note slot="error">{{ "AppVersion.buildInvalid" | translate }}</ion-note>
+          </ion-item>
+        </ion-list>
+      </ion-card>
+
+      <!-- What the draft does, and the prompt the devices will show -->
+      <ion-card class="preview">
+        <h2 class="card-title">{{ "AppVersion.previewTitle" | translate }}</h2>
+        <ion-card-content>
+          <p class="audience" aria-live="polite">{{ audienceText }}</p>
+          <ng-container *ngIf="audience !== 'none' && versionValid">
+            <div class="mock-prompt">
+              <strong>{{ (draft.major ? "Start.majorAppUpdateHeader" : "Start.appUpdateHeader") | translate }}</strong>
+              <p>{{ (draft.major ? "Start.majorAppUpdateMsg" : "Start.appUpdateMsg") | translate }}</p>
+              <div class="mock-buttons">
+                <span *ngIf="!draft.major">{{ "Start.notNow" | translate }}</span>
+                <span>{{ "Start.update" | translate }}</span>
+              </div>
+            </div>
+            <p class="note">{{ "AppVersion.previewNote" | translate }}</p>
+          </ng-container>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="!loading && !loadError && draft">
+  <ion-toolbar>
+    <!-- Same column as the content, so the buttons line up with it. -->
+    <div class="page-column actions">
+      <ion-button fill="outline" size="small" color="medium" (click)="discard()" [disabled]="saving || !dirty">
+        {{ "AppVersion.discard" | translate }}
+      </ion-button>
+      <ion-button size="small" (click)="save()" [disabled]="!canSave">
+        {{ "AppVersion.save" | translate }}
+        <ion-spinner name="dots" slot="end" *ngIf="saving"></ion-spinner>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

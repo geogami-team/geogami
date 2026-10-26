@@ -49,11 +49,12 @@ describe("AppManagementPage", () => {
     expect(APP_MANAGEMENT_ROLES).toEqual(["admin"]);
   });
 
-  it("lists the users, the editor visibility and the audit log, in that order", async () => {
+  it("lists the users, the editor visibility, the app updates and the audit log, in that order", async () => {
     await open();
-    expect(page.tiles.map((t) => t.id)).toEqual(["users", "editor-visibility", "audit-log"]);
+    expect(page.tiles.map((t) => t.id)).toEqual(["users", "editor-visibility", "app-version", "audit-log"]);
     expect(text()).toContain("AppManagement.users.title");
     expect(text()).toContain("EditorVisibility.cardTitle");
+    expect(text()).toContain("AppVersion.cardTitle");
     expect(text()).toContain("AppManagement.auditLog.title");
     expect(text()).toContain("AppManagement.auditLog.description");
   });
@@ -64,6 +65,8 @@ describe("AppManagementPage", () => {
     expect(nav.navigateForward).toHaveBeenCalledWith("user/user-management");
     tile("editor-visibility").click();
     expect(nav.navigateForward).toHaveBeenCalledWith("user/editor-visibility");
+    tile("app-version").click();
+    expect(nav.navigateForward).toHaveBeenCalledWith("user/app-version");
     tile("audit-log").click();
     expect(nav.navigateForward).toHaveBeenCalledWith("user/audit-log");
   });
@@ -78,6 +81,7 @@ describe("AppManagementPage", () => {
     await open();
     expect(page.tiles.length).toBe(0);
     expect(tile("editor-visibility")).toBeNull();
+    expect(tile("app-version")).toBeNull();
     expect(tile("audit-log")).toBeNull();
     expect(auth.getAuditUnreadCount).not.toHaveBeenCalled();
   });

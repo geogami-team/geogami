@@ -56,6 +56,13 @@ export class PlayingVirenvPage implements OnInit {
     });
   }
 
+  /* The 3D view only gets the keyboard while its frame has focus. After the navigation to
+     this page focus is still in this document, so the avatar keys went nowhere until the
+     player clicked into the view. Hand focus to the frame as soon as it has loaded. */
+  focusFrame() {
+    this.veFrame?.nativeElement.focus();
+  }
+
   /* To sanitize url before being shown in iframe */
   sanitizedURL(url: string) {
     return this.domSanitizer.bypassSecurityTrustResourceUrl(this.webGLURL);

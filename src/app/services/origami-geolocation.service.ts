@@ -8,6 +8,7 @@ import { Plugins, GeolocationPosition } from '@capacitor/core';
 import { Feature, MultiPolygon, Polygon } from '@turf/helpers';
 import { HelperService } from './helper.service';
 import { OrigamiOrientationService } from './origami-orientation.service';
+import { parseVirtualWorldNumber } from '../helpers/virtual-world-numbers';
 
 // VR world, SockitIO
 import { Socket } from 'ngx-socket-io';
@@ -46,7 +47,21 @@ export class OrigamiGeolocationService {
       // VR world
       this.avatarGeolocationSubscription = Observable.create((observer: Subscriber<any>) => {
         this.socket.on('updateAvatarPosition', (data) => {
-          observer.next(data);
+          const x = parseVirtualWorldNumber(data?.x);
+          const z = parseVirtualWorldNumber(data?.z);
+          if (x === null || z === null) {
+            return;
+          }
+          const position = { ...data, x, z };
+          // Initial-position messages from older builds do not include height.
+          if (data.y != null) {
+            const y = parseVirtualWorldNumber(data.y);
+            if (y === null) {
+              return;
+            }
+            position.y = y;
+          }
+          observer.next(position);
         });
       }).pipe(shareReplay());
     }

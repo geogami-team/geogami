@@ -1,3 +1,4 @@
+import { APP_VERSION_MANAGER_ROLES } from "./app-version";
 import { EDITOR_VISIBILITY_MANAGER_ROLES } from "./editor-features";
 
 /** Who may open the App management hub (the page and its start-page card). */
@@ -39,6 +40,14 @@ export const APP_MANAGEMENT_TILES: ReadonlyArray<AppManagementTile> = [
     descriptionKey: "EditorVisibility.cardDescription",
     route: "user/editor-visibility",
     roles: EDITOR_VISIBILITY_MANAGER_ROLES,
+  },
+  {
+    id: "app-version",
+    icon: "phone-portrait-outline",
+    titleKey: "AppVersion.cardTitle",
+    descriptionKey: "AppVersion.cardDescription",
+    route: "user/app-version",
+    roles: APP_VERSION_MANAGER_ROLES,
   },
   {
     id: "audit-log",

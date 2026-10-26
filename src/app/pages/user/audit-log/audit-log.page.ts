@@ -94,6 +94,7 @@ export class AuditLogPage implements OnInit {
       "account.email.change": "Email change requested",
       "user.role.change": "Role changed",
       "editorVisibility.update": "Editor visibility changed",
+      "appVersion.update": "App update prompt changed",
       "game.create": "Game created",
       "game.update": "Game edited",
       "security.rateLimit": "Rate limit reached",
@@ -115,6 +116,11 @@ export class AuditLogPage implements OnInit {
     if (entry.action === "editorVisibility.update") {
       const changes = Array.isArray(m.changes) ? m.changes : [];
       return changes.map((c: any) => `${c.id}: ${c.from} → ${c.to}`).join(", ");
+    }
+    if (entry.action === "appVersion.update") {
+      const changes = Array.isArray(m.changes) ? m.changes : [];
+      const shown = (v: any) => (v === "" || v === null || v === undefined ? "—" : v);
+      return changes.map((c: any) => `${c.field}: ${shown(c.from)} → ${shown(c.to)}`).join(", ");
     }
     if (entry.action === "account.create.admin") {
       const roles = Array.isArray(m.roles) ? m.roles.join(", ") : "";

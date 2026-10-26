@@ -3,6 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 import { AuthGuard, ConfirmedOrGuestGuard, RoleGuard } from "./services/auth-gard.service";
 import { EDITOR_VISIBILITY_MANAGER_ROLES } from "./models/editor-features";
 import { APP_MANAGEMENT_ROLES } from "./models/app-management";
+import { APP_VERSION_MANAGER_ROLES } from "./models/app-version";
 
 const routes: Routes = [
   {
@@ -203,7 +204,7 @@ const routes: Routes = [
       ).then((m) => m.CreateGameVirtualMenuPageModule),
   },
   {
-    // The administrators' hub: users, Simple/Advanced visibility, audit log.
+    // The administrators' hub: users, Simple/Advanced visibility, app updates, audit log.
     path: "user/app-management",
     loadChildren: () =>
       import("./pages/user/app-management/app-management.module").then(
@@ -237,6 +238,16 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: EDITOR_VISIBILITY_MANAGER_ROLES },
+  },
+  {
+    // The native apps' "please update" prompt — admin only.
+    path: "user/app-version",
+    loadChildren: () =>
+      import("./pages/user/app-version/app-version.module").then(
+        (m) => m.AppVersionPageModule
+      ),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: APP_VERSION_MANAGER_ROLES },
   },
   {
     path: "game-type-menu/:worldType",

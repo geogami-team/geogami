@@ -143,7 +143,7 @@ export class StartPage implements OnInit {
     this.navCtrl.navigateForward("analyze/dashboard");
   }
 
-  // Administrators get the App management hub (users, editor visibility, audit log);
+  // Administrators get the App management hub (users, editor visibility, app updates, audit log);
   // checked against every role of the user.
   get canOpenAppManagement(): boolean {
     return this.authService.hasAnyRole(APP_MANAGEMENT_ROLES);

@@ -65,6 +65,7 @@ import buffer from "@turf/buffer";
 import { Task } from "src/app/models/task";
 import { ExplorationTimer } from "src/app/models/exploration-timer";
 import { parseCameraFarClipPlane } from "src/app/models/virtual-world-settings";
+import { parseVirtualWorldNumber } from "src/app/helpers/virtual-world-numbers";
 import { point } from "@turf/helpers";
 import booleanWithin from "@turf/boolean-within";
 import { OrigamiOrientationService } from "src/app/services/origami-orientation.service";
@@ -1983,8 +1984,14 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     // TODO: check if it will work on all envs as well
     if(this.task.type == "nav-arrow" && isBuildingTask){
       this.socketService.socket.on("set next arrow point and distance", (data) => {
-        this.targetDistance = parseFloat(data["distance"])
-        this.arrowNextPoint = [parseFloat(data["x"])/ 111000, parseFloat(data["z"])/ 112000];
+        const distance = parseVirtualWorldNumber(data?.distance);
+        const x = parseVirtualWorldNumber(data?.x);
+        const z = parseVirtualWorldNumber(data?.z);
+        if (distance === null || x === null || z === null) {
+          return;
+        }
+        this.targetDistance = distance;
+        this.arrowNextPoint = [x / 111000, z / 112000];
 
         // Update arrow heading of first and other tasks
         if (this.previousTaskAvatarLastKnownPosition && !this.avatarLastKnownPosition) {

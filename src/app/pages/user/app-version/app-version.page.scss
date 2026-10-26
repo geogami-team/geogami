@@ -1,0 +1,138 @@
+// A light page background (it follows the theme), so the white cards stand out.
+ion-content {
+  --background: var(--ion-color-light, #f4f5f8);
+}
+
+// One centred column with space on both sides, instead of the whole width of the window.
+// On a phone the column simply is the screen (minus the padding of the content).
+.page-column {
+  max-width: 760px;
+  margin: 0 auto;
+
+  ion-card {
+    margin: 0 0 16px;
+  }
+}
+
+.status {
+  text-align: center;
+  color: var(--ion-color-medium);
+  margin-top: 32px;
+}
+
+// The light theme pairs the yellow "warning" colour with white text (about 1.5:1).
+// Ionic sets the contrast colour with !important, so it needs !important to be replaced.
+.notice {
+  --ion-color-contrast: #000 !important;
+}
+
+ion-card p {
+  margin: 0 0 8px;
+}
+
+.summary {
+  .intro {
+    margin: 0 0 8px;
+    line-height: 1.45;
+    color: var(--ion-text-color, var(--ion-color-dark, #222428));
+  }
+
+  .meta {
+    margin: 0;
+    font-size: 0.85em;
+    color: var(--ion-color-medium-shade, var(--ion-color-medium));
+  }
+}
+
+.card-title {
+  margin: 0;
+  padding: 14px 16px 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ion-text-color, var(--ion-color-dark, #222428));
+  border-bottom: 1px solid var(--ion-color-step-150, rgba(0, 0, 0, 0.1));
+}
+
+.settings {
+  ion-list {
+    padding: 0;
+  }
+
+  ion-item h3 {
+    margin: 0 0 2px;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  ion-item p {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  ion-input {
+    font-family: monospace;
+    max-width: 16rem;
+  }
+}
+
+// ── Preview of the prompt ────────────────────────────────────────────────────
+
+.preview {
+  .audience {
+    margin: 0 0 12px;
+    font-weight: 600;
+    color: var(--ion-text-color, var(--ion-color-dark, #222428));
+  }
+
+  .note {
+    margin: 8px 0 0;
+    font-size: 0.8125rem;
+    color: var(--ion-color-medium-shade, var(--ion-color-medium));
+  }
+}
+
+// A small picture of the alert the apps show; not interactive.
+.mock-prompt {
+  max-width: 300px;
+  padding: 16px 16px 8px;
+  border: 1px solid var(--ion-color-step-200, rgba(0, 0, 0, 0.15));
+  border-radius: 12px;
+  background: var(--ion-item-background, var(--ion-background-color, #fff));
+  color: var(--ion-text-color, var(--ion-color-dark, #222428));
+
+  strong {
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  p {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+}
+
+.mock-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding-top: 4px;
+  color: var(--ion-color-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+// ── Footer ───────────────────────────────────────────────────────────────────
+
+ion-footer ion-toolbar {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+}

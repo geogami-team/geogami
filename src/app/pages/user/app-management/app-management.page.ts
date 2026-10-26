@@ -5,7 +5,7 @@ import { AuthService } from "src/app/services/auth-service.service";
 
 /**
  * "App management": the one place administrators reach their tools from — the user
- * list, the Simple/Advanced visibility editor and the audit log. Each tile opens the
+ * list, the Simple/Advanced visibility editor, the app update prompt and the audit log. Each tile opens the
  * tool's own page, which keeps its own route and guard.
  */
 @Component({

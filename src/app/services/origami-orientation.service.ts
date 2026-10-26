@@ -3,6 +3,7 @@ import { AlertController, Platform } from '@ionic/angular';
 import { Observable, ReplaySubject, Subscriber, Subscription } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { parseVirtualWorldNumber } from '../helpers/virtual-world-numbers';
 import {
   DeviceOrientation,
   DeviceOrientationCompassHeading
@@ -26,7 +27,7 @@ export class OrigamiOrientationService {
   deviceOrientationSubscription: Subscription;
 
   // VR world
-  public avatarOrientationSubscription: Observable<any>;
+  public avatarOrientationSubscription: Observable<number>;
   isVirtualWorld: boolean = false;
 
   private isListening = false;
@@ -52,9 +53,12 @@ export class OrigamiOrientationService {
 
     if (isVirtualWorld) {
       // VR world
-      this.avatarOrientationSubscription = Observable.create((observer: Subscriber<any>) => {
+      this.avatarOrientationSubscription = Observable.create((observer: Subscriber<number>) => {
         this.socket.on('updateAvatarDirection', (avatarHeading) => {
-          observer.next(avatarHeading["angleValue"]);
+          const heading = parseVirtualWorldNumber(avatarHeading?.angleValue);
+          if (heading !== null) {
+            observer.next(heading);
+          }
         });
       }).pipe(shareReplay());
       return;
