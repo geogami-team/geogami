@@ -93,7 +93,7 @@ export class StartPage implements OnInit {
 
   checkNewAppVersion() {
     this.gamesService
-      .getAppVersion()
+      .getAppVersion(Capacitor.platform)
       .then((res) => res.content)
       .then((latestVersionInfo) => {
         this.latestAppVersionInfo = latestVersionInfo;

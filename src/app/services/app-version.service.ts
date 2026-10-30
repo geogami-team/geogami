@@ -1,7 +1,13 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
-import { AppVersionFields, AppVersionSettings, parseAppVersionSettings } from "../models/app-version";
+import {
+  AppVersionFields,
+  AppVersionSettings,
+  StoreReleases,
+  parseAppVersionSettings,
+  parseStoreReleases,
+} from "../models/app-version";
 import { AuthService } from "./auth-service.service";
 
 /**
@@ -34,6 +40,14 @@ export class AppVersionService {
       .put(this.url, { expectedRevision, ...fields }, { headers: this.authService.createHeaders() })
       .toPromise();
     return this.accept(raw);
+  }
+
+  /** The newest release in the App Store and on Google Play, as the server read them. */
+  async fetchStoreReleases(): Promise<StoreReleases> {
+    const raw = await this.http
+      .get(`${this.url}/stores`, { headers: this.authService.createHeaders() })
+      .toPromise();
+    return parseStoreReleases(raw);
   }
 
   private accept(raw: unknown): AppVersionSettings {

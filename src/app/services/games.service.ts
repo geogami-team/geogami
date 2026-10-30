@@ -168,9 +168,11 @@ export class GamesService {
   }
 
   // To retreive updated app version
-  getAppVersion(): Promise<any> {
+  // The server answers with the version of the given platform ("ios" or "android");
+  // apps released before it was sent are told apart by their user agent.
+  getAppVersion(platform: string): Promise<any> {
     return this.http
-      .get(`${environment.apiURL}/appversion/current`)
+      .get(`${environment.apiURL}/appversion/current`, { params: { platform } })
       .toPromise();
   }
 
