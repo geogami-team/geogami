@@ -51,7 +51,7 @@ describe("AppManagementPage", () => {
 
   it("lists the users, the editor visibility, the app updates and the audit log, in that order", async () => {
     await open();
-    expect(page.tiles.map((t) => t.id)).toEqual(["users", "editor-visibility", "app-version", "audit-log"]);
+    expect(page.tiles.map((t) => t.id)).toEqual(["users", "editor-visibility", "app-version", "live-plays", "audit-log"]);
     expect(text()).toContain("AppManagement.users.title");
     expect(text()).toContain("EditorVisibility.cardTitle");
     expect(text()).toContain("AppVersion.cardTitle");

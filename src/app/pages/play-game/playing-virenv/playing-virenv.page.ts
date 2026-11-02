@@ -10,6 +10,8 @@ import {
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { NavController } from "@ionic/angular";
+import { HOST_INFO_REQUEST } from "src/app/models/play-session";
+import { PlaySessionService } from "src/app/services/play-session.service";
 import { VE_CLOSE_FRAME_MESSAGE } from "src/app/services/socket.service";
 import { environment } from "src/environments/environment";
 
@@ -28,7 +30,8 @@ export class PlayingVirenvPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private readonly domSanitizer: DomSanitizer,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private playSession: PlaySessionService
   ) {}
 
   ngOnInit() {
@@ -76,6 +79,8 @@ export class PlayingVirenvPage implements OnInit {
    * - VE_CLOSE_FRAME_MESSAGE: close the WebGL frame when the game is finished.
    *   Unlike the "closeWebGLFrame" socket event, this doesn't depend on the sockets
    *   still being in the game room (they are not after a reconnect).
+   * - HOST_INFO_REQUEST: the game page in the frame asks which platform and app the
+   *   player is on, for the admins' "Live plays" page (its own platform is always web).
    */
   @HostListener("window:message", ["$event"])
   onFrameMessage(event: MessageEvent) {
@@ -86,6 +91,9 @@ export class PlayingVirenvPage implements OnInit {
     } else if (event.data?.type === VE_CLOSE_FRAME_MESSAGE) {
       if (!this.isFromVEFrame(event.source as Window)) return;
       this.navCtrl.navigateRoot("/");
+    } else if (event.data?.type === HOST_INFO_REQUEST) {
+      if (!this.isFromVEFrame(event.source as Window)) return;
+      this.playSession.answerHost(event);
     }
   }
 

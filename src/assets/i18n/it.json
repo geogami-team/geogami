@@ -311,6 +311,9 @@
     "playersNames": "Chi gioca?",
     "congratulations": "Congratulazioni!",
     "finished": "Hai completato il gioco!",
+    "copyDiagnostics": "Copia i dettagli diagnostici",
+    "diagnosticsCopied": "Dettagli diagnostici copiati",
+    "diagnosticsCopyFailed": "Impossibile copiare i dettagli diagnostici",
     "youLeave": "Stai uscendo",
     "gameArea": "dall'area di gioco.",
     "markedArea": "dall'area contrassegnata.",
@@ -714,6 +717,83 @@
     },
     "unread": "{{count}} non letti"
   },
+    "LivePlays": {
+      "cardTitle": "Partite in tempo reale",
+      "cardDescription": "Quali giochi sono in corso adesso e lo storico delle partite",
+      "pageTitle": "Partite in tempo reale",
+      "tabNow": "Adesso",
+      "tabHistory": "Storico",
+      "playingNow": "In corso",
+      "savesInProgress": "Salvataggi in corso",
+      "updatedAt": "Aggiornato alle {{time}}",
+      "refresh": "Aggiorna",
+      "refreshFailed": "Aggiornamento non riuscito alle {{failed}}. Dati delle {{time}}.",
+      "loadFailed": "Impossibile caricare le partite.",
+      "retry": "Riprova",
+      "olderBuildsNote": "Solo le versioni dell'app che includono questa pagina segnalano le partite. Le partite in vecchie schede web e nelle app non aggiornate non compaiono.",
+      "truncated": "Vengono mostrate le {{count}} partite più recenti delle ultime 24 ore.",
+      "sectionPlaying": "In corso",
+      "sectionRecent": "Ultime 24 ore",
+      "nonePlaying": "Nessun gioco è in corso in questo momento.",
+      "noneRecent": "Nessun'altra partita nelle ultime 24 ore.",
+      "deletedGame": "Gioco eliminato",
+      "deletedEvent": "evento eliminato",
+      "status": {
+        "playing": "In corso",
+        "finished": "Finita",
+        "left": "Uscita dal gioco",
+        "closed": "Probabilmente chiusa",
+        "abandoned": "Abbandonata"
+      },
+      "save": {
+        "saved": "Traccia salvata",
+        "failed": "Salvataggio non riuscito",
+        "pending": "Salvataggio…",
+        "unknown": "Esito del salvataggio sconosciuto",
+        "not_requested": "Traccia non condivisa"
+      },
+      "noAnswer": "nessuna risposta",
+      "startMissing": "Inizio non ricevuto",
+      "world": {
+        "real": "Mondo reale",
+        "virtual": "Ambiente virtuale"
+      },
+      "mode": {
+        "single": "Giocatore singolo",
+        "multi": "Multigiocatore"
+      },
+      "rejoin": "Rientro",
+      "inVeFrame": "tramite l'ambiente virtuale",
+      "event": "Evento: {{name}}",
+      "started": "Iniziata {{date}}",
+      "runningFor": "in corso da {{duration}}",
+      "playedFor": "durata: {{duration}}",
+      "legend": "Probabilmente chiusa: il browser ha segnalato la chiusura della pagina (non confermato). Abbandonata: nessuna fine ricevuta entro 1,5 ore.",
+      "detail": {
+        "playId": "ID partita",
+        "firstSeen": "Primo messaggio",
+        "start": "Inizio (server / dispositivo)",
+        "end": "Fine (server / dispositivo)",
+        "resumes": "Ripristinata dalla cache avanti/indietro del browser",
+        "webBuild": "Build web",
+        "app": "Versione dell'app",
+        "platform": "Piattaforma"
+      },
+      "filter": {
+        "from": "Dal",
+        "to": "Al",
+        "game": "Gioco (nome o ID)",
+        "event": "Evento (nome o ID)",
+        "status": "Stato",
+        "save": "Traccia",
+        "playId": "ID partita",
+        "any": "Tutti",
+        "search": "Cerca",
+        "clear": "Azzera"
+      },
+      "noResults": "Nessuna partita corrisponde a questi filtri.",
+      "loadMore": "Carica altro"
+    },
   "AppVersion": {
     "cardTitle": "Aggiornamenti dell'app",
     "cardDescription": "Chiedi agli utenti iOS e Android di aggiornare l'app",

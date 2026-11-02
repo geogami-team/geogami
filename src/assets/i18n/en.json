@@ -311,6 +311,9 @@
     "playersNames": "Who is playing?",
     "congratulations": "Congratulations!",
     "finished": "You finished the game!",
+    "copyDiagnostics": "Copy diagnostic details",
+    "diagnosticsCopied": "Diagnostic details copied",
+    "diagnosticsCopyFailed": "Could not copy the diagnostic details",
     "youLeave": "You are leaving",
     "gameArea": "the game area.",
     "markedArea": "the marked area.",
@@ -714,6 +717,83 @@
     },
     "unread": "{{count}} unread"
   },
+    "LivePlays": {
+      "cardTitle": "Live plays",
+      "cardDescription": "Which games are being played right now, and the history of plays",
+      "pageTitle": "Live plays",
+      "tabNow": "Now",
+      "tabHistory": "History",
+      "playingNow": "Playing now",
+      "savesInProgress": "Saves in progress",
+      "updatedAt": "Updated {{time}}",
+      "refresh": "Refresh",
+      "refreshFailed": "Refresh failed at {{failed}}. Showing data from {{time}}.",
+      "loadFailed": "The plays could not be loaded.",
+      "retry": "Try again",
+      "olderBuildsNote": "Only app versions that include this page report plays. Plays in older web tabs and in apps that have not been updated do not appear.",
+      "truncated": "Showing the newest {{count}} plays of the last 24 hours.",
+      "sectionPlaying": "Playing now",
+      "sectionRecent": "Last 24 hours",
+      "nonePlaying": "No game is being played right now.",
+      "noneRecent": "No other plays in the last 24 hours.",
+      "deletedGame": "Deleted game",
+      "deletedEvent": "deleted event",
+      "status": {
+        "playing": "Playing",
+        "finished": "Finished",
+        "left": "Left the game",
+        "closed": "Probably closed",
+        "abandoned": "Abandoned"
+      },
+      "save": {
+        "saved": "Track saved",
+        "failed": "Save failed",
+        "pending": "Saving…",
+        "unknown": "Save outcome unknown",
+        "not_requested": "Track not shared"
+      },
+      "noAnswer": "no answer",
+      "startMissing": "Start not received",
+      "world": {
+        "real": "Real world",
+        "virtual": "Virtual environment"
+      },
+      "mode": {
+        "single": "Single player",
+        "multi": "Multiplayer"
+      },
+      "rejoin": "Rejoin",
+      "inVeFrame": "via the virtual environment",
+      "event": "Event: {{name}}",
+      "started": "Started {{date}}",
+      "runningFor": "running for {{duration}}",
+      "playedFor": "played for {{duration}}",
+      "legend": "Probably closed: the browser reported that the page was closed (not confirmed). Abandoned: no end arrived within 1.5 hours.",
+      "detail": {
+        "playId": "Play ID",
+        "firstSeen": "First message",
+        "start": "Start (server / device)",
+        "end": "End (server / device)",
+        "resumes": "Restored from the browser's back/forward cache",
+        "webBuild": "Web build",
+        "app": "App version",
+        "platform": "Platform"
+      },
+      "filter": {
+        "from": "From",
+        "to": "To",
+        "game": "Game (name or ID)",
+        "event": "Event (name or ID)",
+        "status": "Status",
+        "save": "Track",
+        "playId": "Play ID",
+        "any": "Any",
+        "search": "Search",
+        "clear": "Clear"
+      },
+      "noResults": "No plays match these filters.",
+      "loadMore": "Load more"
+    },
   "AppVersion": {
     "cardTitle": "App updates",
     "cardDescription": "Ask iOS and Android users to update the app",

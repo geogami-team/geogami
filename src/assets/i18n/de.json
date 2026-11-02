@@ -311,6 +311,9 @@
     "playersNames": "Wer spielt?",
     "congratulations": "Herzlichen Glückwunsch!",
     "finished": "Du hast das Spiel beendet!",
+    "copyDiagnostics": "Diagnosedetails kopieren",
+    "diagnosticsCopied": "Diagnosedetails kopiert",
+    "diagnosticsCopyFailed": "Die Diagnosedetails konnten nicht kopiert werden",
     "youLeave": "Du verlässt",
     "gameArea": "das Spielgebiet.",
     "markedArea": "das markierte Gebiet.",
@@ -714,6 +717,83 @@
     },
     "unread": "{{count}} ungelesen"
   },
+    "LivePlays": {
+      "cardTitle": "Laufende Spiele",
+      "cardDescription": "Welche Spiele gerade gespielt werden, und der Verlauf der Spiele",
+      "pageTitle": "Laufende Spiele",
+      "tabNow": "Jetzt",
+      "tabHistory": "Verlauf",
+      "playingNow": "Wird gerade gespielt",
+      "savesInProgress": "Speichervorgänge laufen",
+      "updatedAt": "Aktualisiert {{time}}",
+      "refresh": "Aktualisieren",
+      "refreshFailed": "Aktualisierung um {{failed}} fehlgeschlagen. Angezeigt werden die Daten von {{time}}.",
+      "loadFailed": "Die Spiele konnten nicht geladen werden.",
+      "retry": "Erneut versuchen",
+      "olderBuildsNote": "Nur App-Versionen, die diese Seite enthalten, melden Spiele. Spiele in älteren Browser-Tabs und in nicht aktualisierten Apps erscheinen nicht.",
+      "truncated": "Angezeigt werden die neuesten {{count}} Spiele der letzten 24 Stunden.",
+      "sectionPlaying": "Wird gerade gespielt",
+      "sectionRecent": "Letzte 24 Stunden",
+      "nonePlaying": "Gerade wird kein Spiel gespielt.",
+      "noneRecent": "Keine weiteren Spiele in den letzten 24 Stunden.",
+      "deletedGame": "Gelöschtes Spiel",
+      "deletedEvent": "gelöschtes Event",
+      "status": {
+        "playing": "Läuft",
+        "finished": "Beendet",
+        "left": "Spiel verlassen",
+        "closed": "Vermutlich geschlossen",
+        "abandoned": "Abgebrochen"
+      },
+      "save": {
+        "saved": "Track gespeichert",
+        "failed": "Speichern fehlgeschlagen",
+        "pending": "Wird gespeichert…",
+        "unknown": "Speicherergebnis unbekannt",
+        "not_requested": "Track nicht geteilt"
+      },
+      "noAnswer": "keine Antwort",
+      "startMissing": "Start nicht empfangen",
+      "world": {
+        "real": "Reale Welt",
+        "virtual": "Virtuelle Umgebung"
+      },
+      "mode": {
+        "single": "Einzelspieler",
+        "multi": "Mehrspieler"
+      },
+      "rejoin": "Wiedereinstieg",
+      "inVeFrame": "über die virtuelle Umgebung",
+      "event": "Event: {{name}}",
+      "started": "Gestartet {{date}}",
+      "runningFor": "läuft seit {{duration}}",
+      "playedFor": "gespielt: {{duration}}",
+      "legend": "Vermutlich geschlossen: Der Browser hat gemeldet, dass die Seite geschlossen wurde (nicht bestätigt). Abgebrochen: Innerhalb von 1,5 Stunden kam kein Ende an.",
+      "detail": {
+        "playId": "Durchlauf-ID",
+        "firstSeen": "Erste Nachricht",
+        "start": "Start (Server / Gerät)",
+        "end": "Ende (Server / Gerät)",
+        "resumes": "Aus dem Zurück/Vorwärts-Cache des Browsers wiederhergestellt",
+        "webBuild": "Web-Build",
+        "app": "App-Version",
+        "platform": "Plattform"
+      },
+      "filter": {
+        "from": "Von",
+        "to": "Bis",
+        "game": "Spiel (Name oder ID)",
+        "event": "Event (Name oder ID)",
+        "status": "Status",
+        "save": "Track",
+        "playId": "Durchlauf-ID",
+        "any": "Alle",
+        "search": "Suchen",
+        "clear": "Zurücksetzen"
+      },
+      "noResults": "Keine Spiele passen zu diesen Filtern.",
+      "loadMore": "Mehr laden"
+    },
   "AppVersion": {
     "cardTitle": "App-Updates",
     "cardDescription": "iOS- und Android-Nutzer zum Aktualisieren der App auffordern",
