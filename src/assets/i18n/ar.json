@@ -341,6 +341,7 @@
     "creatorCreatedBy": "أنشأها",
     "creatorEmail": "البريد الإلكتروني",
     "creatorCreatedOn": "تاريخ الإنشاء",
+    "creatorUpdatedOn": "تاريخ آخر تحديث",
     "creatorDeleted": "حساب منشئ اللعبة لم يعد موجودًا.",
     "creatorMoreDetails": "مزيد من التفاصيل عن المستخدم",
     "creatorError": "تعذّر تحميل معلومات المنشئ. يرجى المحاولة مرة أخرى.",

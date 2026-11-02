@@ -341,6 +341,7 @@
     "creatorCreatedBy": "Created by",
     "creatorEmail": "Email",
     "creatorCreatedOn": "Created on",
+    "creatorUpdatedOn": "Last updated on",
     "creatorDeleted": "The creator's account no longer exists.",
     "creatorMoreDetails": "More details about user",
     "creatorError": "Could not load creator info. Please try again.",

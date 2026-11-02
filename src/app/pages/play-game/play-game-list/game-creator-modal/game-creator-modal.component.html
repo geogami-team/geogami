@@ -38,17 +38,24 @@
         </ion-label>
       </ion-item>
 
-      <!-- Creator account was deleted: still show the creation date below -->
+      <!-- Creator account was deleted: still show the dates below -->
       <ion-item *ngIf="!creator">
         <ion-label color="medium" class="ion-text-wrap">
           {{ "PlayGame.creatorDeleted" | translate }}
         </ion-label>
       </ion-item>
 
-      <ion-item lines="none">
+      <ion-item>
         <ion-label>
           <h3>{{ "PlayGame.creatorCreatedOn" | translate }}</h3>
           <p>{{ createdAt ? (createdAt | date : "mediumDate") : "—" }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label>
+          <h3>{{ "PlayGame.creatorUpdatedOn" | translate }}</h3>
+          <p>{{ updatedAt ? (updatedAt | date : "mediumDate") : "—" }}</p>
         </ion-label>
       </ion-item>
     </ion-list>

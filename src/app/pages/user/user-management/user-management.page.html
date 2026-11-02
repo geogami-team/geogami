@@ -17,39 +17,38 @@
     </ion-button>
   </div>
 
-  <div class="filters-row">
-    <mat-form-field appearance="standard" class="filter-search">
-      <mat-label>Search name / email</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Jan" #input>
-    </mat-form-field>
-
-    <mat-form-field appearance="standard" class="filter-compact">
-      <mat-label>Role</mat-label>
-      <mat-select [(value)]="filterRole" (selectionChange)="applyAdvancedFilters()">
-        <mat-option value="all">All roles</mat-option>
-        <mat-option value="admin">admin</mat-option>
-        <mat-option value="contentAdmin">content admin</mat-option>
-        <mat-option value="trackAccess">track access</mat-option>
-        <mat-option value="scholar">scholar</mat-option>
-        <mat-option value="user">user</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="standard" class="filter-compact">
-      <mat-label>Verified</mat-label>
-      <mat-select [(value)]="filterVerified" (selectionChange)="applyAdvancedFilters()">
-        <mat-option value="all">All</mat-option>
-        <mat-option value="yes">Verified</mat-option>
-        <mat-option value="no">Unverified</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <button mat-stroked-button type="button" (click)="resetFilters(input)" class="filter-reset">
-      Reset
-    </button>
+  <!-- The filters themselves sit in the table's filter header row, above the column names. -->
+  <div class="table-toolbar">
+    <span class="result-count" *ngIf="dataSource">
+      {{ dataSource.filteredData.length }} of {{ dataSource.data.length }} users
+    </span>
+    <ion-button id="user-columns-trigger" size="small" fill="outline">
+      <ion-icon name="options-outline" slot="start"></ion-icon>
+      Columns
+    </ion-button>
+    <ion-button size="small" fill="clear" (click)="resetFilters()" [disabled]="!hasActiveFilters()">
+      Reset filters
+    </ion-button>
   </div>
 
-<!--   <ion-searchbar (ionChange)="applyFilter($event)" placeholder="Filter" #input></ion-searchbar>   -->
+  <ion-popover trigger="user-columns-trigger" triggerAction="click">
+    <ng-template>
+      <ion-content>
+        <ion-list lines="none">
+          <ion-list-header>Show columns</ion-list-header>
+          <!-- setColumnVisible ignores no-ops: ion-checkbox also fires ionChange when [checked] changes. -->
+          <ion-item *ngFor="let c of optionalColumns">
+            <ion-checkbox
+              slot="start"
+              [checked]="!hiddenColumns.has(c.id)"
+              (ionChange)="setColumnVisible(c.id, $event.detail.checked)">
+            </ion-checkbox>
+            <ion-label>{{ c.label }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
 
   <!-- Bulk action bar — only visible when rows are selected -->
   <div class="bulk-bar" *ngIf="selection.selected.length > 0">
@@ -68,137 +67,269 @@
   </div>
 
   <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <div class="table-scroll">
+      <table mat-table [dataSource]="dataSource" matSort>
 
-      <!-- Select checkbox Column -->
-      <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
-          <ion-checkbox
-            [checked]="isAllSelected()"
-            [indeterminate]="selection.hasValue() && !isAllSelected()"
-            (ionChange)="toggleAllRows()">
-          </ion-checkbox>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <ion-checkbox
-            [checked]="selection.isSelected(row)"
-            (ionChange)="selection.toggle(row)">
-          </ion-checkbox>
-        </td>
-      </ng-container>
+        <!--
+          Each column has an "f-<column>" cell for the filter header row, which
+          is rendered above the row with the column names.
+        -->
 
-      <!-- Position Column -->
-      <ng-container matColumnDef="#">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
-        <td mat-cell *matCellDef="let row; let i = index"> {{i + 1}} </td>
-      </ng-container>
+        <!-- Select checkbox Column -->
+        <ng-container matColumnDef="f-select">
+          <th mat-header-cell *matHeaderCellDef></th>
+        </ng-container>
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <ion-checkbox
+              [checked]="isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()"
+              (ionChange)="toggleAllRows()">
+            </ion-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <ion-checkbox
+              [checked]="selection.isSelected(row)"
+              (ionChange)="selection.toggle(row)">
+            </ion-checkbox>
+          </td>
+        </ng-container>
 
-      <!-- Name Column -->
-      <ng-container matColumnDef="username">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-        <td mat-cell *matCellDef="let row"> {{row.username}} </td>
-      </ng-container>
+        <!-- Position Column -->
+        <ng-container matColumnDef="f-#">
+          <th mat-header-cell *matHeaderCellDef></th>
+        </ng-container>
+        <ng-container matColumnDef="#">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
+          <td mat-cell *matCellDef="let row; let i = index"> {{i + 1}} </td>
+        </ng-container>
 
-      <!-- Email Column -->
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
-        <td mat-cell *matCellDef="let row"> {{row.email}} </td>
-      </ng-container>
+        <!-- Name Column -->
+        <ng-container matColumnDef="f-username">
+          <th mat-header-cell *matHeaderCellDef>
+            <input class="col-filter" [class.active]="filters.username"
+              [(ngModel)]="filters.username" (ngModelChange)="applyAdvancedFilters()"
+              placeholder="Filter" aria-label="Filter by name" autocomplete="off">
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+          <td mat-cell *matCellDef="let row"> {{row.username}} </td>
+        </ng-container>
 
-      <!-- Email Confirmed Column -->
-      <ng-container matColumnDef="emailConfirmed">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Verified </th>
-        <td mat-cell *matCellDef="let row">
-          <ion-icon
-            *ngIf="row.emailIsConfirmed"
-            name="checkmark-circle"
-            color="success"
-            title="Email confirmed">
-          </ion-icon>
-          <ion-icon
-            *ngIf="!row.emailIsConfirmed"
-            name="close-circle"
-            color="medium"
-            title="Email not confirmed">
-          </ion-icon>
-        </td>
-      </ng-container>
+        <!-- Email Column -->
+        <ng-container matColumnDef="f-email">
+          <th mat-header-cell *matHeaderCellDef>
+            <input class="col-filter" [class.active]="filters.email"
+              [(ngModel)]="filters.email" (ngModelChange)="applyAdvancedFilters()"
+              placeholder="Filter" aria-label="Filter by email" autocomplete="off">
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+          <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+        </ng-container>
 
-      <!-- Created_date Column -->
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Created date </th>
-        <td mat-cell *matCellDef="let row"> {{row.createdAt.slice(0, 10)}} </td>
-      </ng-container>
-
-      <!-- Role Column -->
-      <ng-container matColumnDef="roles">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
-        <td mat-cell *matCellDef="let row; let i = index">
-          <ion-list>
-            <!--
-              Single role selector. `row.roles` remains an array in the DB
-              (the Mongoose schema enforces that), but admins edit a single
-              primary role here. For legacy users with multiple roles we pick
-              the first one so the dropdown always has a defined value.
-            -->
-            <ion-select
-              interface="popover"
-              [value]="row.roles && row.roles[0]"
-              (ionChange)="changeRole($event.detail.value, row.email)"
-              [ngStyle]="{ 'background-color' : i%2 ? '#ecebeb' : ''}">
-              <ion-select-option value="admin">admin</ion-select-option>
-              <ion-select-option value="contentAdmin">content admin</ion-select-option>
-              <ion-select-option value="trackAccess">track access</ion-select-option>
-              <ion-select-option value="scholar">scholar</ion-select-option>
-              <ion-select-option value="user">user</ion-select-option>
-            </ion-select>
-          </ion-list>
-          <!-- Subtle hint if legacy data stored more than one role. -->
-          <small *ngIf="row.roles && row.roles.length > 1" class="legacy-roles-hint">
-            was: {{ row.roles.join(', ') }}
-          </small>
-        </td>
-      </ng-container>
-
-      <!-- Action Column -->
-      <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
-        <td mat-cell *matCellDef="let row">
-          <ion-buttons>
-            <ion-button (click)="openUserDetails(row)" title="View user details">
-              <ion-icon name="information-circle-outline" color="medium"></ion-icon>
-            </ion-button>
-
-            <ion-button (click)="saveRoleUpdate(row.email)" disabled="{{!row.roleIsUpdated}}" title="Save role change">
-              <ion-icon name="save-sharp" color="{{ row.roleIsUpdated?'primary':'dark'}}"></ion-icon>
-            </ion-button>
-
-            <ion-button
+        <!-- Email Confirmed Column -->
+        <ng-container matColumnDef="f-emailConfirmed">
+          <th mat-header-cell *matHeaderCellDef>
+            <select class="col-filter" [class.active]="filters.emailConfirmed !== 'all'"
+              [(ngModel)]="filters.emailConfirmed" (ngModelChange)="applyAdvancedFilters()"
+              aria-label="Filter by verified">
+              <option value="all">All</option>
+              <option value="yes">Verified</option>
+              <option value="no">Unverified</option>
+            </select>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="emailConfirmed">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="emailIsConfirmed"> Verified </th>
+          <td mat-cell *matCellDef="let row">
+            <ion-icon
+              *ngIf="row.emailIsConfirmed"
+              name="checkmark-circle"
+              color="success"
+              title="Email confirmed">
+            </ion-icon>
+            <ion-icon
               *ngIf="!row.emailIsConfirmed"
-              (click)="resendVerification(row)"
-              title="Resend verification email">
-              <ion-icon name="mail-unread-outline" color="warning"></ion-icon>
-            </ion-button>
+              name="close-circle"
+              color="medium"
+              title="Email not confirmed">
+            </ion-icon>
+          </td>
+        </ng-container>
 
-            <ion-button (click)="triggerPasswordReset(row)" title="Send password reset email">
-              <ion-icon name="key-outline" color="primary"></ion-icon>
-            </ion-button>
+        <!-- Language Column -->
+        <ng-container matColumnDef="f-language">
+          <th mat-header-cell *matHeaderCellDef>
+            <select class="col-filter" [class.active]="filters.language !== 'all'"
+              [(ngModel)]="filters.language" (ngModelChange)="applyAdvancedFilters()"
+              aria-label="Filter by language">
+              <option value="all">All</option>
+              <option value="de">German (de)</option>
+              <option value="en">English (en)</option>
+              <option value="fr">French (fr)</option>
+              <option value="it">Italian (it)</option>
+              <option value="pt">Portuguese (pt)</option>
+              <option value="ar">Arabic (ar)</option>
+            </select>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="language">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Language </th>
+          <td mat-cell *matCellDef="let row"> {{ row.language ? row.language.slice(0, 2) : '—' }} </td>
+        </ng-container>
 
-            <ion-button (click)="deleteUser(row)" title="Delete user">
-              <ion-icon name="trash-outline" color="danger"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </td>
-      </ng-container>
+        <!-- Created_date Column -->
+        <ng-container matColumnDef="f-createdAt">
+          <th mat-header-cell *matHeaderCellDef>
+            <select class="col-filter" [class.active]="filters.createdAt !== 'any'"
+              [(ngModel)]="filters.createdAt" (ngModelChange)="applyAdvancedFilters()"
+              aria-label="Filter by created date">
+              <option *ngFor="let w of dateWindows" [value]="w.value">{{ w.label }}</option>
+            </select>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Created date </th>
+          <td mat-cell *matCellDef="let row"> {{row.createdAt.slice(0, 10)}} </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <!-- Updated_date Column -->
+        <ng-container matColumnDef="f-updatedAt">
+          <th mat-header-cell *matHeaderCellDef>
+            <select class="col-filter" [class.active]="filters.updatedAt !== 'any'"
+              [(ngModel)]="filters.updatedAt" (ngModelChange)="applyAdvancedFilters()"
+              aria-label="Filter by updated date">
+              <option *ngFor="let w of dateWindows" [value]="w.value">{{ w.label }}</option>
+            </select>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="updatedAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Updated date </th>
+          <td mat-cell *matCellDef="let row"> {{ row.updatedAt ? row.updatedAt.slice(0, 10) : '—' }} </td>
+        </ng-container>
 
-      <!-- Row shown when there is no matching data. -->
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="8">No data matching the filter "{{input.value}}"</td>
-      </tr>
-    </table>
+        <!-- Last login Column (derived by the API from the newest refresh token) -->
+        <ng-container matColumnDef="f-lastLoginAt">
+          <th mat-header-cell *matHeaderCellDef>
+            <select class="col-filter" [class.active]="filters.lastLoginAt !== 'any'"
+              [(ngModel)]="filters.lastLoginAt" (ngModelChange)="applyAdvancedFilters()"
+              aria-label="Filter by last login">
+              <option *ngFor="let w of dateWindows" [value]="w.value">{{ w.label }}</option>
+              <option value="none">No login recorded</option>
+            </select>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="lastLoginAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header title="Latest sign-in or session refresh"> Last login </th>
+          <td mat-cell *matCellDef="let row" [title]="row.lastLoginAt ? '' : 'No login recorded'">
+            {{ row.lastLoginAt ? row.lastLoginAt.slice(0, 10) : '—' }}
+          </td>
+        </ng-container>
+
+        <!-- User ID Column (hidden by default) -->
+        <ng-container matColumnDef="f-userId">
+          <th mat-header-cell *matHeaderCellDef>
+            <input class="col-filter" [class.active]="filters.userId"
+              [(ngModel)]="filters.userId" (ngModelChange)="applyAdvancedFilters()"
+              placeholder="Filter" aria-label="Filter by user ID" autocomplete="off" spellcheck="false">
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="userId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="_id"> User ID </th>
+          <td mat-cell *matCellDef="let row" class="mono"> {{ row._id }} </td>
+        </ng-container>
+
+        <!-- Role Column -->
+        <ng-container matColumnDef="f-roles">
+          <th mat-header-cell *matHeaderCellDef>
+            <select class="col-filter" [class.active]="filters.roles !== 'all'"
+              [(ngModel)]="filters.roles" (ngModelChange)="applyAdvancedFilters()"
+              aria-label="Filter by role">
+              <option value="all">All roles</option>
+              <option value="admin">admin</option>
+              <option value="contentAdmin">content admin</option>
+              <option value="trackAccess">track access</option>
+              <option value="scholar">scholar</option>
+              <option value="user">user</option>
+            </select>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="roles">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+          <td mat-cell *matCellDef="let row; let i = index">
+            <ion-list>
+              <!--
+                Single role selector. `row.roles` remains an array in the DB
+                (the Mongoose schema enforces that), but admins edit a single
+                primary role here. For legacy users with multiple roles we pick
+                the first one so the dropdown always has a defined value.
+              -->
+              <ion-select
+                interface="popover"
+                [value]="row.roles && row.roles[0]"
+                (ionChange)="changeRole($event.detail.value, row.email)"
+                [ngStyle]="{ 'background-color' : i%2 ? '#ecebeb' : ''}">
+                <ion-select-option value="admin">admin</ion-select-option>
+                <ion-select-option value="contentAdmin">content admin</ion-select-option>
+                <ion-select-option value="trackAccess">track access</ion-select-option>
+                <ion-select-option value="scholar">scholar</ion-select-option>
+                <ion-select-option value="user">user</ion-select-option>
+              </ion-select>
+            </ion-list>
+            <!-- Subtle hint if legacy data stored more than one role. -->
+            <small *ngIf="row.roles && row.roles.length > 1" class="legacy-roles-hint">
+              was: {{ row.roles.join(', ') }}
+            </small>
+          </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="f-action">
+          <th mat-header-cell *matHeaderCellDef></th>
+        </ng-container>
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+          <td mat-cell *matCellDef="let row">
+            <ion-buttons>
+              <ion-button (click)="openUserDetails(row)" title="View user details">
+                <ion-icon name="information-circle-outline" color="medium"></ion-icon>
+              </ion-button>
+
+              <ion-button (click)="saveRoleUpdate(row.email)" disabled="{{!row.roleIsUpdated}}" title="Save role change">
+                <ion-icon name="save-sharp" color="{{ row.roleIsUpdated?'primary':'dark'}}"></ion-icon>
+              </ion-button>
+
+              <ion-button
+                *ngIf="!row.emailIsConfirmed"
+                (click)="resendVerification(row)"
+                title="Resend verification email">
+                <ion-icon name="mail-unread-outline" color="warning"></ion-icon>
+              </ion-button>
+
+              <ion-button (click)="triggerPasswordReset(row)" title="Send password reset email">
+                <ion-icon name="key-outline" color="primary"></ion-icon>
+              </ion-button>
+
+              <ion-button (click)="deleteUser(row)" title="Delete user">
+                <ion-icon name="trash-outline" color="danger"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="filterColumns" class="filter-header-row"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length">No users match the current filters.</td>
+        </tr>
+      </table>
+    </div>
 
     <mat-paginator [pageSizeOptions]="[10, 15, 35, 100]" showFirstLastButtons aria-label="Select page of users"></mat-paginator>
   </div>

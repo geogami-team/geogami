@@ -341,6 +341,7 @@
     "creatorCreatedBy": "Erstellt von",
     "creatorEmail": "E-Mail",
     "creatorCreatedOn": "Erstellt am",
+    "creatorUpdatedOn": "Zuletzt geändert am",
     "creatorDeleted": "Das Konto des Erstellers existiert nicht mehr.",
     "creatorMoreDetails": "Weitere Details zum Benutzer",
     "creatorError": "Ersteller-Informationen konnten nicht geladen werden. Bitte versuche es erneut.",

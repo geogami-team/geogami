@@ -8,6 +8,49 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 
+// Preset windows of the date filters: "7d" = within the last 7 days, "gt90d" =
+// longer ago than 90 days, "none" = no date on record (only offered for last
+// login, which is null for users who never signed in).
+type DateWindow = "any" | "1d" | "7d" | "30d" | "90d" | "365d" | "gt90d" | "gt365d" | "none";
+
+// Every table column, in display order. "userId" shows row._id.
+const ALL_COLUMNS = [
+  "select",
+  "#",
+  "username",
+  "email",
+  "emailConfirmed",
+  "language",
+  "createdAt",
+  "updatedAt",
+  "lastLoginAt",
+  "userId",
+  "roles",
+  "action",
+];
+
+// State of the filter header row, keyed by column id so hiding a column can
+// clear its filter.
+const DEFAULT_FILTERS = {
+  username: "",
+  email: "",
+  emailConfirmed: "all" as "all" | "yes" | "no",
+  language: "all",
+  createdAt: "any" as DateWindow,
+  updatedAt: "any" as DateWindow,
+  // lastLoginAt is derived by the API from the newest refresh token, so it also
+  // moves when the app silently renews a session (on open, or after the 1 h JWT).
+  lastLoginAt: "any" as DateWindow,
+  userId: "",
+  roles: "all",
+};
+type UserFilters = typeof DEFAULT_FILTERS;
+
+// Columns the admin switched on or off in the "Columns" popover, saved per
+// browser as { columnId: visible }. Only these explicit choices are stored, so
+// columns they never touched keep following the defaults (hiddenColumns).
+const COLUMN_CHOICES_KEY = "userManagement.columnChoices";
+
 @Component({
   selector: "app-user-management",
   templateUrl: "./user-management.page.html",
@@ -16,24 +59,39 @@ import { MatSort } from "@angular/material/sort";
 export class UserManagementPage implements OnInit {
   users: any; // To hold users info
 
-  displayedColumns: string[] = [
-    "select",
-    "#",
-    "username",
-    "email",
-    "emailConfirmed",
-    "createdAt",
-    "roles",
-    "action",
+  // Columns the "Columns" popover can show/hide, in table order. Select, #,
+  // Name and Action are always shown.
+  readonly optionalColumns: { id: keyof UserFilters; label: string }[] = [
+    { id: "email", label: "Email" },
+    { id: "emailConfirmed", label: "Verified" },
+    { id: "language", label: "Language" },
+    { id: "createdAt", label: "Created date" },
+    { id: "updatedAt", label: "Updated date" },
+    { id: "lastLoginAt", label: "Last login" },
+    { id: "userId", label: "User ID" },
+    { id: "roles", label: "Role" },
   ];
+  // Hidden until switched on in the popover.
+  hiddenColumns = new Set<string>(["emailConfirmed", "updatedAt", "userId"]);
+  private columnChoices: { [id: string]: boolean } = {};
+  // Options of the date filters; last login also offers "none".
+  readonly dateWindows: { value: DateWindow; label: string }[] = [
+    { value: "any", label: "Any time" },
+    { value: "1d", label: "Last 24 hours" },
+    { value: "7d", label: "Last 7 days" },
+    { value: "30d", label: "Last 30 days" },
+    { value: "90d", label: "Last 90 days" },
+    { value: "365d", label: "Last year" },
+    { value: "gt90d", label: "Over 90 days ago" },
+    { value: "gt365d", label: "Over a year ago" },
+  ];
+  displayedColumns: string[] = [];
+  // The filter header row has an "f-<column>" cell above each shown column.
+  filterColumns: string[] = [];
   dataSource: MatTableDataSource<any>;
   selection = new SelectionModel<any>(true, []);
 
-  // Advanced filter state. Keyed by the mat-select values in the template.
-  filterRole: "all" | "admin" | "contentAdmin" | "trackAccess" | "scholar" | "user" = "all";
-  filterVerified: "all" | "yes" | "no" = "all";
-  // Held so the text search can be combined with role/verified filters.
-  private textFilter = "";
+  filters: UserFilters = { ...DEFAULT_FILTERS };
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -65,6 +123,8 @@ export class UserManagementPage implements OnInit {
   }
 
   ngOnInit() {
+    this.loadColumnChoices();
+    this.updateColumns();
     // Get all users
     this.authService.GetUsers().then((res) => {
       this.users = res.map((obj) => ({ ...obj, roleIsUpdated: false }));
@@ -75,27 +135,34 @@ export class UserManagementPage implements OnInit {
   initializeDataSource(usersData) {
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(usersData);
-    // Custom predicate so the single mat-table filter string can encode the
-    // text search + role + verified state as a single JSON blob. Keeps us on
+    // Custom predicate so the single mat-table filter string can encode all
+    // filters of the filter header row as a single JSON blob. Keeps us on
     // client-side filtering without reimplementing the table datasource.
     this.dataSource.filterPredicate = (row: any, filter: string) => {
-      let f: { text: string; role: string; verified: string };
+      let f: UserFilters;
       try {
-        f = JSON.parse(filter);
+        f = { ...DEFAULT_FILTERS, ...JSON.parse(filter) };
       } catch {
-        f = { text: filter || "", role: "all", verified: "all" };
+        f = DEFAULT_FILTERS;
       }
-      const text = (f.text || "").trim().toLowerCase();
-      if (text) {
-        const hay = `${row.username || ""} ${row.email || ""}`.toLowerCase();
-        if (!hay.includes(text)) return false;
+      if (!this.includesText(row.username, f.username)) return false;
+      if (!this.includesText(row.email, f.email)) return false;
+      // Partial match, so an ID cut off in a log line or audit entry still finds the user.
+      if (!this.includesText(row._id, f.userId)) return false;
+      if (f.roles !== "all") {
+        if (!Array.isArray(row.roles) || !row.roles.includes(f.roles)) return false;
       }
-      if (f.role && f.role !== "all") {
-        if (!Array.isArray(row.roles) || !row.roles.includes(f.role)) return false;
+      if (f.emailConfirmed === "yes" && !row.emailIsConfirmed) return false;
+      if (f.emailConfirmed === "no" && row.emailIsConfirmed) return false;
+      // Legacy documents may hold locale-style values ("de_DE"); compare on two letters.
+      if (f.language !== "all") {
+        if ((row.language || "").slice(0, 2).toLowerCase() !== f.language) return false;
       }
-      if (f.verified === "yes" && !row.emailIsConfirmed) return false;
-      if (f.verified === "no" && row.emailIsConfirmed) return false;
-      return true;
+      return (
+        this.inDateWindow(row.createdAt, f.createdAt) &&
+        this.inDateWindow(row.updatedAt, f.updatedAt) &&
+        this.inDateWindow(row.lastLoginAt, f.lastLoginAt)
+      );
     };
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -104,22 +171,74 @@ export class UserManagementPage implements OnInit {
 
   applyAdvancedFilters() {
     if (!this.dataSource) return;
-    this.dataSource.filter = JSON.stringify({
-      text: this.textFilter,
-      role: this.filterRole,
-      verified: this.filterVerified,
-    });
+    this.dataSource.filter = JSON.stringify(this.filters);
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
 
-  resetFilters(input?: HTMLInputElement) {
-    this.filterRole = "all";
-    this.filterVerified = "all";
-    this.textFilter = "";
-    if (input) input.value = "";
+  resetFilters() {
+    this.filters = { ...DEFAULT_FILTERS };
     this.applyAdvancedFilters();
+  }
+
+  hasActiveFilters(): boolean {
+    return Object.keys(DEFAULT_FILTERS).some((key) => this.filters[key] !== DEFAULT_FILTERS[key]);
+  }
+
+  // Show or hide an optional column. Hiding one also clears its filter, so rows
+  // are never filtered by a control that isn't on screen.
+  setColumnVisible(id: keyof UserFilters, visible: boolean) {
+    // Not a choice: ion-checkbox also fires ionChange when [checked] is set.
+    if (visible === !this.hiddenColumns.has(id)) return;
+    if (visible) {
+      this.hiddenColumns.delete(id);
+    } else {
+      this.hiddenColumns.add(id);
+      if (this.filters[id] !== DEFAULT_FILTERS[id]) {
+        this.filters = { ...this.filters, [id]: DEFAULT_FILTERS[id] };
+        this.applyAdvancedFilters();
+      }
+    }
+    this.updateColumns();
+    this.columnChoices[id] = visible;
+    try {
+      window.localStorage.setItem(COLUMN_CHOICES_KEY, JSON.stringify(this.columnChoices));
+    } catch {}
+  }
+
+  private loadColumnChoices() {
+    try {
+      const saved = JSON.parse(window.localStorage.getItem(COLUMN_CHOICES_KEY)) || {};
+      for (const { id } of this.optionalColumns) {
+        if (typeof saved[id] !== "boolean") continue;
+        this.columnChoices[id] = saved[id];
+        if (saved[id]) this.hiddenColumns.delete(id);
+        else this.hiddenColumns.add(id);
+      }
+    } catch {}
+  }
+
+  private updateColumns() {
+    this.displayedColumns = ALL_COLUMNS.filter((c) => !this.hiddenColumns.has(c));
+    this.filterColumns = this.displayedColumns.map((c) => `f-${c}`);
+  }
+
+  // Case-insensitive "contains"; an empty query matches everything.
+  private includesText(value: any, query: string): boolean {
+    const q = (query || "").trim().toLowerCase();
+    return !q || String(value || "").toLowerCase().includes(q);
+  }
+
+  // Whether an ISO timestamp falls in a preset DateWindow (see the type above).
+  private inDateWindow(iso: string | null | undefined, window?: DateWindow): boolean {
+    if (!window || window === "any") return true;
+    if (window === "none") return !iso;
+    if (!iso) return false;
+    const olderThan = window.startsWith("gt");
+    const limitMs = parseInt(window.replace("gt", ""), 10) * 24 * 60 * 60 * 1000;
+    const ageMs = Date.now() - new Date(iso).getTime();
+    return olderThan ? ageMs > limitMs : ageMs <= limitMs;
   }
 
   // Single-role selector. We still store roles as an array in the DB (the
@@ -303,12 +422,6 @@ export class UserManagementPage implements OnInit {
       duration: 2000,
     });
     toast.present();
-  }
-
-  // material table filter — text box only; combines with role/verified filters.
-  applyFilter(event: Event) {
-    this.textFilter = (event.target as HTMLInputElement).value || "";
-    this.applyAdvancedFilters();
   }
 
   // ── Selection helpers ──────────────────────────────────────────────
