@@ -8,11 +8,12 @@ import { UtilService } from "src/app/services/util.service";
 import { UserDetailsModalComponent } from "src/app/pages/user/user-management/user-details-modal/user-details-modal.component";
 
 /**
- * Admin-only modal showing who created a game (username, name, email) and
- * when. The data is fetched only when the modal is opened — the game list
- * endpoints carry no creator details. "More details about user" lazily loads
- * the full account and opens the same UserDetailsModalComponent used on the
- * user-management page (Profile + Games created tabs).
+ * Admin-only modal showing who created a game (username, name, email), when,
+ * and when it was last updated. The data is fetched only when the modal is
+ * opened — the game list endpoints carry no creator details. "More details
+ * about user" lazily loads the full account and opens the same
+ * UserDetailsModalComponent used on the user-management page (Profile +
+ * Games created tabs).
  */
 @Component({
   selector: "app-game-creator-modal",
@@ -23,6 +24,7 @@ export class GameCreatorModalComponent implements OnInit {
 
   creator: any = null;
   createdAt: string = null;
+  updatedAt: string = null;
   loading = true;
   failed = false;
   busy = false;
@@ -40,9 +42,10 @@ export class GameCreatorModalComponent implements OnInit {
       const res = await this.gamesService.getGameCreatorInfo(this.game._id);
       // creator === null means the account was deleted; the template then
       // shows a fallback note and hides the "More details" button, while
-      // createdAt is still displayed.
+      // the dates are still displayed.
       this.creator = res?.creator || null;
       this.createdAt = res?.createdAt || null;
+      this.updatedAt = res?.updatedAt || null;
     } catch (e) {
       this.failed = true;
       this.utilService.showToast(

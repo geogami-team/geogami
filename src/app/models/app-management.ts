@@ -1,5 +1,6 @@
 import { APP_VERSION_MANAGER_ROLES } from "./app-version";
 import { EDITOR_VISIBILITY_MANAGER_ROLES } from "./editor-features";
+import { LIVE_PLAYS_ROLES } from "./play-session";
 
 /** Who may open the App management hub (the page and its start-page card). */
 export const APP_MANAGEMENT_ROLES: ReadonlyArray<string> = ["admin"];
@@ -48,6 +49,14 @@ export const APP_MANAGEMENT_TILES: ReadonlyArray<AppManagementTile> = [
     descriptionKey: "AppVersion.cardDescription",
     route: "user/app-version",
     roles: APP_VERSION_MANAGER_ROLES,
+  },
+  {
+    id: "live-plays",
+    icon: "pulse-outline",
+    titleKey: "LivePlays.cardTitle",
+    descriptionKey: "LivePlays.cardDescription",
+    route: "user/live-plays",
+    roles: LIVE_PLAYS_ROLES,
   },
   {
     id: "audit-log",

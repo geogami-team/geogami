@@ -34,6 +34,7 @@ describe('Exploration tasks', () => {
     page.showExplorationTimeOver = false;
     page.changeDetectorRef = { detectChanges: () => {} };
     page.trackerService = { addEvent: jasmine.createSpy('event'), setTask: () => {} };
+    page.playSession = { end: jasmine.createSpy('play end'), uploadExpected: jasmine.createSpy('upload expected') };
     return page;
   }
 
@@ -195,6 +196,7 @@ describe('Exploration tasks', () => {
     expect(page.showExplorationTimeOver).toBe(false);
     expect(PlayingGamePage.showSuccess).toBe(true);
     expect(page.trackerService.addEvent).toHaveBeenCalledWith({ type: 'FINISHED_GAME' });
+    expect(page.playSession.end).toHaveBeenCalledWith('finished');
     expect(page.enableDisableMapInteraction).toHaveBeenCalledWith(false);
   }));
 

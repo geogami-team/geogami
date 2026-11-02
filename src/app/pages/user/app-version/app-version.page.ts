@@ -3,18 +3,19 @@ import { AlertController } from "@ionic/angular";
 import { TranslateService } from "@ngx-translate/core";
 import {
   APP_VERSION_FIELDS,
-  BUILD_PATTERN,
+  STORE_FLAG,
+  VERSION_FIELD,
   VERSION_PATTERN,
   AppVersionFields,
   AppVersionSettings,
+  Platform,
   PromptAudience,
+  StoreReleases,
   appVersionFieldsOf,
   isValidAppVersion,
-  isValidBuild,
   promptAudience,
 } from "src/app/models/app-version";
 import { AppVersionService } from "src/app/services/app-version.service";
-import { GamesService } from "src/app/services/games.service";
 import { UtilService } from "src/app/services/util.service";
 
 /**
@@ -42,16 +43,26 @@ export class AppVersionPage implements OnInit {
   /** Someone else saved while this draft was open; the draft is kept. */
   conflict = false;
 
-  /** Newest release on GitHub, as a hint for the version field (best effort). */
-  githubLatest = "";
+  /** Newest release in each store, as the server read it (best effort; null while unknown). */
+  stores: StoreReleases = { ios: null, android: null };
+  /** The stores were asked, so a missing release means a store could not be reached. */
+  storesChecked = false;
 
-  // The inputs validate with the same rules, so Ionic marks them invalid and shows their error text.
+  // The version fields validate with the same rule as the server.
   readonly versionPattern = VERSION_PATTERN;
-  readonly buildPattern = BUILD_PATTERN;
+
+  // Each platform has its own switches and version: one column per platform.
+  readonly platforms: ReadonlyArray<Platform> = ["ios", "android"];
+  readonly versionField = VERSION_FIELD;
+  readonly storeFlag = STORE_FLAG;
+  /** What differs per platform (brand names, so not translated). */
+  readonly platformInfo: Readonly<Record<Platform, { name: string; store: string; icon: string }>> = {
+    ios: { name: "iOS", store: "App Store", icon: "logo-apple" },
+    android: { name: "Android", store: "Google Play", icon: "logo-android" },
+  };
 
   constructor(
     private appVersion: AppVersionService,
-    private gamesService: GamesService,
     private alertController: AlertController,
     private translate: TranslateService,
     private utilService: UtilService
@@ -59,12 +70,7 @@ export class AppVersionPage implements OnInit {
 
   ngOnInit() {
     this.load();
-    this.gamesService
-      .getGithubLatestVersion()
-      .then((res) => (this.githubLatest = (res && res.content && res.content.version) || ""))
-      .catch(() => {
-        /* only a hint */
-      });
+    this.loadStores();
   }
 
   async load() {
@@ -79,6 +85,16 @@ export class AppVersionPage implements OnInit {
     }
   }
 
+  async loadStores() {
+    try {
+      this.stores = await this.appVersion.fetchStoreReleases();
+    } catch (error) {
+      // Each store then shows as "cannot be reached".
+    } finally {
+      this.storesChecked = true;
+    }
+  }
+
   /** Makes settings read from the server the new base of the draft. */
   private adopt(settings: AppVersionSettings) {
     this.saved = settings;
@@ -88,12 +104,20 @@ export class AppVersionPage implements OnInit {
 
   // ── Draft ────────────────────────────────────────────────────────────────
 
-  get versionValid(): boolean {
-    return !!this.draft && isValidAppVersion(this.draft.version);
+  /**
+   * The version devices of a platform are compared with: while following its store,
+   * the store's newest release (once known), otherwise the version typed in.
+   */
+  promptVersion(platform: Platform): string {
+    if (!this.draft) {
+      return "";
+    }
+    const release = this.stores[platform];
+    return this.draft[STORE_FLAG[platform]] && release ? release.version : this.draft[VERSION_FIELD[platform]];
   }
 
-  get buildValid(): boolean {
-    return !!this.draft && isValidBuild(this.draft.build);
+  versionValid(platform: Platform): boolean {
+    return isValidAppVersion(this.promptVersion(platform));
   }
 
   private get changedFields(): Array<keyof AppVersionFields> {
@@ -108,16 +132,28 @@ export class AppVersionPage implements OnInit {
   }
 
   get canSave(): boolean {
-    return !!this.saved && this.dirty && this.versionValid && this.buildValid && !this.saving;
+    return (
+      !!this.saved &&
+      this.dirty &&
+      this.platforms.every((platform) => this.versionValid(platform)) &&
+      !this.saving
+    );
   }
 
   get audience(): PromptAudience {
     return this.draft ? promptAudience(this.draft) : "none";
   }
 
+  /** Every platform the draft asks to update has a version the apps can compare. */
+  get askedVersionsValid(): boolean {
+    return this.platforms
+      .filter((platform) => this.audience === "both" || this.audience === platform)
+      .every((platform) => this.versionValid(platform));
+  }
+
   /** One sentence on which devices the draft asks to update. */
   get audienceText(): string {
-    if (this.audience !== "none" && !this.versionValid) {
+    if (!this.askedVersionsValid) {
       return this.translate.instant("AppVersion.audienceNeedsVersion");
     }
     const key = {
@@ -126,7 +162,16 @@ export class AppVersionPage implements OnInit {
       android: "AppVersion.audienceAndroid",
       both: "AppVersion.audienceBoth",
     }[this.audience];
-    return this.translate.instant(key, { version: this.draft ? this.draft.version : "" });
+    return this.translate.instant(key, { ios: this.promptVersion("ios"), android: this.promptVersion("android") });
+  }
+
+  /** Following a store takes over its newest version, which is also kept as the fallback. */
+  setFollowStore(platform: Platform, on: boolean) {
+    this.draft[STORE_FLAG[platform]] = on;
+    const release = this.stores[platform];
+    if (on && release) {
+      this.draft[VERSION_FIELD[platform]] = release.version;
+    }
   }
 
   discard() {
@@ -146,9 +191,15 @@ export class AppVersionPage implements OnInit {
     if (this.draft.major && this.audience !== "none" && !(await this.confirmRequiredUpdate())) {
       return;
     }
+    // While following a store, the stored version (the fallback) is brought up to date.
+    const fields = {
+      ...appVersionFieldsOf(this.draft),
+      version: this.promptVersion("ios"),
+      androidVersion: this.promptVersion("android"),
+    };
     this.saving = true;
     try {
-      this.adopt(await this.appVersion.saveSettings(this.saved.revision, appVersionFieldsOf(this.draft)));
+      this.adopt(await this.appVersion.saveSettings(this.saved.revision, fields));
       this.utilService.showToast(this.translate.instant("AppVersion.saved"), "success");
     } catch (error) {
       // The draft stays exactly as it is, and nothing is reported as saved.
@@ -166,10 +217,7 @@ export class AppVersionPage implements OnInit {
   private async confirmRequiredUpdate(): Promise<boolean> {
     const alert = await this.alertController.create({
       header: this.translate.instant("AppVersion.confirmMajorHeader"),
-      message: this.translate.instant("AppVersion.confirmMajorMessage", {
-        audience: this.audienceText,
-        version: this.draft.version,
-      }),
+      message: this.translate.instant("AppVersion.confirmMajorMessage", { audience: this.audienceText }),
       buttons: [
         { text: this.translate.instant("AppVersion.cancel"), role: "cancel" },
         { text: this.translate.instant("AppVersion.save"), role: "confirm" },

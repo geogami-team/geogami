@@ -4,6 +4,7 @@ import { AuthGuard, ConfirmedOrGuestGuard, RoleGuard } from "./services/auth-gar
 import { EDITOR_VISIBILITY_MANAGER_ROLES } from "./models/editor-features";
 import { APP_MANAGEMENT_ROLES } from "./models/app-management";
 import { APP_VERSION_MANAGER_ROLES } from "./models/app-version";
+import { LIVE_PLAYS_ROLES } from "./models/play-session";
 
 const routes: Routes = [
   {
@@ -248,6 +249,16 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: APP_VERSION_MANAGER_ROLES },
+  },
+  {
+    // Which games are being played right now, and the history of plays — admin only.
+    path: "user/live-plays",
+    loadChildren: () =>
+      import("./pages/user/live-plays/live-plays.module").then(
+        (m) => m.LivePlaysPageModule
+      ),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: LIVE_PLAYS_ROLES },
   },
   {
     path: "game-type-menu/:worldType",

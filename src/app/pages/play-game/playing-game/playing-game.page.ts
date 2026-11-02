@@ -82,6 +82,7 @@ import { GameSessionService } from "src/app/services/game-session.service";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
 import { VEBuildingUtilService } from "src/app/services/ve-building-util.service";
 import { AuthService } from "src/app/services/auth-service.service";
+import { PlaySessionService } from "src/app/services/play-session.service";
 
 @Component({
   selector: "app-playing-game",
@@ -506,7 +507,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     private veBuildingUtilService: VEBuildingUtilService,
     private storage: GameSessionService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private playSession: PlaySessionService
   ) {
     this.lottieConfig = {
       path: "assets/lottie/star-success.json",
@@ -717,6 +719,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
   /******************/
   ionViewWillLeave() {
+    // "Live plays": the player left the game (does nothing after the finish)
+    this.playSession.end("left");
     this.stopExplorationTimer();
     window.removeEventListener("keydown", this.handOverAvatarKey, true);
     window.removeEventListener("keyup", this.handOverAvatarKey, true);
@@ -1897,6 +1901,15 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       });
     }
 
+    // For the admins' "Live plays" page; never waits and never fails the game.
+    this.playSession.start({
+      game: String(this.game._id),
+      event: this.event,
+      world: this.isVirtualWorld ? "virtual" : "real",
+      mode: this.isSingleMode ? "single" : "multi",
+      rejoin: !!this.isRejoin,
+    });
+
     await this.initTask();
 
     if (this.game.bbox != undefined && this.game.bbox?.features?.length > 0) {
@@ -2456,10 +2469,16 @@ export class PlayingGamePage implements OnInit, OnDestroy {
         type: "FINISHED_GAME",
       });
 
+      // "Live plays": the play is finished; its track is saved only with consent
+      this.playSession.end("finished");
+      this.playSession.uploadExpected(!!this.shareDataBox);
+
       // store collected data in database only when user agree in the begining of the game
       if (this.shareDataBox) {
         if (this.isSingleMode) {
-          this.trackerService.uploadTrack().then((res) => {
+          const upload = this.trackerService.uploadTrack();
+          this.playSession.watchUpload(upload);
+          upload.then((res) => {
             if (res.status == 201) {
               this.uploadDone = true;
             // console.log("res (single)", res);
@@ -2478,7 +2497,9 @@ export class PlayingGamePage implements OnInit, OnDestroy {
               // if game track not stored yet
               if (!this.trackDataStatus.status) {
                 /* store multiplayer tracks on server */
-                this.trackerService.uploadTrack().then((res) => {
+                const upload = this.trackerService.uploadTrack();
+                this.playSession.watchUpload(upload);
+                upload.then((res) => {
                   if (res.status == 201) {
                     this.uploadDone = true;
                     // // console.log("game id (multi)", res.body["content"]._id);
@@ -2495,8 +2516,10 @@ export class PlayingGamePage implements OnInit, OnDestroy {
                 // console.log("game track already stored: ", this.trackDataStatus)
 
                 /* update stored multiplayer tracks on server*/
-                this.trackerService
-                  .uploadTrack(true, this.trackDataStatus.track_id)
+                const upload = this.trackerService
+                  .uploadTrack(true, this.trackDataStatus.track_id);
+                this.playSession.watchUpload(upload);
+                upload
                   .then((res) => {
                     if (res.status == 201) {
                       this.uploadDone = true;
@@ -2768,6 +2791,25 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     );
 
     this.targetHeading = 360 - (this.compassHeading - bearing);
+  }
+
+  // For problem reports: the play id, game and build, without the player's name.
+  async copyDiagnostics() {
+    try {
+      const tasksCount = this.game?.tasks?.length;
+      const text = this.playSession.diagnostics({
+        gameId: this.game?._id != null ? String(this.game._id) : undefined,
+        gameName: this.game?.name,
+        world: this.isVirtualWorld ? "virtual" : "real",
+        mode: this.isSingleMode ? "single" : "multi",
+        taskNo: tasksCount ? Math.min(this.taskIndex + 1, tasksCount) : undefined,
+        tasksCount,
+      });
+      await Plugins.Clipboard.write({ string: text });
+      this.utilService.showToast(this.translate.instant("PlayGame.diagnosticsCopied"), "success", 2000);
+    } catch {
+      this.utilService.showToast(this.translate.instant("PlayGame.diagnosticsCopyFailed"), "warning", 3000);
+    }
   }
 
   navigateHome() {

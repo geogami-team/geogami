@@ -56,71 +56,130 @@
         </ion-card-content>
       </ion-card>
 
+      <!-- Settings for both platforms -->
       <ion-card class="settings">
         <h2 class="card-title">{{ "AppVersion.promptTitle" | translate }}</h2>
-        <ion-list lines="full">
-          <ion-item id="app-version-enabled">
-            <ion-label class="ion-text-wrap">
+        <ul class="rows">
+          <li class="row" id="app-version-enabled">
+            <div class="row-text">
               <h3>{{ "AppVersion.enabled" | translate }}</h3>
               <p>{{ "AppVersion.enabledHint" | translate }}</p>
-            </ion-label>
-            <ion-toggle slot="end" [(ngModel)]="draft.enabled"></ion-toggle>
-          </ion-item>
+            </div>
+            <ion-toggle [(ngModel)]="draft.enabled" [attr.aria-label]="'AppVersion.enabled' | translate"></ion-toggle>
+          </li>
 
-          <ion-item id="app-version-ios">
-            <ion-label class="ion-text-wrap">
-              <h3>{{ "AppVersion.ios" | translate }}</h3>
-            </ion-label>
-            <ion-toggle slot="end" [(ngModel)]="draft.ios"></ion-toggle>
-          </ion-item>
-
-          <ion-item id="app-version-android">
-            <ion-label class="ion-text-wrap">
-              <h3>{{ "AppVersion.android" | translate }}</h3>
-            </ion-label>
-            <ion-toggle slot="end" [(ngModel)]="draft.android"></ion-toggle>
-          </ion-item>
-
-          <ion-item id="app-version-version">
-            <ion-label position="stacked">{{ "AppVersion.version" | translate }}</ion-label>
-            <ion-input
-              [(ngModel)]="draft.version"
-              required
-              [pattern]="versionPattern"
-              placeholder="6.2.0"
-              inputmode="decimal"
-              autocomplete="off"
-              spellcheck="false"
-            ></ion-input>
-            <ion-note slot="helper">
-              {{ "AppVersion.versionHint" | translate }}
-              <ng-container *ngIf="githubLatest">
-                {{ "AppVersion.githubLatest" | translate: { version: githubLatest } }}
-              </ng-container>
-            </ion-note>
-            <ion-note slot="error">{{ "AppVersion.versionInvalid" | translate }}</ion-note>
-          </ion-item>
-
-          <ion-item id="app-version-major">
-            <ion-label class="ion-text-wrap">
+          <li class="row" id="app-version-major">
+            <div class="row-text">
               <h3>{{ "AppVersion.major" | translate }}</h3>
               <p>{{ "AppVersion.majorHint" | translate }}</p>
-            </ion-label>
-            <ion-toggle slot="end" [(ngModel)]="draft.major"></ion-toggle>
-          </ion-item>
+            </div>
+            <ion-toggle [(ngModel)]="draft.major" [attr.aria-label]="'AppVersion.major' | translate"></ion-toggle>
+          </li>
+        </ul>
+      </ion-card>
 
-          <ion-item id="app-version-build" lines="none">
-            <ion-label position="stacked">{{ "AppVersion.build" | translate }}</ion-label>
-            <ion-input
-              [(ngModel)]="draft.build"
-              [pattern]="buildPattern"
-              inputmode="numeric"
-              autocomplete="off"
-            ></ion-input>
-            <ion-note slot="helper">{{ "AppVersion.buildHint" | translate }}</ion-note>
-            <ion-note slot="error">{{ "AppVersion.buildInvalid" | translate }}</ion-note>
-          </ion-item>
-        </ion-list>
+      <!-- iOS and Android side by side: one row per setting, one column per platform -->
+      <ion-card class="platforms">
+        <h2 class="card-title">{{ "AppVersion.platformsTitle" | translate }}</h2>
+        <table class="platform-table">
+          <thead>
+            <tr>
+              <th scope="col">
+                <span class="visually-hidden">{{ "AppVersion.settingColumn" | translate }}</span>
+              </th>
+              <th scope="col" class="platform-head" *ngFor="let p of platforms">
+                <ion-icon [name]="platformInfo[p].icon" aria-hidden="true"></ion-icon>{{ platformInfo[p].name }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">
+                <span class="row-label">{{ "AppVersion.rowAsk" | translate }}</span>
+              </th>
+              <td *ngFor="let p of platforms" [id]="'app-version-' + p">
+                <ion-toggle
+                  [(ngModel)]="draft[p]"
+                  [attr.aria-label]="('AppVersion.rowAsk' | translate) + ': ' + platformInfo[p].name"
+                ></ion-toggle>
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row">
+                <span class="row-label">{{ "AppVersion.rowFollow" | translate }}</span>
+                <span class="row-hint">{{ "AppVersion.rowFollowHint" | translate }}</span>
+              </th>
+              <td *ngFor="let p of platforms" [id]="'app-version-' + p + '-follow'">
+                <ion-toggle
+                  [ngModel]="draft[storeFlag[p]]"
+                  (ngModelChange)="setFollowStore(p, $event)"
+                  [attr.aria-label]="('AppVersion.rowFollow' | translate) + ': ' + platformInfo[p].store"
+                ></ion-toggle>
+                <span class="cell-note">{{ platformInfo[p].store }}</span>
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row">
+                <span class="row-label">{{ "AppVersion.rowVersion" | translate }}</span>
+                <span class="row-hint">{{ "AppVersion.versionHint" | translate }}</span>
+              </th>
+              <td *ngFor="let p of platforms">
+                <!-- Typed in, or taken from the store while following it -->
+                <ng-container *ngIf="!draft[storeFlag[p]]; else fromStore">
+                  <input
+                    class="text-input"
+                    [id]="'app-version-' + p + '-version'"
+                    [(ngModel)]="draft[versionField[p]]"
+                    required
+                    [pattern]="versionPattern"
+                    placeholder="6.2.0"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    spellcheck="false"
+                    [attr.aria-label]="('AppVersion.rowVersion' | translate) + ': ' + platformInfo[p].name"
+                    [attr.aria-invalid]="!versionValid(p)"
+                    [attr.aria-describedby]="'app-version-' + p + '-version-error'"
+                  />
+                  <span class="field-error" [id]="'app-version-' + p + '-version-error'" *ngIf="!versionValid(p)">
+                    {{ "AppVersion.versionInvalid" | translate }}
+                  </span>
+                </ng-container>
+                <ng-template #fromStore>
+                  <div [id]="'app-version-' + p + '-store'">
+                    <span class="version-value">{{ promptVersion(p) }}</span>
+                    <span class="cell-note">
+                      {{ (stores[p] ? "AppVersion.fromStore" : "AppVersion.fallbackVersion") | translate: { store: platformInfo[p].store } }}
+                    </span>
+                  </div>
+                </ng-template>
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row">
+                <span class="row-label">{{ "AppVersion.rowStore" | translate }}</span>
+              </th>
+              <td *ngFor="let p of platforms" [id]="'app-version-' + p + '-in-store'">
+                <ng-container *ngIf="stores[p] as release; else noRelease">
+                  <span class="version-value">{{ release.version }}</span>
+                  <span class="cell-note" *ngIf="release.releasedAt">
+                    {{ "AppVersion.storeReleased" | translate: { date: (release.releasedAt | date: "mediumDate") } }}
+                  </span>
+                  <a class="store-link" [href]="release.storeUrl" target="_blank" rel="noopener">
+                    {{ "AppVersion.storePage" | translate }}<ion-icon name="open-outline" aria-hidden="true"></ion-icon>
+                  </a>
+                </ng-container>
+                <ng-template #noRelease>
+                  <span class="cell-note">
+                    {{ (storesChecked ? "AppVersion.storeUnreachable" : "AppVersion.storeChecking") | translate }}
+                  </span>
+                </ng-template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </ion-card>
 
       <!-- What the draft does, and the prompt the devices will show -->
@@ -128,7 +187,7 @@
         <h2 class="card-title">{{ "AppVersion.previewTitle" | translate }}</h2>
         <ion-card-content>
           <p class="audience" aria-live="polite">{{ audienceText }}</p>
-          <ng-container *ngIf="audience !== 'none' && versionValid">
+          <ng-container *ngIf="audience !== 'none' && askedVersionsValid">
             <div class="mock-prompt">
               <strong>{{ (draft.major ? "Start.majorAppUpdateHeader" : "Start.appUpdateHeader") | translate }}</strong>
               <p>{{ (draft.major ? "Start.majorAppUpdateMsg" : "Start.appUpdateMsg") | translate }}</p>

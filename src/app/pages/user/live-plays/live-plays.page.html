@@ -1,0 +1,253 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        color="dark"
+        defaultHref="/user/app-management"
+        [text]="'General.back_button' | translate"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ "LivePlays.pageTitle" | translate }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="tab" (ionChange)="onTabChange()">
+      <ion-segment-button value="now">
+        <ion-label>{{ "LivePlays.tabNow" | translate }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="history">
+        <ion-label>{{ "LivePlays.tabHistory" | translate }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- One centred column, like the other management pages. -->
+  <div class="page-column">
+    <!-- ───────────── Now ───────────── -->
+    <ng-container *ngIf="tab === 'now'">
+      <div class="refresh-line">
+        <span *ngIf="liveUpdatedAt" class="updated">
+          {{ "LivePlays.updatedAt" | translate: { time: (liveUpdatedAt | date: "mediumTime") } }}
+        </span>
+        <ion-button fill="clear" size="small" (click)="refreshLive()" [disabled]="liveLoading">
+          <ion-icon slot="start" name="refresh-outline"></ion-icon>
+          {{ "LivePlays.refresh" | translate }}
+        </ion-button>
+      </div>
+
+      <!-- A failed refresh keeps the last data on screen and says how old it is. -->
+      <ion-card *ngIf="liveFailedAt" color="danger" role="alert">
+        <ion-card-content>
+          <p *ngIf="live">
+            {{ "LivePlays.refreshFailed" | translate: { failed: (liveFailedAt | date: "mediumTime"), time: (liveUpdatedAt | date: "mediumTime") } }}
+          </p>
+          <p *ngIf="!live">{{ "LivePlays.loadFailed" | translate }}</p>
+          <ion-button fill="outline" color="light" (click)="refreshLive()">{{ "LivePlays.retry" | translate }}</ion-button>
+        </ion-card-content>
+      </ion-card>
+
+      <div class="status" *ngIf="!live && liveLoading">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+
+      <ng-container *ngIf="live">
+        <div class="counters">
+          <ion-card class="counter">
+            <ion-card-content>
+              <div class="number">{{ live.counts.playing }}</div>
+              <div class="label">{{ "LivePlays.playingNow" | translate }}</div>
+            </ion-card-content>
+          </ion-card>
+          <ion-card class="counter">
+            <ion-card-content>
+              <div class="number">{{ live.counts.saving }}</div>
+              <div class="label">{{ "LivePlays.savesInProgress" | translate }}</div>
+            </ion-card-content>
+          </ion-card>
+        </div>
+
+        <p class="note">{{ "LivePlays.olderBuildsNote" | translate }}</p>
+
+        <ion-card>
+          <h2 class="card-title">{{ "LivePlays.sectionPlaying" | translate }}</h2>
+          <ion-list lines="full">
+            <ng-container *ngFor="let p of playingNow; trackBy: trackByPlay">
+              <ng-container *ngTemplateOutlet="playRow; context: { $implicit: p }"></ng-container>
+            </ng-container>
+          </ion-list>
+          <p class="empty" *ngIf="playingNow.length === 0">{{ "LivePlays.nonePlaying" | translate }}</p>
+        </ion-card>
+
+        <ion-card>
+          <h2 class="card-title">{{ "LivePlays.sectionRecent" | translate }}</h2>
+          <ion-list lines="full">
+            <ng-container *ngFor="let p of recent; trackBy: trackByPlay">
+              <ng-container *ngTemplateOutlet="playRow; context: { $implicit: p }"></ng-container>
+            </ng-container>
+          </ion-list>
+          <p class="empty" *ngIf="recent.length === 0">{{ "LivePlays.noneRecent" | translate }}</p>
+          <p class="note" *ngIf="live.truncated">{{ "LivePlays.truncated" | translate: { count: live.items.length } }}</p>
+        </ion-card>
+
+        <p class="note">{{ "LivePlays.legend" | translate }}</p>
+      </ng-container>
+    </ng-container>
+
+    <!-- ───────────── History ───────────── -->
+    <ng-container *ngIf="tab === 'history'">
+      <ion-card>
+        <form (ngSubmit)="search()">
+          <ion-list lines="full" class="filters">
+            <ion-item>
+              <ion-label position="stacked">{{ "LivePlays.filter.from" | translate }}</ion-label>
+              <ion-input type="date" name="from" [(ngModel)]="filters.from"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">{{ "LivePlays.filter.to" | translate }}</ion-label>
+              <ion-input type="date" name="to" [(ngModel)]="filters.to"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">{{ "LivePlays.filter.game" | translate }}</ion-label>
+              <ion-input name="game" [(ngModel)]="filters.game" maxlength="100"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">{{ "LivePlays.filter.event" | translate }}</ion-label>
+              <ion-input name="event" [(ngModel)]="filters.event" maxlength="100"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">{{ "LivePlays.filter.status" | translate }}</ion-label>
+              <ion-select name="status" [(ngModel)]="filters.status" interface="popover">
+                <ion-select-option value="">{{ "LivePlays.filter.any" | translate }}</ion-select-option>
+                <ion-select-option *ngFor="let s of statuses" [value]="s">
+                  {{ "LivePlays.status." + s | translate }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">{{ "LivePlays.filter.save" | translate }}</ion-label>
+              <ion-select name="save" [(ngModel)]="filters.save" interface="popover">
+                <ion-select-option value="">{{ "LivePlays.filter.any" | translate }}</ion-select-option>
+                <ion-select-option *ngFor="let s of saveStatuses" [value]="s">
+                  {{ "LivePlays.save." + s | translate }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">{{ "LivePlays.filter.playId" | translate }}</ion-label>
+              <ion-input name="playId" [(ngModel)]="filters.playId" maxlength="36"></ion-input>
+            </ion-item>
+          </ion-list>
+          <div class="filter-actions">
+            <ion-button type="submit">
+              <ion-icon slot="start" name="search-outline"></ion-icon>
+              {{ "LivePlays.filter.search" | translate }}
+            </ion-button>
+            <ion-button fill="outline" color="medium" (click)="clearFilters()">
+              {{ "LivePlays.filter.clear" | translate }}
+            </ion-button>
+          </div>
+        </form>
+      </ion-card>
+
+      <div class="refresh-line" *ngIf="historyUpdatedAt">
+        <span class="updated">
+          {{ "LivePlays.updatedAt" | translate: { time: (historyUpdatedAt | date: "mediumTime") } }}
+        </span>
+      </div>
+
+      <ion-card *ngIf="historyFailedAt" color="danger" role="alert">
+        <ion-card-content>
+          <p *ngIf="historyLoaded">
+            {{ "LivePlays.refreshFailed" | translate: { failed: (historyFailedAt | date: "mediumTime"), time: (historyUpdatedAt | date: "mediumTime") } }}
+          </p>
+          <p *ngIf="!historyLoaded">{{ "LivePlays.loadFailed" | translate }}</p>
+          <ion-button fill="outline" color="light" (click)="search()">{{ "LivePlays.retry" | translate }}</ion-button>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card *ngIf="historyLoaded">
+        <ion-list lines="full">
+          <ng-container *ngFor="let p of history; trackBy: trackByPlay">
+            <ng-container *ngTemplateOutlet="playRow; context: { $implicit: p }"></ng-container>
+          </ng-container>
+        </ion-list>
+        <p class="empty" *ngIf="history.length === 0">{{ "LivePlays.noResults" | translate }}</p>
+      </ion-card>
+
+      <div class="load-more" *ngIf="historyHasMore">
+        <ion-button fill="outline" expand="block" (click)="loadHistory()" [disabled]="historyLoading">
+          {{ "LivePlays.loadMore" | translate }}
+        </ion-button>
+      </div>
+      <div class="status" *ngIf="historyLoading">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+    </ng-container>
+  </div>
+</ion-content>
+
+<!-- One play; tap to show the details. -->
+<ng-template #playRow let-p>
+  <ion-item button [detail]="false" (click)="toggle(p.playId)" [attr.aria-expanded]="expanded.has(p.playId)">
+    <ion-label class="ion-text-wrap">
+      <h3>{{ p.game.name || ("LivePlays.deletedGame" | translate) }}</h3>
+      <p class="badges">
+        <ion-badge [color]="statusColor[p.status]" [class.dark-text]="darkText(statusColor[p.status])">
+          {{ "LivePlays.status." + p.status | translate }}
+        </ion-badge>
+        <ion-badge *ngIf="p.save" [color]="saveColor[p.save]" [class.dark-text]="darkText(saveColor[p.save])">
+          {{ "LivePlays.save." + p.save | translate }}
+          <ng-container *ngIf="p.save === 'failed' && p.uploadHttpStatus !== null">
+            ({{ p.uploadHttpStatus || ("LivePlays.noAnswer" | translate) }})
+          </ng-container>
+        </ion-badge>
+        <ion-badge *ngIf="p.startMissing" color="medium">{{ "LivePlays.startMissing" | translate }}</ion-badge>
+      </p>
+      <p>
+        {{ "LivePlays.world." + p.world | translate }} · {{ "LivePlays.mode." + p.mode | translate }}
+        <ng-container *ngIf="p.rejoin"> · {{ "LivePlays.rejoin" | translate }}</ng-container>
+        <ng-container *ngIf="p.event">
+          · {{ "LivePlays.event" | translate: { name: p.event.name || ("LivePlays.deletedEvent" | translate) } }}
+        </ng-container>
+      </p>
+      <p>
+        {{ "LivePlays.started" | translate: { date: ((p.startedAt || p.firstSeenAt) | date: "medium") } }}
+        <ng-container *ngIf="durations.get(p.playId) as playTime">
+          · {{ (p.status === "playing" ? "LivePlays.runningFor" : "LivePlays.playedFor") | translate: { duration: playTime } }}
+        </ng-container>
+      </p>
+      <p class="muted">
+        {{ p.platform }}
+        <ng-container *ngIf="p.embedded"> ({{ "LivePlays.inVeFrame" | translate }})</ng-container>
+        <ng-container *ngIf="p.appVersion || p.appBuild"> · app {{ p.appVersion || "?" }}<ng-container *ngIf="p.appBuild"> ({{ p.appBuild }})</ng-container></ng-container>
+        <ng-container *ngIf="p.webVersion || p.webCommit"> · web {{ p.webVersion || shortId(p.webCommit) }}</ng-container>
+        · {{ shortId(p.playId) }}
+      </p>
+
+      <dl class="details" *ngIf="expanded.has(p.playId)">
+        <dt>{{ "LivePlays.detail.playId" | translate }}</dt>
+        <dd class="mono">{{ p.playId }}</dd>
+        <dt>{{ "LivePlays.detail.firstSeen" | translate }}</dt>
+        <dd>{{ p.firstSeenAt | date: "medium" }}</dd>
+        <dt>{{ "LivePlays.detail.start" | translate }}</dt>
+        <dd>{{ (p.startedAt | date: "medium") || "—" }} / {{ (p.clientStartedAt | date: "medium") || "—" }}</dd>
+        <dt>{{ "LivePlays.detail.end" | translate }}</dt>
+        <dd>{{ (p.endedAt | date: "medium") || "—" }} / {{ (p.clientEndedAt | date: "medium") || "—" }}</dd>
+        <ng-container *ngIf="p.resumeCount > 0">
+          <dt>{{ "LivePlays.detail.resumes" | translate }}</dt>
+          <dd>{{ p.resumeCount }}</dd>
+        </ng-container>
+        <dt>{{ "LivePlays.detail.webBuild" | translate }}</dt>
+        <dd class="mono">
+          <ng-container *ngIf="p.webVersion">{{ p.webVersion }} · </ng-container>{{ p.webCommit || "—" }}<ng-container *ngIf="p.webDeployId"> · {{ p.webDeployId }}</ng-container
+          ><ng-container *ngIf="p.webBuiltAt"> · {{ p.webBuiltAt | date: "medium" }}</ng-container>
+        </dd>
+        <dt>{{ "LivePlays.detail.app" | translate }}</dt>
+        <dd>{{ p.appVersion || "—" }}<ng-container *ngIf="p.appBuild"> ({{ p.appBuild }})</ng-container></dd>
+        <dt>{{ "LivePlays.detail.platform" | translate }}</dt>
+        <dd>{{ p.platform }}<ng-container *ngIf="p.embedded"> ({{ "LivePlays.inVeFrame" | translate }})</ng-container></dd>
+      </dl>
+    </ion-label>
+  </ion-item>
+</ng-template>

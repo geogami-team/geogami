@@ -318,6 +318,12 @@
     <ion-button color="primary" (click)="navigateHome()" [disabled]="!uploadDone && shareData_cbox">
       {{ "General.done" | translate }}
     </ion-button>
+    <div>
+      <ion-button fill="clear" size="small" color="medium" (click)="copyDiagnostics()">
+        <ion-icon slot="start" name="copy-outline"></ion-icon>
+        {{ "PlayGame.copyDiagnostics" | translate }}
+      </ion-button>
+    </div>
   </ion-card>
 
   <ion-card class="overlay success" *ngIf="geofenceAlert">

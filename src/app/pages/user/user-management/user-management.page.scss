@@ -73,46 +73,71 @@
     padding-left: 0.75rem;
   }
 
-  .filters-row {
+  .table-toolbar {
     display: flex;
-    flex-wrap: nowrap;
-    align-items: flex-end;
-    gap: 0.75rem;
-    width: 100%;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin: 0.75rem 0 0.5rem;
 
-    .filter-search {
-      flex: 1 1 auto;
-      min-width: 0;
-    }
-    .filter-compact {
-      flex: 0 0 140px;
-    }
-    .filter-reset {
-      flex: 0 0 auto;
-      height: 36px;
-      align-self: center;
+    .result-count {
+      margin-right: auto;
+      font-size: 0.875rem;
+      color: var(--ion-color-medium);
     }
   }
 
-  // Phone: search + reset on row 1; role & verified dropdowns on row 2.
-  // CSS order resequences because reset is last in the DOM but needs to
-  // sit next to the search field on small screens.
-  @media (max-width: 640px) {
-    .filters-row {
-      flex-wrap: wrap;
+  // Wide tables scroll sideways inside the card instead of spilling off the page.
+  .table-scroll {
+    overflow-x: auto;
+  }
 
-      .filter-search {
-        flex: 1 1 0;
-        min-width: 40%;
-        order: 1;
-      }
-      .filter-reset {
-        order: 2;
-        flex: 0 0 auto;
-      }
-      .filter-compact {
-        order: 3;
-        flex: 1 1 45%;
-      }
+  // Space between columns: Material's table has none, so neighbouring values
+  // and the header filters would touch.
+  .mat-header-cell:not(:last-of-type),
+  .mat-cell:not(:last-of-type) {
+    padding-right: 12px;
+  }
+
+  // Wrapped column names get centred by mat-sort-header; keep them on one line.
+  .mat-header-cell {
+    white-space: nowrap;
+  }
+
+  // Filter header row: sits above the column names and reads as part of the
+  // same header (no divider, controls aligned to the names below).
+  .filter-header-row {
+    height: auto;
+
+    .mat-header-cell {
+      padding-top: 10px;
+      padding-bottom: 2px;
+      border-bottom: none;
+      vertical-align: bottom;
     }
+  }
+
+  .col-filter {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 90px;
+    height: 30px;
+    padding: 0 6px;
+    font: inherit;
+    font-size: 13px;
+    color: #222;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+
+    // Highlights the columns that currently narrow the list.
+    &.active {
+      border-color: var(--ion-color-primary);
+      box-shadow: 0 0 0 1px var(--ion-color-primary);
+    }
+  }
+
+  .mono {
+    font-family: monospace;
+    font-size: 12px;
   }
