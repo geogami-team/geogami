@@ -251,11 +251,34 @@ describe("PlaySessionService", () => {
 
     it("answers the frame's question as the app around the VE", async () => {
       const source = { postMessage: jasmine.createSpy("postMessage") };
-      await service.answerHost({ source, origin: "https://app.geogami.ifgi.de" } as any);
+      await service.answerHost({ source, origin: "https://app.geogami.ifgi.de" } as any, "de");
       expect(source.postMessage).toHaveBeenCalledWith(
-        { type: HOST_INFO_MESSAGE, platform: Capacitor.platform, appVersion: "7.3.0", appBuild: "42" },
+        { type: HOST_INFO_MESSAGE, platform: Capacitor.platform, appVersion: "7.3.0", appBuild: "42", language: "de" },
         "https://app.geogami.ifgi.de"
       );
+    });
+
+    it("takes the selected language from the app around the VE", async () => {
+      answer = (e) => {
+        if (e.data?.type !== HOST_INFO_REQUEST) return;
+        window.postMessage({ type: HOST_INFO_MESSAGE, platform: "ios", language: "de" }, "*");
+      };
+      window.addEventListener("message", answer);
+      expect(await service.askHostLanguage()).toBe("de");
+    });
+
+    it("has no language when the app around the VE does not answer", async () => {
+      (service as any).hostWaitMs = 20;
+      expect(await service.askHostLanguage()).toBeNull();
+    });
+
+    it("has no language from an app that answers without one", async () => {
+      answer = (e) => {
+        if (e.data?.type !== HOST_INFO_REQUEST) return;
+        window.postMessage({ type: HOST_INFO_MESSAGE, platform: "ios", appVersion: "7.4.0" }, "*");
+      };
+      window.addEventListener("message", answer);
+      expect(await service.askHostLanguage()).toBeNull();
     });
   });
 

@@ -81,6 +81,7 @@ export class PlaySessionService {
   private device: { appVersion: string | null; appBuild: string | null } | null = null;
   /** The app around the VE, once it has answered. */
   private host: Identity | null = null;
+  private hostLanguage: string | null = null;
   private hostWaitMs = 2000;
   private listening = false;
 
@@ -193,9 +194,10 @@ export class PlaySessionService {
 
   /**
    * For the VE page (playing-virenv), the app around the VE: the game page in the VE's
-   * frame asks what platform and app the player is really on, and this answers it.
+   * frame asks what platform and app the player is really on, and which language they
+   * selected, and this answers it.
    */
-  async answerHost(event: MessageEvent): Promise<void> {
+  async answerHost(event: MessageEvent, language: string): Promise<void> {
     try {
       await this.loadDevice();
       const source = event.source as Window;
@@ -206,6 +208,7 @@ export class PlaySessionService {
           platform: Capacitor.platform,
           appVersion: this.device.appVersion,
           appBuild: this.device.appBuild,
+          language,
         },
         origin
       );
@@ -325,6 +328,16 @@ export class PlaySessionService {
     }
   }
 
+  /**
+   * The language selected in the app around the VE. In the VE's frame the page has its
+   * own storage, so without this it follows the device, not the player's selection.
+   * Null outside the frame, and for apps from before the language was part of the answer.
+   */
+  async askHostLanguage(): Promise<string | null> {
+    await this.askHost();
+    return this.hostLanguage;
+  }
+
   /** Asks the app around the VE what it is, and waits a moment for the answer. */
   private askHost(): Promise<void> {
     const target = this.hostWindow();
@@ -344,6 +357,7 @@ export class PlaySessionService {
           appVersion: text(e.data.appVersion),
           appBuild: text(e.data.appBuild),
         };
+        this.hostLanguage = text(e.data.language);
         done();
       };
       window.addEventListener("message", onMessage);
