@@ -72,6 +72,7 @@ export class MediaAuditPage implements OnInit, OnDestroy {
 
   private requestVersion = 0;
   private scanPoll?: ReturnType<typeof setTimeout>;
+  private previewRequested = false;
   private loadingMore = false;
   private page = 0;
   files: MediaFile[] = [];
@@ -177,8 +178,8 @@ export class MediaAuditPage implements OnInit, OnDestroy {
       page,
       limit: PAGE_SIZE,
       q: this.search.trim(),
-      hostFlagged: this.onlyHostFlagged,
-      orphans: this.onlyOrphans,
+      hostFlagged: !filesOnly && this.onlyHostFlagged,
+      orphans: !filesOnly && this.onlyOrphans,
       refresh,
       filesOnly,
       defer: page === 0 && !filesOnly,
@@ -201,6 +202,7 @@ export class MediaAuditPage implements OnInit, OnDestroy {
     this.hosts = [];
     this.generatedAt = null;
     this.showInventory();
+    if (this.previewRequested) this.loadPreview(version);
     await this.loadAuditPage(version, refresh);
   }
 
@@ -209,7 +211,9 @@ export class MediaAuditPage implements OnInit, OnDestroy {
       const res = await this.fetchPage(0, refresh);
       if (version !== this.requestVersion) return;
       if (res.scanning) {
-        if (this.scanPoll === undefined && !this.onlyOrphans && !this.onlyHostFlagged) this.loadPreview(version);
+        if (this.scanPoll === undefined && !this.previewRequested && !this.onlyOrphans && !this.onlyHostFlagged) {
+          this.loadPreview(version);
+        }
         this.scanPoll = setTimeout(() => this.loadAuditPage(version), SCAN_POLL_MS);
         return;
       }
@@ -224,6 +228,7 @@ export class MediaAuditPage implements OnInit, OnDestroy {
       this.canonicalHost = res.canonicalHost;
       this.hosts = res.hosts;
       this.totals = res.totals;
+      this.previewRequested = false;
       this.previewing = false;
       this.loading = false;
     } catch (err) {
@@ -243,13 +248,14 @@ export class MediaAuditPage implements OnInit, OnDestroy {
       this.previewing = true;
     } catch (_) {
       // The full audit is still running and will supply the file list.
+      if (version === this.requestVersion) this.previewRequested = false;
     }
   }
 
   browseAll() {
-    this.onlyOrphans = false;
-    this.onlyHostFlagged = false;
-    this.reload();
+    if (!this.loading || this.previewRequested) return;
+    this.previewRequested = true;
+    this.loadPreview(this.requestVersion);
   }
 
   async loadMore(ev) {

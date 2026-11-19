@@ -75,10 +75,19 @@ describe("MediaAuditPage cleanup", () => {
     expect(auth.GetMediaAudit.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({ year: 2021, refresh: true }));
   });
 
-  it("shows the filters during a scan and labels an all-files preview as unchecked", async () => {
-    auth.GetMediaAudit.and.callFake(async (opts) => opts.filesOnly ? {
-      page: { filteredTotal: 1, files: [{ filename: "preview.jpg", referenced: null, hosts: [], games: [] }] },
-    } : { scanning: true });
+  it("previews all files during a scan without resetting the unreferenced filter", async () => {
+    let scanFinished = false;
+    auth.GetMediaAudit.and.callFake(async (opts) => {
+      if (opts.filesOnly) return {
+        page: { filteredTotal: 1, files: [{ filename: "preview.jpg", referenced: null, hosts: [], games: [] }] },
+      };
+      if (!scanFinished) return { scanning: true };
+      return {
+        categories: [{ bucket: "photos", label: "Photos" }],
+        hosts: [],
+        page: { bucket: "photos", filteredTotal: 1, files: [{ filename: "unreferenced.jpg", referenced: false, hosts: [], games: [] }] },
+      };
+    });
 
     fixture.detectChanges();
     await Promise.resolve();
@@ -88,13 +97,24 @@ describe("MediaAuditPage cleanup", () => {
     expect(fixture.nativeElement.querySelector(".cleanup-row")).toBeNull();
     expect(fixture.nativeElement.querySelector(".file-row")).toBeNull();
 
-    fixture.componentInstance.browseAll();
-    await Promise.resolve();
+    fixture.nativeElement.querySelector(".scan-status ion-button").click();
     await Promise.resolve();
     fixture.detectChanges();
     expect(auth.GetMediaAudit).toHaveBeenCalledWith(jasmine.objectContaining({ orphans: false, filesOnly: true }));
+    expect(fixture.componentInstance.onlyOrphans).toBeTrue();
+    expect(fixture.nativeElement.querySelector(".showing").textContent).toContain("All-files preview");
     expect(fixture.nativeElement.querySelector(".file-row").textContent).toContain("Reference status pending");
     expect(fixture.nativeElement.querySelector(".badge.orphan")).toBeNull();
+
+    fixture.componentInstance.search = "jpg";
+    await fixture.componentInstance.reload();
+    expect(auth.GetMediaAudit).toHaveBeenCalledWith(jasmine.objectContaining({ q: "jpg", filesOnly: true }));
+
+    scanFinished = true;
+    await render();
+    expect(auth.GetMediaAudit.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({ orphans: true, filesOnly: false }));
+    expect(fixture.nativeElement.querySelector(".file-row").textContent).toContain("unreferenced.jpg");
+    expect(fixture.nativeElement.querySelector(".showing").textContent).not.toContain("All-files preview");
     fixture.destroy();
   });
 });

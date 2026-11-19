@@ -198,12 +198,13 @@
       <div class="scan-status" *ngIf="loading" role="status">
         <ion-spinner name="crescent"></ion-spinner>
         <span>Checking references in saved games and tracks…</span>
-        <ion-button *ngIf="onlyOrphans || onlyHostFlagged" size="small" fill="clear" (click)="browseAll()">
+        <ion-button *ngIf="!previewing && (onlyOrphans || onlyHostFlagged)" size="small" fill="clear" (click)="browseAll()">
           Browse all files now
         </ion-button>
       </div>
 
       <div class="showing" *ngIf="(!loading && !error) || previewing">
+        <ng-container *ngIf="previewing">All-files preview · </ng-container>
         Showing {{ files.length }} of {{ filteredTotal }}
       </div>
 
