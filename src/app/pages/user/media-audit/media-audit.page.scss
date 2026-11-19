@@ -95,6 +95,14 @@
 
 .showing { font-size: 12px; opacity: 0.6; margin: 2px 2px 8px; }
 
+.scan-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-block: 8px;
+}
+
 .cleanup-row {
   display: flex;
   flex-wrap: wrap;

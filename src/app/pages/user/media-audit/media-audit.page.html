@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>{{ "AppManagement.mediaAudit.title" | translate }}</ion-title>
     <ion-buttons slot="end" *ngIf="!selecting">
-      <ion-button (click)="loadCategories()" [disabled]="loading || deleting">
+      <ion-button (click)="loadCategories()" [disabled]="deleting">
         <ion-icon name="options-outline" slot="start"></ion-icon>
         Categories
       </ion-button>
@@ -64,21 +64,23 @@
     </ng-container>
   </div>
 
-  <div *ngIf="!selecting && loading" class="centered">
+  <div *ngIf="!selecting && loading && !categories.length" class="centered" role="status">
     <ion-spinner name="crescent"></ion-spinner>
-    <p>Scanning media and cross-referencing games &amp; tracks…</p>
+    <p>{{ metaLoading ? 'Loading media categories…' : 'Checking media references…' }}</p>
   </div>
 
   <div *ngIf="!selecting && !loading && error" class="centered error">
     <ion-icon name="alert-circle-outline"></ion-icon>
     <p>{{ error }}</p>
-    <ion-button size="small" (click)="reload(false)">Try again</ion-button>
+    <ion-button size="small" (click)="reload(true)">Try again</ion-button>
   </div>
 
-  <ng-container *ngIf="!selecting && !loading && !error">
+  <div *ngIf="!selecting && !loading && !error && !categories.length" class="centered">No media uploaded.</div>
+
+  <ng-container *ngIf="!selecting && categories.length">
 
     <!-- Summary for the selected upload year and categories -->
-    <div class="summary-grid">
+    <div class="summary-grid" *ngIf="totals">
       <div class="summary-card">
         <div class="num">{{ totals ? totals.files : '…' }}</div>
         <div class="lbl">Total files</div>
@@ -138,8 +140,11 @@
 
     <ng-container *ngIf="activeCategory as cat">
       <div class="cat-meta">
-        {{ cat.totalFiles }} files · {{ fmtBytes(cat.totalBytes) }} · {{ cat.referencedFiles }} referenced ·
-        {{ cat.orphanFiles }} unreferenced · {{ cat.hostFlaggedFiles }} with a different/misspelled URL
+        {{ cat.totalFiles }} files
+        <ng-container *ngIf="cat.referencedFiles !== null">
+          · {{ fmtBytes(cat.totalBytes) }} · {{ cat.referencedFiles }} referenced ·
+          {{ cat.orphanFiles }} unreferenced · {{ cat.hostFlaggedFiles }} with a different/misspelled URL
+        </ng-container>
       </div>
 
       <div class="filters-row">
@@ -175,7 +180,7 @@
         </ion-segment>
       </div>
 
-      <div class="cleanup-row" *ngIf="cat.deletable && year !== null && onlyOrphans">
+      <div class="cleanup-row" *ngIf="!loading && !error && cat.deletable && year !== null && onlyOrphans">
         <ion-button
           color="danger"
           size="small"
@@ -190,7 +195,15 @@
         <span role="status" *ngIf="deleting">Rechecking references and deleting eligible files…</span>
       </div>
 
-      <div class="showing">
+      <div class="scan-status" *ngIf="loading" role="status">
+        <ion-spinner name="crescent"></ion-spinner>
+        <span>Checking references in saved games and tracks…</span>
+        <ion-button *ngIf="onlyOrphans || onlyHostFlagged" size="small" fill="clear" (click)="browseAll()">
+          Browse all files now
+        </ion-button>
+      </div>
+
+      <div class="showing" *ngIf="(!loading && !error) || previewing">
         Showing {{ files.length }} of {{ filteredTotal }}
       </div>
 
@@ -223,7 +236,7 @@
                 <span class="game-names">{{ gameLabel(f) }}</span>
                 <span class="via-track" *ngIf="f.games[0].viaTrack">(player photo)</span>
               </div>
-              <div class="file-games none" *ngIf="!f.games?.length && !f.referenced">
+              <div class="file-games none" *ngIf="!f.games?.length && f.referenced === false">
                 not used by any game
               </div>
               <div class="file-hosts" *ngIf="f.hosts.length">
@@ -242,7 +255,8 @@
               <span class="badge ok" *ngIf="f.referenced" title="Referenced by a game or track">
                 ✓ used <em *ngIf="f.refCount">×{{ f.refCount }}</em>
               </span>
-              <span class="badge orphan" *ngIf="!f.referenced" title="Not referenced by any game or track">
+              <span class="badge date" *ngIf="f.referenced === null">Reference status pending</span>
+              <span class="badge orphan" *ngIf="f.referenced === false" title="Not referenced by any game or track">
                 unreferenced
               </span>
               <span class="badge size">{{ fmtBytes(f.size) }}</span>
@@ -261,7 +275,7 @@
           </div>
         </div>
 
-        <div class="empty" *ngIf="!files.length">
+        <div class="empty" *ngIf="!loading && !error && !files.length">
           No files match the current filters.
         </div>
       </div>
@@ -282,14 +296,14 @@
             ></ion-icon>
             <div class="grid-corner">
               <span class="badge flag" *ngIf="f.hostFlag" title="Different/misspelled URL">⚠</span>
-              <span class="badge orphan" *ngIf="!f.referenced" title="Unreferenced">•</span>
+              <span class="badge orphan" *ngIf="f.referenced === false" title="Unreferenced">•</span>
             </div>
           </div>
           <div class="grid-name">{{ f.filename }}</div>
           <div class="grid-game" *ngIf="f.games?.length">🎮 {{ gameLabel(f) }}</div>
         </div>
 
-        <div class="empty" *ngIf="!files.length">
+        <div class="empty" *ngIf="!loading && !error && !files.length">
           No files match the current filters.
         </div>
       </div>

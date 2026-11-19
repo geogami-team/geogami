@@ -327,6 +327,7 @@ export class AuthService {
     orphans?: boolean;
     refresh?: boolean;
     filesOnly?: boolean;
+    defer?: boolean;
   } = {}): Promise<any> {
     const p = new URLSearchParams();
     if (opts.kinds) p.set("kinds", opts.kinds);
@@ -340,6 +341,7 @@ export class AuthService {
     if (opts.orphans) p.set("orphans", "1");
     if (opts.refresh) p.set("refresh", "1");
     if (opts.filesOnly) p.set("filesOnly", "1");
+    if (opts.defer) p.set("defer", "1");
     return this.http
       .get(`${environment.apiURL}/file/admin/media?${p.toString()}`, {
         headers: this.createHeaders(),

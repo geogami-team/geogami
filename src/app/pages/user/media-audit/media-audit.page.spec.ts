@@ -13,7 +13,10 @@ describe("MediaAuditPage cleanup", () => {
 
   beforeEach(async () => {
     dismissRole = "cancel";
-    auth = jasmine.createSpyObj("AuthService", ["GetMediaAudit", "deleteUnreferencedMedia"]);
+    auth = jasmine.createSpyObj("AuthService", ["GetMediaAudit", "GetMediaCategories", "deleteUnreferencedMedia"]);
+    auth.GetMediaCategories.and.resolveTo({ categories: [{
+      bucket: "photos", label: "Photos", totalFiles: 2, years: [{ year: 2022, files: 2 }],
+    }] });
     auth.GetMediaAudit.and.resolveTo({
       categories: [{ bucket: "photos", label: "Photos", deletable: true, eligibleFiles: 2 }],
       years: [2022, 2021],
@@ -34,7 +37,6 @@ describe("MediaAuditPage cleanup", () => {
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(MediaAuditPage);
-    await render();
   });
 
   async function render() {
@@ -49,6 +51,7 @@ describe("MediaAuditPage cleanup", () => {
   }
 
   it("opens on unreferenced files and allows the UTC year filter to be cleared", async () => {
+    await render();
     expect(auth.GetMediaAudit).toHaveBeenCalledWith(jasmine.objectContaining({ orphans: true, year: null }));
     expect(fixture.nativeElement.querySelector(".cleanup-row")).toBeNull();
     await selectYear(2022);
@@ -60,6 +63,7 @@ describe("MediaAuditPage cleanup", () => {
   });
 
   it("deletes the selected category and year only after confirmation, then refreshes", async () => {
+    await render();
     await selectYear(2021);
     await fixture.componentInstance.confirmDeleteYear();
     expect(auth.deleteUnreferencedMedia).not.toHaveBeenCalled();
@@ -69,5 +73,28 @@ describe("MediaAuditPage cleanup", () => {
     expect(auth.deleteUnreferencedMedia).toHaveBeenCalledTimes(1);
     expect(auth.deleteUnreferencedMedia).toHaveBeenCalledWith("photos", 2021);
     expect(auth.GetMediaAudit.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({ year: 2021, refresh: true }));
+  });
+
+  it("shows the filters during a scan and labels an all-files preview as unchecked", async () => {
+    auth.GetMediaAudit.and.callFake(async (opts) => opts.filesOnly ? {
+      page: { filteredTotal: 1, files: [{ filename: "preview.jpg", referenced: null, hosts: [], games: [] }] },
+    } : { scanning: true });
+
+    fixture.detectChanges();
+    await Promise.resolve();
+    fixture.detectChanges();
+    expect(auth.GetMediaAudit).toHaveBeenCalledWith(jasmine.objectContaining({ orphans: true, defer: true }));
+    expect(fixture.nativeElement.querySelector("ion-select")).not.toBeNull();
+    expect(fixture.nativeElement.querySelector(".cleanup-row")).toBeNull();
+    expect(fixture.nativeElement.querySelector(".file-row")).toBeNull();
+
+    fixture.componentInstance.browseAll();
+    await Promise.resolve();
+    await Promise.resolve();
+    fixture.detectChanges();
+    expect(auth.GetMediaAudit).toHaveBeenCalledWith(jasmine.objectContaining({ orphans: false, filesOnly: true }));
+    expect(fixture.nativeElement.querySelector(".file-row").textContent).toContain("Reference status pending");
+    expect(fixture.nativeElement.querySelector(".badge.orphan")).toBeNull();
+    fixture.destroy();
   });
 });
