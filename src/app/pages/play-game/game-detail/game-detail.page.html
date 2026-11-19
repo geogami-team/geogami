@@ -24,8 +24,36 @@
 <ion-content>
   <!-- Loading state until the game data arrives, so the play screen comes up
        complete rather than half-populated. -->
-  <div *ngIf="!game" class="loading-wrap">
+  <div *ngIf="gameLoadState === 'loading'" class="loading-wrap">
     <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- Link/QR code to a deleted, hidden or unknown game (or no valid id). -->
+  <div *ngIf="gameLoadState === 'notFound'" class="game-missing">
+    <ion-icon name="help-circle-outline" color="medium"></ion-icon>
+    <h2>{{ 'PlayGame.gameNotFoundTitle' | translate }}</h2>
+    <p>{{ 'PlayGame.gameNotFoundHint' | translate }}</p>
+    <ion-button expand="block" (click)="browseGames()">
+      {{ 'PlayGame.browseGames' | translate }}
+    </ion-button>
+    <ion-button expand="block" fill="outline" (click)="goHome()">
+      {{ 'PlayGame.goHome' | translate }}
+    </ion-button>
+  </div>
+
+  <!-- The API couldn't be reached (offline, server down): the game may well
+       exist, so offer a retry rather than saying it's gone. -->
+  <div *ngIf="gameLoadState === 'error'" class="game-missing">
+    <ion-icon name="cloud-offline-outline" color="medium"></ion-icon>
+    <h2>{{ 'PlayGame.gameLoadErrorTitle' | translate }}</h2>
+    <p>{{ 'PlayGame.gameLoadErrorHint' | translate }}</p>
+    <ion-button expand="block" (click)="loadGame()">
+      <ion-icon slot="start" name="refresh"></ion-icon>
+      {{ 'PlayGame.tryAgain' | translate }}
+    </ion-button>
+    <ion-button expand="block" fill="outline" (click)="goHome()">
+      {{ 'PlayGame.goHome' | translate }}
+    </ion-button>
   </div>
 
   <ion-card *ngIf="game">

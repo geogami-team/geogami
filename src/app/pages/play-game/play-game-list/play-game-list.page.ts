@@ -16,6 +16,7 @@ import mapboxgl from "mapbox-gl";
 import { UtilService } from "src/app/services/util.service";
 import { SocketService } from "src/app/services/socket.service";
 import { TranslateService } from "@ngx-translate/core";
+import { usesHiddenVirEnv } from "src/app/models/virEnvsHeader";
 // import {} from environment.mapStyle + 'realWorld.json'
 
 @Component({
@@ -678,6 +679,13 @@ export class PlayGameListPage implements OnInit {
 
     const fullGame = (await this.gamesService.getGame(game._id))?.content;
     if (!fullGame) return;
+    // A copy inherits the original game's default and task environments.
+    if (usesHiddenVirEnv(fullGame)) {
+      this.utilService.showValidationError(
+        this._translate.instant("CreateGame.virtualEnvironmentUnavailable")
+      );
+      return;
+    }
 
     fullGame.name = newName;
     fullGame.isPublished = false; // a copy starts as a draft, like any new game

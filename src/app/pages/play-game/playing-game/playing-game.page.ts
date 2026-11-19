@@ -76,6 +76,8 @@ import { SocketService, VE_CLOSE_FRAME_MESSAGE } from "src/app/services/socket.s
 import { AvatarPosition } from "src/app/models/avatarPosition";
 import { Coords } from "src/app/models/coords";
 import { TranslateService } from "@ngx-translate/core";
+import { TaskTextService } from "src/app/services/task-text.service";
+import { LanguageService } from "src/app/services/language.service";
 import { UtilService } from "src/app/services/util.service";
 
 import { GameSessionService } from "src/app/services/game-session.service";
@@ -508,7 +510,9 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     private storage: GameSessionService,
     private router: Router,
     private authService: AuthService,
-    private playSession: PlaySessionService
+    private playSession: PlaySessionService,
+    private taskTextService: TaskTextService,
+    private languageService: LanguageService
   ) {
     this.lottieConfig = {
       path: "assets/lottie/star-success.json",
@@ -614,6 +618,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.gamesService
         .getGame(JSON.parse(params.bundle).id)
         .then((res) => res.content)
+        .then((game) => this.localizeGame(game))
         .then(
           (game) => {
             this.game = game;
@@ -715,6 +720,11 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
     /* Initialize map and subscribe location */
     // this.initializeMap();
+  }
+
+  private async localizeGame(game) {
+    this.languageService.setLanguage(await this.playSession.askHostLanguage());
+    return this.taskTextService.localizeGame(game);
   }
 
   /******************/
@@ -2280,8 +2290,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     }
 
     if (this.task.question.area?.features?.length > 0) {
-      this.task.question.text = this.task.question.text +=
-        " Suche im umrandeten Gebiet.";
+      this.task.question.text +=
+        " " + this.translate.instant("PlayGame.searchOutlinedArea");
       this.landmarkControl.setSearchArea(this.task.question.area);
     }
 

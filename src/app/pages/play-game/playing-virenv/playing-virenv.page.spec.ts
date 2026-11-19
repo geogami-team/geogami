@@ -3,6 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { IonicModule, NavController } from '@ionic/angular';
 import { of } from 'rxjs';
 
+import { HOST_INFO_REQUEST } from 'src/app/models/play-session';
+import { LanguageService } from 'src/app/services/language.service';
+import { PlaySessionService } from 'src/app/services/play-session.service';
 import { PlayingVirenvPage } from './playing-virenv.page';
 
 describe('PlayingVirenvPage', () => {
@@ -14,6 +17,7 @@ describe('PlayingVirenvPage', () => {
       declarations: [ PlayingVirenvPage ],
       imports: [IonicModule.forRoot()],
       providers: [
+        { provide: LanguageService, useValue: { selected: 'de' } },
         {
           provide: ActivatedRoute,
           useValue: { params: of({ queryParams: JSON.stringify({ id: 'game-1', isVRWorld: true }) }) },
@@ -29,6 +33,16 @@ describe('PlayingVirenvPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('tells the game page in the VE frame the selected language', () => {
+    const answerHost = spyOn(TestBed.inject(PlaySessionService), 'answerHost');
+    spyOn<any>(component, 'isFromVEFrame').and.returnValue(true);
+    const event = { data: { type: HOST_INFO_REQUEST }, source: {} } as any;
+
+    component.onFrameMessage(event);
+
+    expect(answerHost).toHaveBeenCalledWith(event, 'de');
   });
 
   describe('keyboard focus', () => {

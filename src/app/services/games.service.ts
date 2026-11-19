@@ -8,6 +8,11 @@ import { Game } from "./../models/game";
 
 import { environment } from "../../environments/environment";
 
+export type GameLookup =
+  | { state: "found"; game: any }
+  | { state: "notFound" }
+  | { state: "error" };
+
 @Injectable({
   providedIn: "root",
 })
@@ -123,6 +128,28 @@ export class GamesService {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  /**
+   * Looks up a game to play and says why it isn't there when it isn't.
+   * - `notFound`: no game id, a malformed id, or the server has no visible game
+   *   with it (deleted, hidden, or never existed). Retrying won't help.
+   * - `error`: the request itself failed (offline, server down). Retrying may help.
+   * Malformed ids are rejected here, so they never reach the API (older API
+   * builds answer them with a 500 CastError instead of a 404).
+   */
+  async findGame(id: string): Promise<GameLookup> {
+    if (!/^[0-9a-f]{24}$/i.test(id ?? "")) return { state: "notFound" };
+    try {
+      const res: any = await this.http
+        .get(`${environment.apiURL}/game/${id}`)
+        .toPromise();
+      return res?.content
+        ? { state: "found", game: res.content }
+        : { state: "notFound" };
+    } catch (err) {
+      return err?.status === 404 ? { state: "notFound" } : { state: "error" };
+    }
   }
 
   postGame(game: Game): Promise<any> {

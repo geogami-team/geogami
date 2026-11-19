@@ -16,12 +16,13 @@
 <ion-content>
   <div class="menu-cards">
     <ion-card
-      *ngFor="let virEnv of virEnvTypesList; index as i"
+      *ngFor="let virEnv of virEnvTypesList"
       (click)="navigateCreateVRGame(virEnv.layerName)"
     >
       <ion-card-header>
         <img src="{{virEnv.img_url}}" />
-        <ion-card-subtitle>{{i+1}}: {{virEnv.envName}} </ion-card-subtitle>
+        <!-- Use the layer ID so hiding environments leaves their numbers stable. -->
+        <ion-card-subtitle>{{ virEnv.layerName.replace("VirEnv_", "") }}: {{ virEnv.envName }}</ion-card-subtitle>
         <!-- <ion-card-title>pre</ion-card-title> -->
       </ion-card-header>
     </ion-card>

@@ -11,6 +11,28 @@
   padding: 3rem 0;
 }
 
+/* "Game not found" / "couldn't load" message, centred in a narrow column */
+.game-missing {
+  max-width: 420px;
+  margin: 3rem auto;
+  padding: 0 16px;
+  text-align: center;
+
+  > ion-icon {
+    font-size: 64px;
+  }
+
+  h2 {
+    margin: 0.75rem 0 0.5rem;
+  }
+
+  p {
+    margin: 0 0 1.5rem;
+    color: var(--ion-color-medium-shade);
+    line-height: 1.5;
+  }
+}
+
 .dot {
   height: 9px;
   width: 9px;

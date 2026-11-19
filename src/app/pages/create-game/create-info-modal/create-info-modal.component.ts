@@ -12,7 +12,7 @@ import { MapFeaturesModalPage } from "./../map-features-modal/map-features-modal
 import { QuestionType, AnswerType } from "src/app/models/types";
 import { standardMapFeatures } from "src/app/models/standardMapFeatures";
 import { cloneDeep } from "lodash";
-import { VirEnvHeaders } from "src/app/models/virEnvsHeader";
+import { getSelectableVirEnvHeaders, VirEnvHeader } from "src/app/models/virEnvsHeader";
 import { UtilService } from "src/app/services/util.service";
 import { TranslateService } from "@ngx-translate/core";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
@@ -50,8 +50,7 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
   //* get virual environment headers
   virEnvLayers = virEnvLayers;
 
-  //* get virual environment headers
-  virEnvTypesList = VirEnvHeaders;
+  virEnvTypesList: VirEnvHeader[];
 
   @Output() taskChange: EventEmitter<any> = new EventEmitter<any>(true);
 
@@ -67,6 +66,8 @@ export class CreateInfoModalComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
+    this.virEnvTypesList = getSelectableVirEnvHeaders(this.virEnvType);
+
     if (this.task == null) {
       this.task = {
         category: "info",

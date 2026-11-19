@@ -46,10 +46,10 @@
       [disabled]="!isSingleMode"
     >
       <option
-        *ngFor="let virEnvitem of virEnvTypesList; let i = index"
+        *ngFor="let virEnvitem of virEnvTypesList"
         [ngValue]="virEnvitem.layerName"
       >
-        {{i+1}}: {{virEnvitem.envName}}
+        {{ virEnvitem.layerName.replace("VirEnv_", "") }}: {{ virEnvitem.envName }}
       </option>
     </select>
   </ion-item>
