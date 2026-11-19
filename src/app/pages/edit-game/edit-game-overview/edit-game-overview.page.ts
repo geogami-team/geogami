@@ -290,6 +290,16 @@ export class EditGameOverviewPage implements AfterViewInit, OnDestroy {
             this.changeDetectorRef.detectChanges();
             this.initMap();
           }
+        }, () => {
+          // Game was deleted or the id is unknown: say so instead of opening
+          // an empty editor (same as edit-game-tasks).
+          this.utilService.showToast(
+            this.translate.instant("PlayGame.gameNotFound"),
+            "warning",
+            3000,
+            "toast-black-text"
+          );
+          this.navCtrl.navigateForward("/");
         });
     });
 

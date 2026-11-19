@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from "@angular/core";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Params } from "@angular/router";
 import { AlertController, IonModal, NavController } from "@ionic/angular";
 import { GamesService } from "../../../services/games.service";
 import { PopoverController } from "@ionic/angular";
@@ -29,6 +29,10 @@ export class GameDetailPage implements OnInit {
   @ViewChild("classQrModal") classQrModal!: IonModal;
 
   game: any;
+  // Drives the template: spinner, the game, or a "not found" / "couldn't load"
+  // message for links to deleted or unknown games.
+  gameLoadState: "loading" | "loaded" | "notFound" | "error" = "loading";
+  private lastParams: Params = {};
   activities: any[];
   points: any[];
   //* Default share data status
@@ -135,116 +139,142 @@ export class GameDetailPage implements OnInit {
         this.eventId = params["eventId"];
       }
 
-      this.gamesService
-        .getGame(params["gameId"])
-        .then((res) => res.content)
-        .then((game) => {
-          this.game = game;
-
-          // Class QR (Phase 2): single-player games only. Multiplayer keeps its
-          // existing room-based QR (showInstructionView) — participant count is
-          // limited there and the play logic depends on it, so the class-sharing
-          // QR doesn't apply. Reuses the `uId` param; the resulting track stores
-          // it as `instructor`.
-          if (this.authService.getUserValue() && !game.isMultiplayerGame) {
-            const user = this.authService.getUserValue();
-            this.myName = user["name"] || user["username"] || "";
-            this.classQrLink =
-              `${environment.uiURL}/play-game/game-detail` +
-              `?gameId=${game._id}` +
-              `&uId=${this.authService.getUserId()}` +
-              `&iName=${encodeURIComponent(this.myName)}`;
-          }
-
-          // The game's own setting can make sharing a condition of playing. The
-          // box is left unticked — the player decides.
-          if (this.game.disableShareData) {
-            this.consentRequired = true;
-          }
-
-          // Phase 3: a class play (single-player game opened from an instructor
-          // QR/link) exists to send the track to the instructor, so consent is a
-          // condition of starting it — but it is still the player's to give.
-          if (!game.isMultiplayerGame && this.instructorId) {
-            this.consentRequired = true;
-            this.consentRequiredByInstructor = true;
-          }
-          
-          // VR world
-          // Check game type either real or VR world
-          if (game.isVRWorld !== undefined && game.isVRWorld != false) {
-            this.isVirtualWorld = true;
-            if (game.isVRMirrored !== undefined && game.isVRMirrored != false) {
-              this.isVRMirrored = true;
-            }
-          }
-
-          // multi-player
-          if (game.isMultiplayerGame) {
-            this.isSingleMode = false;
-            this.numPlayers = game.numPlayers;
-
-            // show instructor view of multiplayer games
-            // should only be shown for
-            // - registered users
-            // - uid in link does not exist
-            // - uid in link equals the id of the player (means the instrauctor rejoins the games using the link)
-            // this.showInstructionView = true;
-            if (
-              this.authService.isRegisteredUser() &&
-              (!this.instructorId ||
-                this.authService?.getUserId() == this.instructorId)
-            ) {
-              this.showInstructionView = true;
-            }
-          }
-        })
-        .finally(() => {
-          // check if this is a teacher with 'scholar' or advanced role who is playing multiplayer game
-          if (!this.isSingleMode && this.authService.getUserValue()) {
-            // initialize multi-player game link
-            const userId = this.authService.getUserId();
-            this.multiplayerGameLink = `${environment.uiURL}/play-game/game-detail?gameId=${this.game._id}&uId=${userId}`;
-
-            // initialize teacher-code
-            this.teacherCode =
-              this.authService.getUserId() + "-" + this.game._id;
-            // console.log("teacher code -> game name", this.teacherCode);
-            //ex(teacherId+gameId): 610bbc83a9fca4001cea4eaa-638df27d7ece7c88bff50443
-
-            // initialize map
-            this.initMonitoringMap();
-          }
-
-          //* set vir env type for old (where task type is not included in all tasks) and new games
-          if (this.isVirtualWorld) {
-            if (this.game.tasks[0] && this.game.tasks[0].virEnvType) {
-              this.virEnvType = this.game.tasks[0].virEnvType;
-            } else {
-              this.virEnvType = this.game.virEnvType;
-            }
-          }
-
-          // initialize teacher code for multi-player games
-          if (!this.isSingleMode) {
-            // 1. connect to socketio in cloud (multiplayer)
-            this.connectSocketIO_MultiPlayer();
-
-            // 2. check if this is a multiplayer game played using a copied link by instructor
-            // if a copied link is used, the instructor/user id attached to link 'uId' will be used to form teacher code / game code
-            if (params["uId"]) {
-              this.teacherCode = params["uId"] + "-" + this.game._id;
-            } else {
-              // console.log("unlogged user!!!!");
-              this.utilService.getQRCode().subscribe((qrCode) => {
-                if (qrCode) {
-                  this.teacherCode = qrCode;
-                }
-              });
-            }
-          }
-        });
+      this.loadGame(params);
     });
+  }
+
+  // Loads the game named by the link's `gameId`. Also the retry action of the
+  // "couldn't load" message, so it can run more than once.
+  loadGame(params: Params = this.lastParams) {
+    this.lastParams = params;
+    this.gameLoadState = "loading";
+    this.gamesService
+      .findGame(params["gameId"])
+      .then((lookup) => {
+        // Deleted, hidden or unknown game (or a link without a valid id), or
+        // the API couldn't be reached: the template shows a message instead
+        // of the game, and nothing below runs.
+        if (lookup.state !== "found") {
+          this.gameLoadState = lookup.state;
+          return;
+        }
+        const game = lookup.game;
+        this.game = game;
+        this.gameLoadState = "loaded";
+
+        // Class QR (Phase 2): single-player games only. Multiplayer keeps its
+        // existing room-based QR (showInstructionView) — participant count is
+        // limited there and the play logic depends on it, so the class-sharing
+        // QR doesn't apply. Reuses the `uId` param; the resulting track stores
+        // it as `instructor`.
+        if (this.authService.getUserValue() && !game.isMultiplayerGame) {
+          const user = this.authService.getUserValue();
+          this.myName = user["name"] || user["username"] || "";
+          this.classQrLink =
+            `${environment.uiURL}/play-game/game-detail` +
+            `?gameId=${game._id}` +
+            `&uId=${this.authService.getUserId()}` +
+            `&iName=${encodeURIComponent(this.myName)}`;
+        }
+
+        // The game's own setting can make sharing a condition of playing. The
+        // box is left unticked — the player decides.
+        if (this.game.disableShareData) {
+          this.consentRequired = true;
+        }
+
+        // Phase 3: a class play (single-player game opened from an instructor
+        // QR/link) exists to send the track to the instructor, so consent is a
+        // condition of starting it — but it is still the player's to give.
+        if (!game.isMultiplayerGame && this.instructorId) {
+          this.consentRequired = true;
+          this.consentRequiredByInstructor = true;
+        }
+        
+        // VR world
+        // Check game type either real or VR world
+        if (game.isVRWorld !== undefined && game.isVRWorld != false) {
+          this.isVirtualWorld = true;
+          if (game.isVRMirrored !== undefined && game.isVRMirrored != false) {
+            this.isVRMirrored = true;
+          }
+        }
+
+        // multi-player
+        if (game.isMultiplayerGame) {
+          this.isSingleMode = false;
+          this.numPlayers = game.numPlayers;
+
+          // show instructor view of multiplayer games
+          // should only be shown for
+          // - registered users
+          // - uid in link does not exist
+          // - uid in link equals the id of the player (means the instrauctor rejoins the games using the link)
+          // this.showInstructionView = true;
+          if (
+            this.authService.isRegisteredUser() &&
+            (!this.instructorId ||
+              this.authService?.getUserId() == this.instructorId)
+          ) {
+            this.showInstructionView = true;
+          }
+        }
+      })
+      .finally(() => {
+        if (!this.game) return;
+
+        // check if this is a teacher with 'scholar' or advanced role who is playing multiplayer game
+        if (!this.isSingleMode && this.authService.getUserValue()) {
+          // initialize multi-player game link
+          const userId = this.authService.getUserId();
+          this.multiplayerGameLink = `${environment.uiURL}/play-game/game-detail?gameId=${this.game._id}&uId=${userId}`;
+
+          // initialize teacher-code
+          this.teacherCode =
+            this.authService.getUserId() + "-" + this.game._id;
+          // console.log("teacher code -> game name", this.teacherCode);
+          //ex(teacherId+gameId): 610bbc83a9fca4001cea4eaa-638df27d7ece7c88bff50443
+
+          // initialize map
+          this.initMonitoringMap();
+        }
+
+        //* set vir env type for old (where task type is not included in all tasks) and new games
+        if (this.isVirtualWorld) {
+          if (this.game.tasks[0] && this.game.tasks[0].virEnvType) {
+            this.virEnvType = this.game.tasks[0].virEnvType;
+          } else {
+            this.virEnvType = this.game.virEnvType;
+          }
+        }
+
+        // initialize teacher code for multi-player games
+        if (!this.isSingleMode) {
+          // 1. connect to socketio in cloud (multiplayer)
+          this.connectSocketIO_MultiPlayer();
+
+          // 2. check if this is a multiplayer game played using a copied link by instructor
+          // if a copied link is used, the instructor/user id attached to link 'uId' will be used to form teacher code / game code
+          if (params["uId"]) {
+            this.teacherCode = params["uId"] + "-" + this.game._id;
+          } else {
+            // console.log("unlogged user!!!!");
+            this.utilService.getQRCode().subscribe((qrCode) => {
+              if (qrCode) {
+                this.teacherCode = qrCode;
+              }
+            });
+          }
+        }
+      });
+  }
+
+  browseGames() {
+    this.navCtrl.navigateRoot("play-game/play-game-list");
+  }
+
+  goHome() {
+    this.navCtrl.navigateRoot("/");
   }
 
   /* ionViewWillEnter(){
