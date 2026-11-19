@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button color="dark" defaultHref="/" text="{{ 'General.back_button' | translate }}"></ion-back-button>
+      <ion-back-button color="dark" defaultHref="/user/app-management" text="{{ 'General.back_button' | translate }}"></ion-back-button>
     </ion-buttons>
-    <ion-title> Media Audit</ion-title>
+    <ion-title>{{ "AppManagement.mediaAudit.title" | translate }}</ion-title>
     <ion-buttons slot="end" *ngIf="!selecting">
       <ion-button (click)="changeSelection()">
         <ion-icon name="options-outline" slot="start"></ion-icon>
@@ -33,8 +33,7 @@
       </ion-button>
     </div>
     <p class="hint">
-      Pick the media categories to audit. Only the selected categories are
-      scanned and loaded (20 files at a time).
+      Choose which media categories to display. Files load 20 at a time.
     </p>
 
     <div *ngIf="metaLoading" class="centered">

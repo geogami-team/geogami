@@ -726,7 +726,7 @@
     },
     "mediaAudit": {
       "title": "Medienprüfung",
-      "description": "Hochgeladene Dateien, fehlende Verweise und veraltete URLs prüfen"
+      "description": "Uploads, Dateien ohne Verweis und veraltete URLs prüfen"
     },
     "unread": "{{count}} ungelesen"
   },

@@ -726,7 +726,7 @@
     },
     "mediaAudit": {
       "title": "Audit des médias",
-      "description": "Examiner les fichiers importés, les références manquantes et les URL obsolètes"
+      "description": "Examiner les fichiers importés, les fichiers sans référence et les URL obsolètes"
     },
     "unread": "{{count}} non lus"
   },

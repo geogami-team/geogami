@@ -726,7 +726,7 @@
     },
     "mediaAudit": {
       "title": "Auditoria de multimédia",
-      "description": "Consultar ficheiros carregados, referências em falta e URLs desatualizados"
+      "description": "Consultar ficheiros carregados, ficheiros sem referência e URLs desatualizados"
     },
     "unread": "{{count}} por ler"
   },

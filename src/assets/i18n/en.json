@@ -726,7 +726,7 @@
     },
     "mediaAudit": {
       "title": "Media audit",
-      "description": "Review uploaded files, missing references, and outdated URLs"
+      "description": "Review uploads, unreferenced files, and outdated URLs"
     },
     "unread": "{{count}} unread"
   },

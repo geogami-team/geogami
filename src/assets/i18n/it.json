@@ -726,7 +726,7 @@
     },
     "mediaAudit": {
       "title": "Verifica dei file multimediali",
-      "description": "Controlla i file caricati, i riferimenti mancanti e gli URL obsoleti"
+      "description": "Controlla i file caricati, i file senza riferimenti e gli URL obsoleti"
     },
     "unread": "{{count}} non letti"
   },
