@@ -95,6 +95,15 @@
 
 .showing { font-size: 12px; opacity: 0.6; margin: 2px 2px 8px; }
 
+.cleanup-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  margin: 8px 0;
+  font-size: 13px;
+}
+
 .view-toggle {
   width: auto;
   flex: 0 0 auto;
@@ -271,7 +280,6 @@
 
   &.ok { background: #eaf6ec; color: #1e7e34; }
   &.orphan { background: #f0f0f0; color: #777; }
-  &.pending { background: #eef1f4; color: #999; letter-spacing: 1px; }
   &.flag { background: #fdecea; color: #c0392b; font-weight: 700; }
   &.size { background: #eef1f4; color: #556; }
   &.date { background: #eef1f4; color: #556; }
@@ -309,7 +317,6 @@
   align-items: center;
   justify-content: space-between;
 }
-.loading-inline { opacity: 0.6; font-style: italic; }
 .select-list {
   margin-bottom: 16px;
   ion-item { --padding-start: 4px; }

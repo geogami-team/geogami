@@ -5,11 +5,11 @@
     </ion-buttons>
     <ion-title>{{ "AppManagement.mediaAudit.title" | translate }}</ion-title>
     <ion-buttons slot="end" *ngIf="!selecting">
-      <ion-button (click)="changeSelection()">
+      <ion-button (click)="loadCategories()" [disabled]="loading || deleting">
         <ion-icon name="options-outline" slot="start"></ion-icon>
         Categories
       </ion-button>
-      <ion-button (click)="reload(true)" [disabled]="loading">
+      <ion-button (click)="reload(true)" [disabled]="loading || deleting">
         <ion-icon name="refresh-outline" slot="start"></ion-icon>
         Refresh
       </ion-button>
@@ -24,7 +24,6 @@
     <div class="select-head">
       <h3>What do you want to load?</h3>
       <ion-button
-        *ngIf="hasLoadedOnce"
         fill="clear"
         size="small"
         (click)="cancelSelection()"
@@ -78,7 +77,7 @@
 
   <ng-container *ngIf="!selecting && !loading && !error">
 
-    <!-- Overall summary (reference figures fill in after the background scan) -->
+    <!-- Summary for the selected upload year and categories -->
     <div class="summary-grid">
       <div class="summary-card">
         <div class="num">{{ totals ? totals.files : '…' }}</div>
@@ -126,6 +125,7 @@
       scrollable
       [value]="activeBucket"
       (ionChange)="segmentChanged($event)"
+      [disabled]="deleting"
       class="cat-segment"
     >
       <ion-segment-button *ngFor="let c of categories" [value]="c.bucket">
@@ -138,30 +138,32 @@
 
     <ng-container *ngIf="activeCategory as cat">
       <div class="cat-meta">
-        {{ cat.totalFiles }} files<span *ngIf="cat.totalBytes != null"> · {{ fmtBytes(cat.totalBytes) }}</span>
-        <span *ngIf="cat.referencedFiles != null">
-          · {{ cat.referencedFiles }} referenced · {{ cat.orphanFiles }} unreferenced ·
-          {{ cat.hostFlaggedFiles }} with a different/misspelled URL
-        </span>
-        <span *ngIf="cat.referencedFiles == null && summaryLoading" class="loading-inline">
-          · checking references…
-        </span>
+        {{ cat.totalFiles }} files · {{ fmtBytes(cat.totalBytes) }} · {{ cat.referencedFiles }} referenced ·
+        {{ cat.orphanFiles }} unreferenced · {{ cat.hostFlaggedFiles }} with a different/misspelled URL
       </div>
 
       <div class="filters-row">
+        <ion-item lines="none" class="toggle">
+          <ion-label>Upload year (UTC)</ion-label>
+          <ion-select [value]="year ?? 'all'" (ionChange)="changeYear($event.detail.value)" [disabled]="deleting">
+            <ion-select-option value="all">All years</ion-select-option>
+            <ion-select-option *ngFor="let option of years" [value]="option">{{ option }}</ion-select-option>
+          </ion-select>
+        </ion-item>
         <ion-searchbar
           [(ngModel)]="search"
-          (ionChange)="onSearchChange()"
+          (ionChange)="reload()"
+          [disabled]="deleting"
           placeholder="Filter by filename"
           debounce="350"
         ></ion-searchbar>
         <ion-item lines="none" class="toggle">
           <ion-label>Only different/misspelled URL</ion-label>
-          <ion-toggle [(ngModel)]="onlyHostFlagged" (ionChange)="onRefFilterChange()"></ion-toggle>
+          <ion-toggle [(ngModel)]="onlyHostFlagged" (ngModelChange)="reload()" [disabled]="deleting"></ion-toggle>
         </ion-item>
         <ion-item lines="none" class="toggle">
           <ion-label>Only unreferenced</ion-label>
-          <ion-toggle [(ngModel)]="onlyOrphans" (ionChange)="onRefFilterChange()"></ion-toggle>
+          <ion-toggle [(ngModel)]="onlyOrphans" (ngModelChange)="reload()" [disabled]="deleting"></ion-toggle>
         </ion-item>
         <ion-segment class="view-toggle" [value]="viewMode" (ionChange)="setViewMode($event)">
           <ion-segment-button value="list" title="List view">
@@ -173,22 +175,30 @@
         </ion-segment>
       </div>
 
+      <div class="cleanup-row" *ngIf="cat.deletable && year !== null && onlyOrphans">
+        <ion-button
+          color="danger"
+          size="small"
+          [disabled]="deleting || (!cat.eligibleFiles && !cat.pendingDeletes)"
+          (click)="confirmDeleteYear()"
+        >
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
+          Delete unreferenced in {{ year }}
+        </ion-button>
+        <span *ngIf="!deleting">{{ cat.eligibleFiles }} eligible in {{ cat.label }}</span>
+        <span *ngIf="cat.pendingDeletes && !deleting">· {{ cat.pendingDeletes }} pending retry</span>
+        <span role="status" *ngIf="deleting">Rechecking references and deleting eligible files…</span>
+      </div>
+
       <div class="showing">
-        <ng-container *ngIf="refFilterActive">
-          Showing {{ displayFiles.length }} match<span *ngIf="displayFiles.length !== 1">es</span>
-          among {{ files.length }} loaded
-          <span *ngIf="summaryLoading" class="loading-inline">· checking more…</span>
-        </ng-container>
-        <ng-container *ngIf="!refFilterActive">
-          Showing {{ files.length }} of {{ filteredTotal }} (loaded in pages of 20)
-        </ng-container>
+        Showing {{ files.length }} of {{ filteredTotal }}
       </div>
 
       <!-- LIST VIEW -->
       <div class="file-list" *ngIf="viewMode === 'list'">
         <div
           class="file-row"
-          *ngFor="let f of displayFiles"
+          *ngFor="let f of files"
           [class.flagged]="f.hostFlag"
         >
           <div class="file-main" (click)="togglePreview(f)">
@@ -213,7 +223,7 @@
                 <span class="game-names">{{ gameLabel(f) }}</span>
                 <span class="via-track" *ngIf="f.games[0].viaTrack">(player photo)</span>
               </div>
-              <div class="file-games none" *ngIf="!f.pending && !f.games?.length && !f.referenced">
+              <div class="file-games none" *ngIf="!f.games?.length && !f.referenced">
                 not used by any game
               </div>
               <div class="file-hosts" *ngIf="f.hosts.length">
@@ -226,20 +236,17 @@
             </div>
 
             <div class="file-badges">
-              <span class="badge pending" *ngIf="f.pending" title="Checking references…">
-                …
-              </span>
-              <span class="badge flag" *ngIf="!f.pending && f.hostFlag" title="Referenced via a different/misspelled URL">
+              <span class="badge flag" *ngIf="f.hostFlag" title="Referenced via a different/misspelled URL">
                 ⚠ URL
               </span>
-              <span class="badge ok" *ngIf="!f.pending && f.referenced" title="Referenced by a game or track">
+              <span class="badge ok" *ngIf="f.referenced" title="Referenced by a game or track">
                 ✓ used <em *ngIf="f.refCount">×{{ f.refCount }}</em>
               </span>
-              <span class="badge orphan" *ngIf="!f.pending && !f.referenced" title="Not referenced by any game or track">
+              <span class="badge orphan" *ngIf="!f.referenced" title="Not referenced by any game or track">
                 unreferenced
               </span>
               <span class="badge size">{{ fmtBytes(f.size) }}</span>
-              <span class="badge date" *ngIf="f.uploadDate">{{ f.uploadDate | date:'yyyy-MM-dd' }}</span>
+              <span class="badge date" *ngIf="f.uploadDate">{{ f.uploadDate | date:'yyyy-MM-dd':'UTC' }}</span>
             </div>
           </div>
 
@@ -254,11 +261,8 @@
           </div>
         </div>
 
-        <div class="empty" *ngIf="!displayFiles.length && !summaryLoading">
+        <div class="empty" *ngIf="!files.length">
           No files match the current filters.
-        </div>
-        <div class="empty" *ngIf="!displayFiles.length && summaryLoading">
-          Checking references…
         </div>
       </div>
 
@@ -266,7 +270,7 @@
       <div class="grid" *ngIf="viewMode === 'grid'">
         <div
           class="grid-item"
-          *ngFor="let f of displayFiles"
+          *ngFor="let f of files"
           [class.flagged]="f.hostFlag"
           (click)="openLightbox(f)"
         >
@@ -277,24 +281,20 @@
               [name]="isVideo(f) ? 'videocam-outline' : 'musical-notes-outline'"
             ></ion-icon>
             <div class="grid-corner">
-              <span class="badge pending" *ngIf="f.pending">…</span>
-              <span class="badge flag" *ngIf="!f.pending && f.hostFlag" title="Different/misspelled URL">⚠</span>
-              <span class="badge orphan" *ngIf="!f.pending && !f.referenced" title="Unreferenced">•</span>
+              <span class="badge flag" *ngIf="f.hostFlag" title="Different/misspelled URL">⚠</span>
+              <span class="badge orphan" *ngIf="!f.referenced" title="Unreferenced">•</span>
             </div>
           </div>
           <div class="grid-name">{{ f.filename }}</div>
           <div class="grid-game" *ngIf="f.games?.length">🎮 {{ gameLabel(f) }}</div>
         </div>
 
-        <div class="empty" *ngIf="!displayFiles.length && !summaryLoading">
+        <div class="empty" *ngIf="!files.length">
           No files match the current filters.
-        </div>
-        <div class="empty" *ngIf="!displayFiles.length && summaryLoading">
-          Checking references…
         </div>
       </div>
 
-      <ion-infinite-scroll (ionInfinite)="loadMore($event)" [disabled]="!hasMore">
+      <ion-infinite-scroll *ngIf="hasMore" (ionInfinite)="loadMore($event)" [disabled]="deleting">
         <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Loading more…">
         </ion-infinite-scroll-content>
       </ion-infinite-scroll>

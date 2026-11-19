@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ToastController } from "@ionic/angular";
+import { AlertController, ToastController } from "@ionic/angular";
 import { AuthService } from "src/app/services/auth-service.service";
 import { environment } from "src/environments/environment";
 
@@ -16,12 +16,11 @@ interface MediaFile {
   size: number;
   uploadDate: string | null;
   contentType: string | null;
-  referenced: boolean | null; // null = not yet known (still enriching)
+  referenced: boolean;
   refCount: number;
   hosts: string[];
   hostFlag: boolean;
   games: GameRef[];
-  pending?: boolean; // true while reference/game info is still loading
 }
 
 interface CategoryMeta {
@@ -29,15 +28,16 @@ interface CategoryMeta {
   kind: string | null;
   label: string;
   totalFiles: number;
-  totalBytes: number | null;
-  referencedFiles: number | null;
-  orphanFiles: number | null;
-  hostFlaggedFiles: number | null;
+  totalBytes: number;
+  referencedFiles: number;
+  orphanFiles: number;
+  hostFlaggedFiles: number;
+  eligibleFiles: number;
+  pendingDeletes: number;
+  deletable: boolean;
 }
 
 const PAGE_SIZE = 20;
-// Max pages auto-loaded to surface matches for a sparse reference filter.
-const AUTO_FILL_MAX_PAGES = 40;
 
 @Component({
   selector: "app-media-audit",
@@ -45,345 +45,198 @@ const AUTO_FILL_MAX_PAGES = 40;
   styleUrls: ["./media-audit.page.scss"],
 })
 export class MediaAuditPage implements OnInit {
-  // Selection screen: pick which categories to load before the heavy scan runs.
-  selecting = true;
-  metaLoading = true;
+  selecting = false;
+  metaLoading = false;
   metaError = "";
-  selectableCategories: {
-    bucket: string;
-    kind: string | null;
-    label: string;
-    totalFiles: number;
-    key: string; // kind || "other"
-    selected: boolean;
-  }[] = [];
+  selectableCategories: { bucket: string; label: string; totalFiles: number; selected: boolean }[] = [];
+  private selectedBuckets: string[] = [];
 
-  loading = true; // initial / full reload spinner (fast file list)
+  loading = true;
+  deleting = false;
   error = "";
-
-  // Reference/host/game info arrives after the file list (background scan).
-  summaryReady = false;
-  summaryLoading = false;
-  // True once at least one loaded view exists — enables "Cancel" on the
-  // selection screen so it can be dismissed without re-loading.
-  hasLoadedOnce = false;
-
   generatedAt: string | null = null;
   canonicalHost = "";
   hosts: { host: string; count: number; canonical: boolean }[] = [];
-  totals: {
-    files: number;
-    bytes: number;
-    referenced: number;
-    orphans: number;
-    hostFlagged: number;
-  } | null = null;
+  totals: { files: number; bytes: number; referenced: number; orphans: number; hostFlagged: number } | null = null;
   categories: CategoryMeta[] = [];
-
   activeBucket = "";
+  years: number[] = [];
+  year: number | null = null;
 
-  // Guards the background scan for the current view so pages loaded before it
-  // finishes are re-enriched once it does.
-  private enrichToken = 0;
+  private requestVersion = 0;
   private loadingMore = false;
-  // When a reference filter is active and matches are sparse, we auto-load more
-  // pages to surface them — bounded so a rare filter can't fetch the whole DB.
-  private autoFillBudget = 0;
-
-  // List vs. grid (bigger thumbnails) view.
-  viewMode: "list" | "grid" = "list";
-  // File shown full-size in the lightbox overlay (grid clicks / preview).
-  lightboxFile: MediaFile | null = null;
-
-  // Accumulated files for the current bucket + filters (grows via infinite scroll).
+  private page = 0;
   files: MediaFile[] = [];
-  page = 0;
   filteredTotal = 0;
   hasMore = false;
 
-  // Filters (applied server-side).
   search = "";
   onlyHostFlagged = false;
-  onlyOrphans = false;
-
+  onlyOrphans = true;
+  viewMode: "list" | "grid" = "list";
+  lightboxFile: MediaFile | null = null;
   previewFilename: string | null = null;
-
   readonly apiURL = environment.apiURL;
 
   constructor(
     private authService: AuthService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
-    this.loadCategories();
+    this.reload();
   }
 
-  // Selection screen: fetch cheap per-category counts (no scan).
   async loadCategories() {
     this.selecting = true;
     this.metaLoading = true;
     this.metaError = "";
     try {
       const res = await this.authService.GetMediaCategories();
-      this.selectableCategories = (res.categories || []).map((c: any) => ({
+      this.selectableCategories = (res.categories || []).map((c: CategoryMeta) => ({
         bucket: c.bucket,
-        kind: c.kind,
         label: c.label,
         totalFiles: c.totalFiles,
-        key: c.kind || "other",
-        selected: true,
+        selected: !this.selectedBuckets.length || this.selectedBuckets.includes(c.bucket),
       }));
-    } catch (e) {
-      this.metaError =
-        (e && e.error && e.error.error) ||
-        "Could not load media categories. Admin access is required.";
+    } catch (err) {
+      this.metaError = err?.error?.error || "Could not load media categories.";
     } finally {
       this.metaLoading = false;
     }
   }
 
   get anySelected(): boolean {
-    return this.selectableCategories.some((c) => c.selected);
+    return this.selectableCategories.some((category) => category.selected);
   }
 
-  private get selectedKindsCsv(): string {
-    return this.selectableCategories
-      .filter((c) => c.selected)
-      .map((c) => c.key)
-      .join(",");
-  }
-
-  // Confirm the selection → load the chosen categories.
   startLoading() {
     if (!this.anySelected) return;
+    this.selectedBuckets = this.selectableCategories.filter((category) => category.selected).map((category) => category.bucket);
     this.selecting = false;
-    this.activeBucket = "";
-    this.files = [];
-    this.summaryReady = false;
     this.reload();
   }
 
-  // Open the selection screen (keeps current results in memory).
-  changeSelection() {
-    this.selecting = true;
-  }
-
-  // Dismiss the selection screen back to the existing results (no reload).
   cancelSelection() {
-    if (this.hasLoadedOnce) this.selecting = false;
+    this.selecting = false;
   }
 
-  get refFilterActive(): boolean {
-    return this.onlyHostFlagged || this.onlyOrphans;
-  }
-
-  // Rows to display: the loaded files, filtered client-side by the reference
-  // toggles (instant — no reload). Files still being enriched (pending) can't
-  // be classified yet, so they're hidden while a reference filter is active.
-  get displayFiles(): MediaFile[] {
-    if (!this.refFilterActive) return this.files;
-    return this.files.filter((f) => {
-      if (f.pending) return false;
-      if (this.onlyHostFlagged && !f.hostFlag) return false;
-      if (this.onlyOrphans && f.referenced) return false;
-      return true;
-    });
-  }
-
-  // Segments come from the selection immediately (counts known); the reference
-  // sub-counts (referenced / orphan / flagged) fill in after the scan.
-  private buildSegmentsFromSelection() {
-    this.categories = this.selectableCategories
-      .filter((c) => c.selected)
-      .map((c) => ({
-        bucket: c.bucket,
-        kind: c.kind,
-        label: c.label,
-        totalFiles: c.totalFiles,
-        totalBytes: null,
-        referencedFiles: null,
-        orphanFiles: null,
-        hostFlaggedFiles: null,
-      }));
-    if (
-      !this.activeBucket ||
-      !this.categories.some((c) => c.bucket === this.activeBucket)
-    ) {
-      this.activeBucket = this.categories.length ? this.categories[0].bucket : "";
-    }
-  }
-
-  // Full reload: reset to page 0 for the active bucket + current search.
-  // Always uses the fast path (file list first, references enriched after);
-  // reference toggles are applied client-side, never via a reload.
-  async reload(refresh = false) {
-    this.loading = true;
-    this.error = "";
-    this.previewFilename = null;
-    this.lightboxFile = null;
-    this.page = 0;
-    this.summaryReady = false;
-    this.autoFillBudget = AUTO_FILL_MAX_PAGES;
-    const token = ++this.enrichToken;
-    this.buildSegmentsFromSelection();
-
-    try {
-      const res = await this.fetchFilesOnly(0);
-      if (token !== this.enrichToken) return;
-      this.files = res.page.files;
-      this.filteredTotal = res.page.filteredTotal;
-      this.hasMore = res.page.hasMore;
-      this.loading = false;
-      this.hasLoadedOnce = true;
-      this.enrichPage(0, token, refresh);
-    } catch (e) {
-      this.error =
-        (e && e.error && e.error.error) ||
-        "Could not load the media audit. Admin access is required.";
-    } finally {
-      this.loading = false;
-    }
-  }
-
-  // Infinite-scroll handler.
-  async loadMore(ev: any) {
-    await this.loadNextPage();
-    ev.target.complete();
-  }
-
-  // Append the next page (fast list), then enrich it in the background.
-  private async loadNextPage(): Promise<void> {
-    if (this.loadingMore || !this.hasMore) return;
-    this.loadingMore = true;
-    const token = this.enrichToken;
-    try {
-      const next = this.page + 1;
-      const res = await this.fetchFilesOnly(next);
-      if (token !== this.enrichToken) return;
-      this.files = this.files.concat(res.page.files);
-      this.filteredTotal = res.page.filteredTotal;
-      this.hasMore = res.page.hasMore;
-      this.page = next;
-      this.enrichPage(next, token);
-    } catch (_) {
-      this.hasMore = false;
-    } finally {
-      this.loadingMore = false;
-    }
-  }
-
-  // Background: fetch the reference/host/game info for one page and merge it
-  // into the already-displayed rows, then top up sparse filtered views.
-  private async enrichPage(page: number, token: number, refresh = false) {
-    this.summaryLoading = true;
-    try {
-      const res = await this.fetchFull(page, refresh);
-      if (token !== this.enrichToken) return;
-      this.mergeRef(res.page.files);
-      this.applySummary(res);
-      this.summaryReady = true;
-      this.maybeAutoFill(token);
-    } catch (_) {
-      // leave rows pending; a later Refresh can retry
-    } finally {
-      if (token === this.enrichToken) this.summaryLoading = false;
-    }
-  }
-
-  // When a reference filter is active but few matches are loaded, pull the next
-  // page so matches keep appearing without the user having to scroll a short
-  // list. Bounded by autoFillBudget so a sparse filter can't fetch everything.
-  private maybeAutoFill(token: number) {
-    if (token !== this.enrichToken) return;
-    if (!this.refFilterActive) return;
-    if (this.loading || this.loadingMore || !this.hasMore) return;
-    if (this.displayFiles.length >= PAGE_SIZE) return;
-    if (this.autoFillBudget <= 0) return;
-    this.autoFillBudget--;
-    this.loadNextPage();
-  }
-
-  // Copy reference/host/game fields onto matching rows (by filename).
-  private mergeRef(enriched: MediaFile[]) {
-    const map = new Map(enriched.map((f) => [f.filename, f]));
-    for (const f of this.files) {
-      const e = map.get(f.filename);
-      if (e) {
-        f.referenced = e.referenced;
-        f.refCount = e.refCount;
-        f.hosts = e.hosts;
-        f.hostFlag = e.hostFlag;
-        f.games = e.games;
-        f.pending = false;
-      }
-    }
-  }
-
-  private fetchFilesOnly(page: number): Promise<any> {
+  private fetchPage(page: number, refresh = false) {
     return this.authService.GetMediaAudit({
-      filesOnly: true,
-      bucket: this.activeBucket || undefined,
+      buckets: this.selectedBuckets.join(","),
+      bucket: this.activeBucket,
+      year: this.year,
       page,
       limit: PAGE_SIZE,
-      q: this.search.trim() || undefined,
-    });
-  }
-
-  // No reference filters here: this must paginate identically to fetchFilesOnly
-  // so page N carries the reference data for the same 20 files. The reference
-  // toggles are applied client-side (see displayFiles).
-  private fetchFull(page: number, refresh = false): Promise<any> {
-    return this.authService.GetMediaAudit({
-      kinds: this.selectedKindsCsv || undefined,
-      bucket: this.activeBucket || undefined,
-      page,
-      limit: PAGE_SIZE,
-      q: this.search.trim() || undefined,
+      q: this.search.trim(),
+      hostFlagged: this.onlyHostFlagged,
+      orphans: this.onlyOrphans,
       refresh,
     });
   }
 
-  // Distinct game references for a file (deduped by name for display).
-  gameLabel(f: MediaFile): string {
-    if (!f.games || !f.games.length) return "";
-    const names = f.games.map((g) => g.name || "(deleted game)");
-    const unique = names.filter((n, i) => names.indexOf(n) === i);
-    return unique.join(", ");
+  async reload(refresh = false) {
+    const version = ++this.requestVersion;
+    this.loading = true;
+    this.loadingMore = false;
+    this.error = "";
+    this.previewFilename = null;
+    this.lightboxFile = null;
+    this.hasMore = false;
+    try {
+      const res = await this.fetchPage(0, refresh);
+      if (version !== this.requestVersion) return;
+      this.files = res.page.files;
+      this.page = 0;
+      this.filteredTotal = res.page.filteredTotal;
+      this.hasMore = res.page.hasMore;
+      this.activeBucket = res.page.bucket || "";
+      this.categories = res.categories;
+      const years = new Set<number>(res.years);
+      if (this.year !== null) years.add(this.year);
+      this.years = [...years].sort((a, b) => b - a);
+      this.generatedAt = res.generatedAt;
+      this.canonicalHost = res.canonicalHost;
+      this.hosts = res.hosts;
+      this.totals = res.totals;
+    } catch (err) {
+      if (version === this.requestVersion) this.error = err?.error?.error || "Could not load the media audit.";
+    } finally {
+      if (version === this.requestVersion) this.loading = false;
+    }
   }
 
-  private applySummary(res: any) {
-    this.generatedAt = res.generatedAt;
-    this.canonicalHost = res.canonicalHost;
-    this.hosts = res.hosts || [];
-    this.totals = res.totals;
-    if (res.categories && res.categories.length) this.categories = res.categories;
-    if (
-      !this.activeBucket ||
-      !this.categories.some((c) => c.bucket === this.activeBucket)
-    ) {
-      this.activeBucket = this.categories.length ? this.categories[0].bucket : "";
+  async loadMore(ev) {
+    const version = this.requestVersion;
+    if (this.loading || this.deleting || this.loadingMore || !this.hasMore) {
+      ev.target.complete();
+      return;
     }
+    this.loadingMore = true;
+    try {
+      const res = await this.fetchPage(this.page + 1);
+      if (version !== this.requestVersion) return;
+      this.files = this.files.concat(res.page.files);
+      this.page = res.page.page;
+      this.filteredTotal = res.page.filteredTotal;
+      this.hasMore = res.page.hasMore;
+    } catch (err) {
+      if (version === this.requestVersion) await this.showToast(err?.error?.error || "Could not load more files.");
+    } finally {
+      if (version === this.requestVersion) this.loadingMore = false;
+      ev.target.complete();
+    }
+  }
+
+  changeYear(value: number | "all") {
+    const year = value === "all" ? null : value;
+    if (this.year === year) return;
+    this.year = year;
+    this.reload();
+  }
+
+  async confirmDeleteYear() {
+    const category = this.activeCategory;
+    const year = this.year;
+    if (this.deleting || this.loading || year === null || !category?.deletable ||
+        (!category.eligibleFiles && !category.pendingDeletes)) return;
+
+    const alert = await this.alertController.create({
+      header: `Delete unreferenced media from ${year}?`,
+      message: `This permanently deletes eligible files in ${category.label} for ${year} (UTC), including files hidden by other filters. The server will recheck references and keep uploads under 24 hours old.`,
+      buttons: [
+        { text: "Cancel", role: "cancel" },
+        { text: "Delete", role: "destructive" },
+      ],
+    });
+    await alert.present();
+    if ((await alert.onDidDismiss()).role !== "destructive" || this.deleting) return;
+
+    this.deleting = true;
+    try {
+      const result = await this.authService.deleteUnreferencedMedia(category.bucket, year);
+      await this.showToast(`Deleted ${result.deletedFiles} file(s) (${this.fmtBytes(result.deletedBytes)}).`);
+    } catch (err) {
+      await this.showToast(err?.error?.error || "Cleanup did not finish. Retry the same category and year.");
+    } finally {
+      await this.reload(true);
+      this.deleting = false;
+    }
+  }
+
+  gameLabel(file: MediaFile): string {
+    return [...new Set(file.games.map((game) => game.name || "(deleted game)"))].join(", ");
   }
 
   get activeCategory(): CategoryMeta | undefined {
     return this.categories.find((c) => c.bucket === this.activeBucket);
   }
 
-  segmentChanged(ev: any) {
+  segmentChanged(ev) {
+    if (this.activeBucket === ev.detail.value) return;
     this.activeBucket = ev.detail.value;
     this.reload();
-  }
-
-  // Text search changes the server-side file query → reset to page 0.
-  onSearchChange() {
-    this.reload();
-  }
-
-  // Reference toggles are client-side only (no reload) — just top up if sparse.
-  onRefFilterChange() {
-    this.autoFillBudget = AUTO_FILL_MAX_PAGES;
-    this.maybeAutoFill(this.enrichToken);
   }
 
   setViewMode(ev: any) {
@@ -429,7 +282,7 @@ export class MediaAuditPage implements OnInit {
   }
 
   private async showToast(message: string) {
-    const t = await this.toastController.create({ message, duration: 1800 });
+    const t = await this.toastController.create({ message, duration: 4500 });
     await t.present();
   }
 }

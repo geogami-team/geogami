@@ -317,7 +317,9 @@ export class AuthService {
   // the server-side cache for a fresh scan.
   GetMediaAudit(opts: {
     kinds?: string;
+    buckets?: string;
     bucket?: string;
+    year?: number | null;
     page?: number;
     limit?: number;
     q?: string;
@@ -328,7 +330,9 @@ export class AuthService {
   } = {}): Promise<any> {
     const p = new URLSearchParams();
     if (opts.kinds) p.set("kinds", opts.kinds);
+    if (opts.buckets) p.set("buckets", opts.buckets);
     if (opts.bucket) p.set("bucket", opts.bucket);
+    if (opts.year != null) p.set("year", String(opts.year));
     p.set("page", String(opts.page ?? 0));
     p.set("limit", String(opts.limit ?? 20));
     if (opts.q) p.set("q", opts.q);
@@ -339,6 +343,15 @@ export class AuthService {
     return this.http
       .get(`${environment.apiURL}/file/admin/media?${p.toString()}`, {
         headers: this.createHeaders(),
+      })
+      .toPromise();
+  }
+
+  deleteUnreferencedMedia(bucket: string, year: number): Promise<{ deletedFiles: number; deletedBytes: number }> {
+    return this.http
+      .delete<{ deletedFiles: number; deletedBytes: number }>(`${environment.apiURL}/file/admin/media`, {
+        headers: this.createHeaders(),
+        params: { bucket, year: String(year) },
       })
       .toPromise();
   }
