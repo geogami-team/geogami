@@ -2,7 +2,7 @@ import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NavController } from "@ionic/angular";
-import { VirEnvHeaders } from "src/app/models/virEnvsHeader";
+import { getSelectableVirEnvHeaders } from "src/app/models/virEnvsHeader";
 import { GameFactoryService } from "src/app/services/game-factory.service";
 
 @Component({
@@ -17,8 +17,7 @@ export class CreateGameVirtualMenuPage implements OnInit {
   bundle: any;
   virEnvType: string; // new var. to store vir env type
 
-  //* get virual environment headers
-  virEnvTypesList = VirEnvHeaders;
+  readonly virEnvTypesList = getSelectableVirEnvHeaders();
 
   constructor(
     public navCtrl: NavController,

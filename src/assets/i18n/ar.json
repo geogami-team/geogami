@@ -230,6 +230,7 @@
     "virtualWorldDescription": "طور GeoGami لعالم افتراضي.",
     "titleCreateGameVirtual": "طور GeoGami الافتراضي الخاص بك",
     "titleCreateGameVirtualMenu": "اختر عالماً افتراضياً",
+    "virtualEnvironmentUnavailable": "تستخدم هذه اللعبة عالماً افتراضياً غير متاح للألعاب الجديدة.",
     "titleCreateGameList": "أنشئ GeoGami",
     "titleCreateGameVirtualList": "أنشئ GeoGami افتراضي",
     "create": "إنشاء",

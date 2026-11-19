@@ -18,7 +18,7 @@ import { navtasksMultiplayers3 } from "src/app/models/navigation-tasks-multi_3_p
 import { navtasksMultiplayers2 } from "src/app/models/navigation-tasks-multi_2_players";
 import { themetasksMultiplayers3 } from "src/app/models/theme-tasks-multi-3-players";
 import { themetasksMultiplayers2 } from "src/app/models/theme-tasks-multi-2-players";
-import { VirEnvHeaders } from "src/app/models/virEnvsHeader";
+import { getSelectableVirEnvHeaders, VirEnvHeader } from "src/app/models/virEnvsHeader";
 import { virEnvLayers } from "src/app/models/virEnvsLayers";
 import { VEBuildingUtilService } from "src/app/services/ve-building-util.service";
 import { UtilService } from "src/app/services/util.service";
@@ -143,8 +143,7 @@ export class CreateTaskModalPage implements OnInit {
   // selectedcollMethodType: any;
   selectedCollType: any;
 
-  //* get virual environment headers
-  virEnvTypesList = VirEnvHeaders;
+  virEnvTypesList: VirEnvHeader[];
   //* Get virtual environment layers
   virEnvLayers = virEnvLayers;
   
@@ -412,6 +411,8 @@ export class CreateTaskModalPage implements OnInit {
   }
 
   ngOnInit() {
+    this.virEnvTypesList = getSelectableVirEnvHeaders(this.virEnvType);
+
     if (this.type == "nav") {
       if (this.isSingleMode) {
         this.tasks = cloneDeep(navtasks);

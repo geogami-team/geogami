@@ -230,6 +230,7 @@
     "virtualWorldDescription": "Desenvolva um GeoGami para o mundo virtual.",
     "titleCreateGameVirtual": "Desenvolva o seu GeoGami virtual",
     "titleCreateGameVirtualMenu": "Escolha um mundo virtual",
+    "virtualEnvironmentUnavailable": "Este jogo usa um mundo virtual que não está disponível para novos jogos.",
     "titleCreateGameList": "Crie um GeoGami",
     "titleCreateGameVirtualList": "Crie um GeoGami virtual",
     "create": "Criar",

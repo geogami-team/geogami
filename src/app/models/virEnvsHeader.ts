@@ -1,4 +1,32 @@
-export const VirEnvHeaders: ReadonlyArray<any> = [
+import type { Game } from "./game";
+
+export interface VirEnvHeader {
+  envName: string;
+  layerName: string;
+  img_url: string;
+}
+
+// These environments are temporarily unavailable for new games. Remove an ID
+// from this list to offer it again. The headers below also serve existing games.
+const hiddenVirEnvTypes = new Set([
+  "VirEnv_5",
+  "VirEnv_9",
+  "VirEnv_10",
+  "VirEnv_11",
+  "VirEnv_12",
+  "VirEnv_14",
+  "VirEnv_15",
+  "VirEnv_21",
+  "VirEnv_30",
+  "VirEnv_31",
+  "VirEnv_32",
+  "VirEnv_33",
+  "VirEnv_34",
+  "VirEnv_35",
+  "VirEnv_36",
+]);
+
+export const VirEnvHeaders: ReadonlyArray<VirEnvHeader> = [
   {
     envName: "VirEnv_1",
     layerName: "VirEnv_1",
@@ -295,3 +323,18 @@ export const VirEnvHeaders: ReadonlyArray<any> = [
     img_url: "assets/vir_envs_layers/VirEnv_58.png",
   },
 ];
+
+// Task editors pass the current environment so their saved selection remains visible.
+export function getSelectableVirEnvHeaders(currentVirEnvType?: string): VirEnvHeader[] {
+  return VirEnvHeaders.filter(({ layerName }) =>
+    layerName === currentVirEnvType || !hiddenVirEnvTypes.has(layerName)
+  );
+}
+
+// The game default is still a reference even when every task overrides it.
+export function usesHiddenVirEnv(game: Pick<Game, "isVRWorld" | "virEnvType" | "tasks">): boolean {
+  return !!game.isVRWorld && (
+    hiddenVirEnvTypes.has(game.virEnvType) ||
+    !!game.tasks?.some(task => hiddenVirEnvTypes.has(task.virEnvType))
+  );
+}

@@ -36,6 +36,7 @@ import { UtilService } from "src/app/services/util.service";
 import { Subscription } from "rxjs";
 import { EditorVisibilityService } from "src/app/services/editor-visibility.service";
 import { detectGameAdvancedUsage } from "src/app/helpers/editor-advanced-usage";
+import { usesHiddenVirEnv } from "src/app/models/virEnvsHeader";
 
 @Component({
   selector: "app-create-game-overview",
@@ -507,6 +508,19 @@ export class CreateGameOverviewPage implements AfterViewInit, OnDestroy {
     if (this.game.name == "") {
       this.utilService.showValidationError(
         this.translate.instant("SaveGame.enterValidGameName")
+      );
+      return;
+    }
+
+    // The route supplies the game default, and the authoring session holds the
+    // tasks. Validate both before creating the draft.
+    if (usesHiddenVirEnv({
+      isVRWorld: this.isVirtualWorld,
+      virEnvType: this.virEnvType,
+      tasks: this.game.tasks,
+    })) {
+      this.utilService.showValidationError(
+        this.translate.instant("CreateGame.virtualEnvironmentUnavailable")
       );
       return;
     }
