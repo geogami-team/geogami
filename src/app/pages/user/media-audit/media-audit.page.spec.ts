@@ -13,7 +13,7 @@ describe("MediaAuditPage cleanup", () => {
 
   beforeEach(async () => {
     dismissRole = "cancel";
-    auth = jasmine.createSpyObj("AuthService", ["GetMediaAudit", "GetMediaCategories", "deleteUnreferencedMedia"]);
+    auth = jasmine.createSpyObj("AuthService", ["GetMediaAudit", "GetMediaCategories", "deleteUnreferencedMedia", "getMediaCleanup"]);
     auth.GetMediaCategories.and.resolveTo({ categories: [{
       bucket: "photos", label: "Photos", totalFiles: 2, years: [{ year: 2022, files: 2 }],
     }] });
@@ -81,7 +81,9 @@ describe("MediaAuditPage cleanup", () => {
       if (opts.filesOnly) return {
         page: { filteredTotal: 1, files: [{ filename: "preview.jpg", referenced: null, hosts: [], games: [] }] },
       };
-      if (!scanFinished) return { scanning: true };
+      if (!scanFinished) return { scanning: true, progress: {
+        phase: "references", completed: 25, total: 100, approximate: true, secondsRemaining: 30,
+      } };
       return {
         categories: [{ bucket: "photos", label: "Photos" }],
         hosts: [],
@@ -96,6 +98,8 @@ describe("MediaAuditPage cleanup", () => {
     expect(fixture.nativeElement.querySelector("ion-select")).not.toBeNull();
     expect(fixture.nativeElement.querySelector(".cleanup-row")).toBeNull();
     expect(fixture.nativeElement.querySelector(".file-row")).toBeNull();
+    expect(fixture.nativeElement.querySelector(".scan-status ion-progress-bar").value).toBe(0.25);
+    expect(fixture.nativeElement.querySelector(".scan-status").textContent).toContain("About 30 sec left in this step");
 
     fixture.nativeElement.querySelector(".scan-status ion-button").click();
     await Promise.resolve();
@@ -116,5 +120,38 @@ describe("MediaAuditPage cleanup", () => {
     expect(fixture.nativeElement.querySelector(".file-row").textContent).toContain("unreferenced.jpg");
     expect(fixture.nativeElement.querySelector(".showing").textContent).not.toContain("All-files preview");
     fixture.destroy();
+  });
+
+  it("shows progress and an estimate from a running cleanup job", async () => {
+    await render();
+    await selectYear(2022);
+    dismissRole = "destructive";
+    auth.deleteUnreferencedMedia.and.resolveTo({ id: "job", status: "running", progress: {
+      phase: "preparing", completed: 0, total: null, approximate: false, secondsRemaining: null,
+    } });
+    let firstPoll: () => void;
+    const polled = new Promise<void>((resolve) => { firstPoll = resolve; });
+    auth.getMediaCleanup.and.callFake(async () => {
+      if (auth.getMediaCleanup.calls.count() === 1) {
+        firstPoll();
+        return { id: "job", status: "running", progress: {
+          phase: "deleting", completed: 25, total: 50, approximate: false, secondsRemaining: 60,
+        } };
+      }
+      return { id: "job", status: "done", result: { deletedFiles: 50, deletedBytes: 2048 } };
+    });
+
+    const cleanup = fixture.componentInstance.confirmDeleteYear();
+    await polled;
+    await Promise.resolve();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector(".cleanup-progress ion-progress-bar").value).toBe(0.5);
+    expect(fixture.nativeElement.querySelector(".cleanup-progress").textContent).toContain("25 of 50 files deleted");
+    expect(fixture.nativeElement.querySelector(".cleanup-progress").textContent).toContain("About 1 min left in this step");
+    await cleanup;
+    await render();
+    expect(fixture.nativeElement.querySelector(".cleanup-progress")).toBeNull();
+    expect(auth.getMediaCleanup).toHaveBeenCalledWith("job");
+    expect(auth.GetMediaAudit.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({ refresh: true }));
   });
 });

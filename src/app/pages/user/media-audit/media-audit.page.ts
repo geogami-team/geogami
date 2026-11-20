@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AlertController, ToastController } from "@ionic/angular";
-import { AuthService } from "src/app/services/auth-service.service";
+import { AuthService, MediaCleanupJob, MediaCleanupResult, MediaOperationProgress } from "src/app/services/auth-service.service";
 import { environment } from "src/environments/environment";
 
 interface GameRef {
@@ -43,6 +43,7 @@ interface CategoryMeta extends InventoryCategory {
 
 const PAGE_SIZE = 20;
 const SCAN_POLL_MS = 2000;
+const CLEANUP_POLL_MS = 1000;
 
 @Component({
   selector: "app-media-audit",
@@ -58,8 +59,11 @@ export class MediaAuditPage implements OnInit, OnDestroy {
   private selectedBuckets: string[] = [];
 
   loading = true;
+  scanProgress: MediaOperationProgress | null = null;
   previewing = false;
   deleting = false;
+  cleanupProgress: MediaOperationProgress | null = null;
+  cleanupPollingDelayed = false;
   error = "";
   generatedAt: string | null = null;
   canonicalHost = "";
@@ -71,6 +75,7 @@ export class MediaAuditPage implements OnInit, OnDestroy {
   year: number | null = null;
 
   private requestVersion = 0;
+  private destroyed = false;
   private scanPoll?: ReturnType<typeof setTimeout>;
   private previewRequested = false;
   private loadingMore = false;
@@ -86,6 +91,16 @@ export class MediaAuditPage implements OnInit, OnDestroy {
   lightboxFile: MediaFile | null = null;
   previewFilename: string | null = null;
   readonly apiURL = environment.apiURL;
+  readonly searchPhases = ["references", "matching"];
+  readonly cleanupPhases = ["references", "eligibility", "deleting", "finishing"];
+  readonly progressLabels = {
+    references: "Checking references",
+    matching: "Matching references to uploaded files",
+    eligibility: "Finding files eligible for deletion",
+    deleting: "Deleting unreferenced files",
+    finishing: "Saving the cleanup result",
+  };
+  readonly progressUnits = { references: "records checked", matching: "files checked", eligibility: "entries checked", deleting: "files deleted" };
 
   constructor(
     private authService: AuthService,
@@ -99,6 +114,7 @@ export class MediaAuditPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.destroyed = true;
     this.requestVersion++;
     clearTimeout(this.scanPoll);
   }
@@ -190,6 +206,7 @@ export class MediaAuditPage implements OnInit, OnDestroy {
     const version = ++this.requestVersion;
     clearTimeout(this.scanPoll);
     this.scanPoll = undefined;
+    if (!this.loading || refresh) this.scanProgress = null;
     this.loading = true;
     this.previewing = false;
     this.loadingMore = false;
@@ -211,6 +228,7 @@ export class MediaAuditPage implements OnInit, OnDestroy {
       const res = await this.fetchPage(0, refresh);
       if (version !== this.requestVersion) return;
       if (res.scanning) {
+        this.scanProgress = res.progress || null;
         if (this.scanPoll === undefined && !this.previewRequested && !this.onlyOrphans && !this.onlyHostFlagged) {
           this.loadPreview(version);
         }
@@ -230,10 +248,12 @@ export class MediaAuditPage implements OnInit, OnDestroy {
       this.totals = res.totals;
       this.previewRequested = false;
       this.previewing = false;
+      this.scanProgress = null;
       this.loading = false;
     } catch (err) {
       if (version === this.requestVersion) {
         this.error = err?.error?.error || "Could not load the media audit.";
+        this.scanProgress = null;
         this.loading = false;
       }
     }
@@ -302,18 +322,51 @@ export class MediaAuditPage implements OnInit, OnDestroy {
       ],
     });
     await alert.present();
-    if ((await alert.onDidDismiss()).role !== "destructive" || this.deleting) return;
+    if ((await alert.onDidDismiss()).role !== "destructive" || this.deleting || this.destroyed) return;
 
     this.deleting = true;
     try {
-      const result = await this.authService.deleteUnreferencedMedia(category.bucket, year);
-      await this.showToast(`Deleted ${result.deletedFiles} file(s) (${this.fmtBytes(result.deletedBytes)}).`);
+      const started = await this.authService.deleteUnreferencedMedia(category.bucket, year);
+      const result = "id" in started ? await this.waitForCleanup(started) : started;
+      if (!this.destroyed) {
+        await this.showToast(`Deleted ${result.deletedFiles} file(s) (${this.fmtBytes(result.deletedBytes)}).`);
+      }
     } catch (err) {
-      await this.showToast(err?.error?.error || "Cleanup did not finish. Retry the same category and year.");
+      if (!this.destroyed) {
+        await this.showToast(err?.error?.error || (err instanceof Error ? err.message : "Could not confirm the cleanup result. Refresh the audit before retrying."));
+      }
     } finally {
-      await this.reload(true);
       this.deleting = false;
+      this.cleanupProgress = null;
+      this.cleanupPollingDelayed = false;
+      if (!this.destroyed) await this.reload(true);
     }
+  }
+
+  private async waitForCleanup(job: MediaCleanupJob): Promise<MediaCleanupResult> {
+    while (job.status === "running" && !this.destroyed) {
+      this.cleanupProgress = job.progress;
+      await new Promise((resolve) => setTimeout(resolve, CLEANUP_POLL_MS));
+      if (this.destroyed) return;
+      try {
+        job = await this.authService.getMediaCleanup(job.id);
+        this.cleanupPollingDelayed = false;
+      } catch (err) {
+        if (err.status !== 0 && err.status !== 429 && !(err.status >= 500)) throw err;
+        this.cleanupPollingDelayed = true;
+      }
+    }
+    if (job.status === "failed") throw new Error(job.error);
+    if (job.status === "done") return job.result;
+  }
+
+  progressFraction(progress: MediaOperationProgress | null): number {
+    return progress?.total > 0 ? Math.min(1, progress.completed / progress.total) : 0;
+  }
+
+  formatTimeRemaining(seconds: number): string {
+    if (seconds < 60) return `${Math.max(5, Math.round(seconds / 5) * 5)} sec`;
+    return `${Math.round(seconds / 60)} min`;
   }
 
   gameLabel(file: MediaFile): string {

@@ -103,6 +103,27 @@
   margin-block: 8px;
 }
 
+.operation-progress {
+  width: 100%;
+  text-align: left;
+
+  ion-progress-bar { margin: 6px 0; }
+}
+
+.scan-status .operation-progress { flex: 1 1 260px; }
+
+.operation-progress-label,
+.operation-progress-detail {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 12px;
+  font-size: 13px;
+}
+
+.operation-progress-detail { color: var(--ion-color-medium-shade); }
+.cleanup-progress { margin: 8px 0 12px; }
+
 .cleanup-row {
   display: flex;
   flex-wrap: wrap;

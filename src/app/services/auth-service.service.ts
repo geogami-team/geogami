@@ -7,6 +7,24 @@ import { Router } from '@angular/router';
 import { UtilService } from './util.service';
 import { LanguageService } from './language.service';
 
+export interface MediaOperationProgress {
+  phase: "preparing" | "references" | "matching" | "eligibility" | "deleting" | "finishing";
+  completed: number;
+  total: number | null;
+  approximate: boolean;
+  secondsRemaining: number | null;
+}
+
+export interface MediaCleanupResult {
+  deletedFiles: number;
+  deletedBytes: number;
+}
+
+export type MediaCleanupJob =
+  | { id: string; status: "running"; progress: MediaOperationProgress }
+  | { id: string; status: "done"; result: MediaCleanupResult }
+  | { id: string; status: "failed"; error: string };
+
 @Injectable({
   providedIn: 'root',
 })
@@ -349,11 +367,19 @@ export class AuthService {
       .toPromise();
   }
 
-  deleteUnreferencedMedia(bucket: string, year: number): Promise<{ deletedFiles: number; deletedBytes: number }> {
+  deleteUnreferencedMedia(bucket: string, year: number): Promise<MediaCleanupJob | MediaCleanupResult> {
     return this.http
-      .delete<{ deletedFiles: number; deletedBytes: number }>(`${environment.apiURL}/file/admin/media`, {
+      .delete<MediaCleanupJob | MediaCleanupResult>(`${environment.apiURL}/file/admin/media`, {
         headers: this.createHeaders(),
-        params: { bucket, year: String(year) },
+        params: { bucket, year: String(year), defer: "1" },
+      })
+      .toPromise();
+  }
+
+  getMediaCleanup(id: string): Promise<MediaCleanupJob> {
+    return this.http
+      .get<MediaCleanupJob>(`${environment.apiURL}/file/admin/media/cleanup/${encodeURIComponent(id)}`, {
+        headers: this.createHeaders(),
       })
       .toPromise();
   }
