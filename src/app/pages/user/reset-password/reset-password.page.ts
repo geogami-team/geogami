@@ -15,7 +15,9 @@ export class ResetPasswordPage implements OnInit {
   register;
   codeInput = [];
   userEmail;
-  
+  // Eye toggle on the new-password field, as on the login page.
+  showPassword = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -49,6 +51,10 @@ export class ResetPasswordPage implements OnInit {
 
   resetPassword() {
     this.authService.resetPassword(this.loginForm.getRawValue().password, this.userEmail ,this.codeInput.join(''));
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
   // Digits advance to the next box, Backspace jumps back — other keys

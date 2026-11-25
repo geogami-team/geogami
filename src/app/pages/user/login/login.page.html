@@ -48,28 +48,36 @@
           <ion-label position="stacked"
             >{{ "User.pl_password" | translate }}</ion-label
           >
+          <!-- clearOnEdit off: Ionic clears a password field on the first
+               keystroke after it regains focus, which wiped the entered
+               password whenever the eye toggle had been used. -->
           <ion-input
             [type]="showPassword ? 'text' : 'password'"
+            [clearOnEdit]="false"
             placeholder="{{ 'User.pl_password' | translate }}"
             [id]="'password'"
             formControlName="password"
           ></ion-input>
-          <!-- type="button" so the eye never submits the surrounding form. -->
+          <!-- type="button" so the eye never submits the surrounding form.
+               Named by the hidden text inside, not aria-label: Ionic copies
+               aria-label to its inner button only once, so it kept saying
+               "Show password" after revealing. -->
           <ion-button
             class="pw-toggle"
             slot="end"
             fill="clear"
             type="button"
             (click)="togglePassword()"
-            [attr.aria-label]="
-              (showPassword ? 'User.hidePassword' : 'User.showPassword')
-                | translate
-            "
           >
             <ion-icon
               slot="icon-only"
+              aria-hidden="true"
               [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
             ></ion-icon>
+            <span class="pw-toggle-label">{{
+              (showPassword ? "User.hidePassword" : "User.showPassword")
+                | translate
+            }}</span>
           </ion-button>
         </ion-item>
 
