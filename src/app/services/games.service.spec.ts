@@ -24,6 +24,38 @@ describe('GamesService', () => {
     expect(service).toBeTruthy();
   });
 
+  // The server only tells a signed-in co-author that they co-author a game
+  // (their own address in `editors`), so these public reads carry the token.
+  describe('public game reads', () => {
+    const listUrl = (url: string) => url.startsWith(`${environment.apiURL}/game/all/`);
+
+    afterEach(() => window.localStorage.removeItem('bg_accesstoken'));
+
+    it('send the access token when signed in', () => {
+      window.localStorage.setItem('bg_accesstoken', 'test-token');
+      service.getGames(true, true);
+      service.getGame(id);
+      const list = http.expectOne((req) => listUrl(req.url));
+      const game = http.expectOne(`${environment.apiURL}/game/${id}`);
+      expect(list.request.headers.get('Authorization')).toBe('Bearer test-token');
+      expect(game.request.headers.get('Authorization')).toBe('Bearer test-token');
+      list.flush({ content: [] });
+      game.flush({ content: { _id: id } });
+    });
+
+    it('send no Authorization header when signed out', () => {
+      window.localStorage.removeItem('bg_accesstoken');
+      service.getGames(true, false);
+      service.getGame(id);
+      const list = http.expectOne((req) => listUrl(req.url));
+      const game = http.expectOne(`${environment.apiURL}/game/${id}`);
+      expect(list.request.headers.has('Authorization')).toBeFalse();
+      expect(game.request.headers.has('Authorization')).toBeFalse();
+      list.flush({ content: [] });
+      game.flush({ content: { _id: id } });
+    });
+  });
+
   describe('findGame', () => {
     it('returns the game when the API has it', async () => {
       const lookup = service.findGame(id);

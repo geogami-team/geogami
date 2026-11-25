@@ -163,7 +163,7 @@ export class AuthService {
         this.setLoginPageOpen(false);
         // If the email isn't confirmed yet, send the user to the verify-email
         // page instead of the home page. They are still authenticated so the
-        // page can call resend/change-mail endpoints.
+        // page can call the resend-verification endpoint.
         if (res.needsEmailVerification) {
           this.router.navigate(['/user/verify-email']);
         } else {
@@ -358,17 +358,20 @@ export class AuthService {
       });
   }
 
-  // self-serve: change email (and trigger a new verification email).
-  // Uses the existing /user/change-mail endpoint.
-  changeMyEmail(newEmail: string): Promise<any> {
-    return this.http
-      .post(
-        `${environment.apiURL}/user/change-mail`,
-        { mail: newEmail },
-        { headers: this.createHeaders(), observe: "response" }
-      )
-      .toPromise();
-  }
+  // DISABLED 2026-11-25: changing the account email is switched off on the
+  // server (POST /user/change-mail is commented out there). No page called this.
+  // Re-enable together with the server route.
+  //
+  // // self-serve: change email (and trigger a new verification email).
+  // changeMyEmail(newEmail: string): Promise<any> {
+  //   return this.http
+  //     .post(
+  //       `${environment.apiURL}/user/change-mail`,
+  //       { mail: newEmail },
+  //       { headers: this.createHeaders(), observe: "response" }
+  //     )
+  //     .toPromise();
+  // }
 
   // self-serve: resend verification email for the currently logged-in user
   resendMyVerificationEmail(): Promise<any> {
