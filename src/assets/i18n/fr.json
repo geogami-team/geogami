@@ -413,7 +413,7 @@
     "deleteAccount": "Supprimer le compte",
     "cancel": "Annuler",
     "enterEmail": "Entrez votre adresse email et nous vous enverrons un email pour réinitialiser votre mot de passe.",
-    "enterVirCode": "Un code de vérification a été envoyé à {{email}}. Veuillez entrer le code ci-dessous ainsi que votre nouveau mot de passe.",
+    "enterVirCode": "Si un compte existe pour {{email}}, un code de vérification y a été envoyé. Veuillez entrer le code ci-dessous ainsi que votre nouveau mot de passe.",
     "editProfile": "Modifier le profil",
     "pl_name": "Votre nom",
     "language": "Langue par défaut",

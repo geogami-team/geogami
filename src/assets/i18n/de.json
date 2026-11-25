@@ -413,7 +413,7 @@
     "deleteAccount": "Konto löschen",
     "cancel": "Abbrechen",
     "enterEmail": "Gib deine E-Mail-Adresse ein. Wir senden dir eine E-Mail zum Zurücksetzen deines Passworts.",
-    "enterVirCode": "Der Bestätigungscode wurde an {{email}} gesendet. Bitte gib unten den Code und dein neues Passwort ein.",
+    "enterVirCode": "Falls zu {{email}} ein Konto existiert, wurde ein Bestätigungscode an diese Adresse gesendet. Bitte gib unten den Code und dein neues Passwort ein.",
     "editProfile": "Profil bearbeiten",
     "pl_name": "Dein Name",
     "language": "Standardsprache",

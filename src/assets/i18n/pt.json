@@ -413,7 +413,7 @@
     "deleteAccount": "Eliminar conta",
     "cancel": "Cancelar",
     "enterEmail": "Introduza o seu endereço de e-mail. Enviar-lhe-emos uma mensagem para repor a palavra-passe.",
-    "enterVirCode": "O código de confirmação foi enviado para {{email}}. Introduza abaixo o código e a nova palavra-passe.",
+    "enterVirCode": "Se existir uma conta associada a {{email}}, foi enviado um código de confirmação para esse endereço. Introduza abaixo o código e a nova palavra-passe.",
     "editProfile": "Editar perfil",
     "pl_name": "O seu nome",
     "language": "Idioma predefinido",

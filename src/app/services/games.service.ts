@@ -31,6 +31,17 @@ export class GamesService {
     return headers;
   }
 
+  // For the public game reads: the token when signed in, nothing otherwise.
+  // The server then returns the caller's own address in `editors` when they
+  // co-author the game (other people's addresses are never sent), which
+  // "My games" and the editor's Delete button rely on.
+  private optionalAuthHeaders(): HttpHeaders {
+    const token = window.localStorage.getItem("bg_accesstoken");
+    return token
+      ? new HttpHeaders({ Authorization: "Bearer " + token })
+      : new HttpHeaders();
+  }
+
   getGames(
     minimal: boolean = false,
     registeredUser: boolean = false
@@ -40,7 +51,8 @@ export class GamesService {
       .get(
         `${environment.apiURL}/game/all/?${minimal ? "minimal" : ""}&${
           registeredUser ? "registeredUser" : ""
-        }`
+        }`,
+        { headers: this.optionalAuthHeaders() }
       )
       .toPromise();
   }
@@ -122,7 +134,9 @@ export class GamesService {
 
   getGame(id: string): Promise<any> {
     return this.http
-      .get(`${environment.apiURL}/game/${id}`)
+      .get(`${environment.apiURL}/game/${id}`, {
+        headers: this.optionalAuthHeaders(),
+      })
       .toPromise()
       // in case game was deleted or not found
       .catch((err) => {
