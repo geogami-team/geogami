@@ -413,7 +413,7 @@
     "deleteAccount": "Delete Account",
     "cancel": "Cancel",
     "enterEmail": "Enter your email address and we'll send you an email to reset your password.",
-    "enterVirCode": "Verification code has been sent to {{email}}. Please enter the code below along with your new password.",
+    "enterVirCode": "If an account exists for {{email}}, a verification code has been sent to it. Please enter the code below along with your new password.",
     "editProfile": "Edit profile",
     "pl_name": "Your name",
     "language": "Default language",
