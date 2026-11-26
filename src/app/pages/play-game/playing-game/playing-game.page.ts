@@ -925,6 +925,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.socketService.socket.emit("joinGame", {
         roomName: this.gameCode,
         playerName: this.playersNames[0],
+        // the player key the server sends back only works for this game
+        game: this.game?._id,
       });
     }
   }
