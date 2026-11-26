@@ -473,6 +473,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   isSingleMode: boolean = true;
   numPlayers = 0;
   playerNo: number = 1;
+  // Multiplayer: the server's key for this player's part of the play
+  playerKey: string = null;
   joinedPlayersCount = 0;
   trackDataStatus: any;
   storedGameTrack_id: string;
@@ -749,6 +751,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
         playerName: this.playersNames[0],
         playerNo: this.playerNo,
         roomName: this.gameCode,
+        playerKey: this.playerKey,
       };
       this.storage.set("savedTracksData", {
         s_playerInfo: c_playerInfo,
@@ -1875,6 +1878,11 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
     this.trackerService.updateTaskNo(this.taskIndex + 1, this.task.category); // to update taskNo stored in waypoints
     this.feedbackControl.setTask(this.task);
+    /* a resumed multiplayer game keeps the key it was given when joining */
+    if (this.isRejoin && !this.isSingleMode && !this.playerKey) {
+      const saved = await this.storage.get("savedTracksData");
+      this.playerKey = saved?.s_playerInfo?.playerKey ?? null;
+    }
     await this.trackerService.init(
       this.game._id,
       this.game.name,
@@ -1886,7 +1894,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.numPlayers,
       this.playerNo,
       this.instructor, // Phase 3: single-player class plays only
-      this.event // Phase 3: single-player event plays only
+      this.event, // Phase 3: single-player event plays only
+      this.playerKey // multiplayer only
     );
   // console.log(this.game);
 
@@ -2518,6 +2527,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
                     this.socketService.socket.emit("updateGameTrackStauts", {
                       roomName: this.gameCode,
                       storedTrack_id: this.storedGameTrack_id,
+                      playerKey: this.playerKey, // the server only listens to the group's players
                     });
                   }
                 });
@@ -3211,6 +3221,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
       /* player number equal number of players already joined the room */
       this.playerNo = this.joinedPlayersCount = data.playerNo;
+      /* key for uploading this player's part of the play (none from older servers) */
+      this.playerKey = data.playerKey ?? null;
 
       /* if all players joined the game, remove waiting panel */
       if (this.joinedPlayersCount == this.numPlayers) {
