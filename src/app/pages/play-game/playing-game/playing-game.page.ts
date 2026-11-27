@@ -475,6 +475,14 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   playerNo: number = 1;
   // Multiplayer: the server's key for this player's part of the play
   playerKey: string = null;
+  // Multiplayer: this player got their number from the server
+  playerAssigned = false;
+  // Multiplayer: the server didn't place this player (code in use, group complete)
+  joinRefused = false;
+  // The game starts once the map has loaded (and the group is complete)
+  mapLoaded = false;
+  gameStarted = false;
+  private startTimer: ReturnType<typeof setTimeout> = null;
   joinedPlayersCount = 0;
   trackDataStatus: any;
   storedGameTrack_id: string;
@@ -731,6 +739,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
   /******************/
   ionViewWillLeave() {
+    this.cancelPendingStart();
     // "Live plays": the player left the game (does nothing after the finish)
     this.playSession.end("left");
     this.stopExplorationTimer();
@@ -742,8 +751,9 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.disconnectSocketIO();
     }
 
-    /* Keep unfinished progress only in this running app, for same-session rejoin. */
-    if (!PlayingGamePage.showSuccess) {
+    /* Keep unfinished progress only in this running app, for same-session rejoin
+       (not when the server never placed this player). */
+    if (!PlayingGamePage.showSuccess && !this.joinRefused) {
       let c_waypoints = this.trackerService.getWaypoints();
       let c_events = this.trackerService.getEvents();
       /* to store player no, name and room name */
@@ -767,6 +777,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.cancelPendingStart();
     this.stopExplorationTimer();
     this.mapResizeObserver?.disconnect();
     window.removeEventListener("keydown", this.handOverAvatarKey, true);
@@ -910,6 +921,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     if (!this.isRejoin) {
       /* (socket listener) on assign number to myself  */
       this.onAssignPlayerNumber();
+      /* (socket listener) when the server doesn't place this player */
+      this.onJoinRefused();
     }
 
     /* on joining game by other players */
@@ -1146,18 +1159,9 @@ export class PlayingGamePage implements OnInit, OnDestroy {
         }
       );
 
-      // ToDO: update it using callback
-      /* in case joined player is last */
-      /* with rejoin playerno might no be last one to join therefore we use count received from socker server instead  */
-      if (
-        this.isSingleMode ||
-        this.playerNo == this.numPlayers ||
-        (this.isRejoin && this.joinedPlayersCount == this.numPlayers)
-      ) {
-        setTimeout(() => {
-          this.startGame();
-        }, 200);
-      }
+      /* start now if everything else is ready (see startGameWhenReady) */
+      this.mapLoaded = true;
+      this.startGameWhenReady();
       resolve(true);
     });
 
@@ -3152,6 +3156,36 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     return index;
   }
 
+  /**
+   * Starts the game once, as soon as the map has loaded and (multiplayer) this
+   * player has their number and the group is complete. Called whenever one of
+   * those becomes true, as they can happen in any order: the last player to
+   * join hears of the full group through their own number, which may arrive
+   * after the map has loaded.
+   */
+  startGameWhenReady() {
+    if (this.gameStarted || !this.mapLoaded) return;
+    const ready =
+      this.isSingleMode ||
+      /* a resumed player has their number already (from the saved session) */
+      ((this.playerAssigned || this.isRejoin) && this.joinedPlayersCount == this.numPlayers);
+    if (!ready) return;
+    this.gameStarted = true;
+    this.waitPlayersPanel = false;
+    this.startTimer = setTimeout(() => {
+      this.startTimer = null;
+      this.startGame();
+    }, 200);
+  }
+
+  /* A start still pending when the player leaves must not run afterwards. */
+  cancelPendingStart() {
+    if (this.startTimer) {
+      clearTimeout(this.startTimer);
+      this.startTimer = null;
+    }
+  }
+
   startGame() {
   // console.log(this.playersNames);
     // this.subscripePosition(); // For Realworld / VE
@@ -3225,11 +3259,27 @@ export class PlayingGamePage implements OnInit, OnDestroy {
       this.playerNo = this.joinedPlayersCount = data.playerNo;
       /* key for uploading this player's part of the play (none from older servers) */
       this.playerKey = data.playerKey ?? null;
+      this.playerAssigned = true;
 
-      /* if all players joined the game, remove waiting panel */
-      if (this.joinedPlayersCount == this.numPlayers) {
-        this.waitPlayersPanel = false;
-      }
+      /* if all players joined the game (this player is the last), start */
+      this.startGameWhenReady();
+    });
+  }
+
+  /* when the server doesn't place this player: the code is in use for another
+     game, or the group is already complete (only servers with player keys) */
+  onJoinRefused() {
+    this.socketService.socket.removeListener("joinRefused");
+    this.socketService.socket.on("joinRefused", (data) => {
+      this.joinRefused = true;
+      const message =
+        data?.reason == "otherGame"
+          ? this.translate.instant("PlayGame.codeInUseByOtherGame")
+          : data?.reason == "unavailable" // the server couldn't check the game: play again
+            ? this.translate.instant("PlayGame.joinFailed")
+            : `Sorry this game accepts only ${this.numPlayers} players.`;
+      this.utilService.showToast(message, "dark", 3500);
+      this.navCtrl.back();
     });
   }
 
@@ -3240,10 +3290,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     // console.log("PlayerJoined: (number of players so far) ", data);
       this.joinedPlayersCount = data.joinedPlayersCount;
 
-      if (this.joinedPlayersCount == this.numPlayers) {
-        this.waitPlayersPanel = false;
-        this.startGame();
-      }
+      this.startGameWhenReady();
     });
   }
 

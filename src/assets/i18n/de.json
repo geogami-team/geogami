@@ -323,6 +323,8 @@
     "correctLocation": "Stehst du genau richtig? Dann drücke 'Okay'!",
     "gameConnection": "Verbindungscode",
     "pl_EnterCode": "Verbindungscode eingeben",
+    "codeInUseByOtherGame": "Dieser Verbindungscode wird bereits für ein anderes Spiel verwendet. Bitte einen anderen Code verwenden.",
+    "joinFailed": "Dem Spiel konnte nicht beigetreten werden. Bitte versuche es erneut.",
     "shareDataAgreement": "Ich bin damit einverstanden, dass die während des Spielens erhobenen Daten unter meinem Spielnamen für Forschungszwecke und zur Erstellung individueller Rückmeldungen für die Spielenden verarbeitet werden. Ergebnisse werden nur in anonymisierter, zusammengefasster Form veröffentlicht.",
     "allGames": "Alle",
     "myGames": "Meine Spiele",

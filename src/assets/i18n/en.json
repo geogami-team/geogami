@@ -323,6 +323,8 @@
     "correctLocation": "Are you exactly right? Then press 'okay'!",
     "gameConnection": "Connection code",
     "pl_EnterCode": "Enter connection code",
+    "codeInUseByOtherGame": "This connection code is already in use for another game. Please use a different code.",
+    "joinFailed": "Could not join the game. Please try again.",
     "shareDataAgreement": "I agree that the data collected during play may be processed under my player name for research purposes and to create individual feedback for players. Results are only published in anonymised, aggregated form.",
     "allGames": "All",
     "myGames": "My games",
