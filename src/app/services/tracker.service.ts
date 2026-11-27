@@ -49,6 +49,9 @@ export class TrackerService {
   private isSingleMode: boolean = true;
   private numPlayers: number = 1;
   private playerNo: number = 2;
+  // The server's key for this player's part of the group's play (sent with
+  // assignPlayerNumber). Older servers send none.
+  private playerKey: string = null;
   private playersNames_list;
   private waypoints_list;
   private events_list;
@@ -91,7 +94,8 @@ export class TrackerService {
     numPlayers: number,
     playerNo: number,
     instructor: string = null,
-    event: string = null
+    event: string = null,
+    playerKey: string = null // multiplayer only
   ) {
     this.isVirtualWorld = isVirtualWorld;
     this.initialAvatarLoc = initialAvatarLoc;
@@ -100,6 +104,7 @@ export class TrackerService {
     this.playerNo = playerNo;
     this.instructor = instructor;
     this.event = event;
+    this.playerKey = playerKey;
 
     if (!isVirtualWorld) {
       this.positionWatch =
@@ -325,6 +330,9 @@ export class TrackerService {
       /* (multiplayer) 3. send game track id and player no if track is already exitied in socket server room then update player's corresponding track data */
       _id: isGameTrackStored ? gameTrack_Id : undefined,
       playerNo: isGameTrackStored ? this.playerNo : undefined,
+      // (multiplayer) proves this is our part of our group's play; the first
+      // upload ties the group's track to our game with it
+      playerKey: !this.isSingleMode && this.playerKey ? this.playerKey : undefined,
       game: this.game,
       // Phase 3: attribute single-player class plays to the instructor.
       instructor: this.instructor || undefined,
@@ -381,7 +389,7 @@ export class TrackerService {
         path: `origami/tracks/${this.gameName.replace(/ /g, "_")}-${
           this.start
         }.json`,
-        data: JSON.stringify(data),
+        data: JSON.stringify({ ...data, playerKey: undefined }), // the key is only for the server
         directory: FilesystemDirectory.Documents,
         encoding: FilesystemEncoding.UTF8,
       });

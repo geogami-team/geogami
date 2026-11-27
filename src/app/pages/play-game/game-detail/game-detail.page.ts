@@ -464,9 +464,12 @@ export class GameDetailPage implements OnInit {
       {
         gameCode: this.teacherCode.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ""),
         gameNumPlayers: this.numPlayers,
+        game: this.game?._id, // a room plays one game; the server refuses another one
       },
       (response) => {
-        if (response.isRoomFull) {
+        if (response.isOtherGame) {
+          this.utilService.showToast(this.translate.instant("PlayGame.codeInUseByOtherGame"), "dark", 3500);
+        } else if (response.isRoomFull) {
           /* show toast msg */
           this.utilService.showToast(
             `Sorry this game accepts only ${this.numPlayers} players.`,
