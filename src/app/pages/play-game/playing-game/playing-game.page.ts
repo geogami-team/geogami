@@ -483,6 +483,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   mapLoaded = false;
   gameStarted = false;
   private startTimer: ReturnType<typeof setTimeout> = null;
+  // The player left this page; nothing may start the game any more
+  private viewLeft = false;
   joinedPlayersCount = 0;
   trackDataStatus: any;
   storedGameTrack_id: string;
@@ -739,7 +741,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
 
   /******************/
   ionViewWillLeave() {
-    this.cancelPendingStart();
+    this.markViewLeft();
     // "Live plays": the player left the game (does nothing after the finish)
     this.playSession.end("left");
     this.stopExplorationTimer();
@@ -777,7 +779,7 @@ export class PlayingGamePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.cancelPendingStart();
+    this.markViewLeft();
     this.stopExplorationTimer();
     this.mapResizeObserver?.disconnect();
     window.removeEventListener("keydown", this.handOverAvatarKey, true);
@@ -3164,7 +3166,8 @@ export class PlayingGamePage implements OnInit, OnDestroy {
    * after the map has loaded.
    */
   startGameWhenReady() {
-    if (this.gameStarted || !this.mapLoaded) return;
+    /* a late map load or socket message after the player left starts nothing */
+    if (this.viewLeft || this.gameStarted || !this.mapLoaded) return;
     const ready =
       this.isSingleMode ||
       /* a resumed player has their number already (from the saved session) */
@@ -3174,12 +3177,15 @@ export class PlayingGamePage implements OnInit, OnDestroy {
     this.waitPlayersPanel = false;
     this.startTimer = setTimeout(() => {
       this.startTimer = null;
-      this.startGame();
+      if (!this.viewLeft) this.startGame();
     }, 200);
   }
 
-  /* A start still pending when the player leaves must not run afterwards. */
-  cancelPendingStart() {
+  /* The player left the page (or it is destroyed): a start still pending must
+     not run, and nothing arriving later (e.g. the map finishing loading) may
+     schedule one. */
+  markViewLeft() {
+    this.viewLeft = true;
     if (this.startTimer) {
       clearTimeout(this.startTimer);
       this.startTimer = null;

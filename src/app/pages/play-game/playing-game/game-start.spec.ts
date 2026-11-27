@@ -26,7 +26,7 @@ describe('PlayingGamePage start check', () => {
     return p;
   }
   const check = (p: Page) => PlayingGamePage.prototype.startGameWhenReady.call(p);
-  const leave = (p: Page) => PlayingGamePage.prototype.cancelPendingStart.call(p);
+  const leave = (p: Page) => PlayingGamePage.prototype.markViewLeft.call(p);
 
   // The events the page acts on, as its handlers record them.
   const mapLoads = (p: Page) => { p.mapLoaded = true; check(p); };
@@ -100,6 +100,16 @@ describe('PlayingGamePage start check', () => {
     tick(1000);
     expect(p.startGame).not.toHaveBeenCalled();
     leave(p); // leaving twice is fine
+  }));
+
+  it('never starts when the map finishes loading after the player has left', fakeAsync(() => {
+    const p = page({});
+    assigned(p, 2); // ready but for the map
+    leave(p);
+    mapLoads(p); // a late load callback
+    playerJoined(p, 2); // or a late message
+    tick(1000);
+    expect(p.startGame).not.toHaveBeenCalled();
   }));
 
   it('starts a single-player game when the map has loaded', fakeAsync(() => {
